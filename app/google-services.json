@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "102558089548",
+    "project_id": "giveease-dev",
+    "storage_bucket": "giveease-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102558089548:android:1f6a84afb320154462cfe9",
+        "android_client_info": {
+          "package_name": "com.example.giveease"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFhumiKSGLiEkr4Mie4IKPoS5z33FZhus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
