@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentAdminMainBinding
 
@@ -15,31 +16,29 @@ class AdminMainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAdminMainBinding.inflate(inflater, container, false)
-        setupBottomNav()
+        setupBottomNavigation()
+        loadDefaultFragment()
         return binding.root
     }
 
-    private fun setupBottomNav() {
-        val fragmentManager = childFragmentManager
-
+    private fun setupBottomNavigation() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            val selectedFragment: Fragment? = when (item.itemId) {
-                R.id.nav_home -> AdminDashboardFragment()
-                R.id.nav_profile -> AdminProfileFragment()
-                R.id.nav_settings -> AdminSettingsFragment()
-                else -> null
-            }
-            selectedFragment?.let {
-                fragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, it)
-                    .commit()
+            when (item.itemId) {
+                R.id.nav_home -> childFragmentManager.commit {
+                    replace(R.id.fragmentContainer, AdminDashboardFragment())
+                }
+                R.id.nav_profile -> {}
+                R.id.nav_settings -> {}
             }
             true
         }
-
-        binding.bottomNavigationView.selectedItemId = R.id.nav_home
     }
 
+    private fun loadDefaultFragment() {
+        childFragmentManager.commit {
+            replace(R.id.fragmentContainer, AdminDashboardFragment())
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

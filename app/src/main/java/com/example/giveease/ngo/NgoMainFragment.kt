@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentNgoMainBinding
 
@@ -15,27 +16,28 @@ class NgoMainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentNgoMainBinding.inflate(inflater, container, false)
-        setupBottomNav()
+        setupBottomNavigation()
+        loadDefaultFragment()
         return binding.root
     }
 
-    private fun setupBottomNav() {
+    private fun setupBottomNavigation() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            val selectedFragment: Fragment? = when (item.itemId) {
-                R.id.nav_home -> NgoHomeFragment()
-                R.id.nav_profile -> NgoProfileFragment()
-                R.id.nav_settings -> NgoSettingsFragment()
-                else -> null
-            }
-            selectedFragment?.let {
-                childFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, it)
-                    .commit()
+            when (item.itemId) {
+                R.id.nav_home -> childFragmentManager.commit {
+                    replace(R.id.fragmentContainer, NgoHomeFragment())
+                }
+                R.id.nav_profile -> {}
+                R.id.nav_settings -> {}
             }
             true
         }
+    }
 
-        binding.bottomNavigationView.selectedItemId = R.id.nav_home
+    private fun loadDefaultFragment() {
+        childFragmentManager.commit {
+            replace(R.id.fragmentContainer, NgoHomeFragment())
+        }
     }
 
     override fun onDestroyView() {

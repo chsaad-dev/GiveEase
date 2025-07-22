@@ -16,22 +16,18 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         lifecycleScope.launch {
-            delay(1500) // splash delay
-            navigateToNextScreen()
+            delay(1500)
+            val role = RoleManager.getCurrentUserRole()
+
+            val nextIntent = when (role) {
+                "donor" -> Intent(this@SplashActivity, MainActivity::class.java).putExtra("role", "donor")
+                "ngo" -> Intent(this@SplashActivity, MainActivity::class.java).putExtra("role", "ngo")
+                "admin" -> Intent(this@SplashActivity, MainActivity::class.java).putExtra("role", "admin")
+                else -> Intent(this@SplashActivity, MainActivity::class.java)
+            }
+
+            startActivity(nextIntent)
+            finish()
         }
-    }
-
-    private fun navigateToNextScreen() {
-        val role = RoleManager.getCurrentUserRole()
-
-        val nextIntent = when (role) {
-            "donor" -> Intent(this, MainActivity::class.java).putExtra("role", "donor")
-            "ngo" -> Intent(this, MainActivity::class.java).putExtra("role", "ngo")
-            "admin" -> Intent(this, MainActivity::class.java).putExtra("role", "admin")
-            else -> Intent(this, MainActivity::class.java)
-        }
-
-        startActivity(nextIntent)
-        finish()
     }
 }
