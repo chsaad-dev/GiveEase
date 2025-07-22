@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentDonorMainBinding
 
@@ -15,30 +16,29 @@ class DonorMainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDonorMainBinding.inflate(inflater, container, false)
-        setupBottomNav()
+        setupBottomNavigation()
+        loadDefaultFragment()
         return binding.root
     }
 
-    private fun setupBottomNav() {
+    private fun setupBottomNavigation() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            val selectedFragment: Fragment? = when (item.itemId) {
-                R.id.nav_home -> DonorHomeFragment()
-                R.id.nav_profile -> DonorProfileFragment()
-                R.id.nav_settings -> DonorSettingsFragment()
-                else -> null
-            }
-
-            selectedFragment?.let {
-                childFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, it)
-                    .commit()
+            when (item.itemId) {
+                R.id.nav_home -> childFragmentManager.commit {
+                    replace(R.id.fragmentContainer, DonorHomeFragment())
+                }
+                R.id.nav_profile -> {} // Add your Profile fragment
+                R.id.nav_settings -> {} // Add your Settings fragment
             }
             true
         }
-
-        binding.bottomNavigationView.selectedItemId = R.id.nav_home
     }
 
+    private fun loadDefaultFragment() {
+        childFragmentManager.commit {
+            replace(R.id.fragmentContainer, DonorHomeFragment())
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -1,4 +1,5 @@
 package com.example.giveease.model
 
-class UserRole {
-}
+data class UserRole(
+    val role: String = ""
+)

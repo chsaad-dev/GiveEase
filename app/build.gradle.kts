@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.giveease"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.giveease"
         minSdk = 29
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -47,6 +47,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
+    implementation(libs.jetbrains.kotlinx.coroutines.play.services.v164)
+
     implementation(libs.material)
 
     // Firebase
@@ -56,6 +58,8 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+
+    // Optional: Firebase crash reporting
     implementation(libs.firebase.crashlytics.buildtools)
 
     // Testing
