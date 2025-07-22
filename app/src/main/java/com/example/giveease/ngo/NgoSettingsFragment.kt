@@ -5,17 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.giveease.databinding.FragmentNgoProfileBinding
+import com.example.giveease.databinding.FragmentNgoSettingsBinding
 
-class NgoProfileFragment : Fragment() {
+class NgoSettingsFragment : Fragment() {
 
-    private var _binding: FragmentNgoProfileBinding? = null
+    private var _binding: FragmentNgoSettingsBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNgoProfileBinding.inflate(inflater, container, false)
+        _binding = FragmentNgoSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
 

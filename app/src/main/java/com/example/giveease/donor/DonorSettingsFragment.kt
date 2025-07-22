@@ -1,15 +1,15 @@
-package com.example.giveease.auth
+package com.example.giveease.donor
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.giveease.databinding.FragmentLoginBinding
+import com.example.giveease.databinding.FragmentDonorSettingsBinding
 
-class LoginFragment : Fragment() {
+class DonorSettingsFragment : Fragment() {
 
-    private var _binding: FragmentLoginBinding? = null
+    private var _binding: FragmentDonorSettingsBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,7 +17,10 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        _binding = FragmentDonorSettingsBinding.inflate(inflater, container, false)
+
+        // Add your logic for settings interactions here
+
         return binding.root
     }
 
