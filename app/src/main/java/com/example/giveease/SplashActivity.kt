@@ -8,6 +8,9 @@ import com.example.giveease.auth.LoginFragment
 import com.example.giveease.utils.RoleManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
+
 
 class SplashActivity : AppCompatActivity() {
 
@@ -15,6 +18,11 @@ class SplashActivity : AppCompatActivity() {
         setTheme(R.style.Theme_GiveEase)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
+        findViewById<ImageView>(R.id.splash_logo).startAnimation(
+            AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        )
+
 
         lifecycleScope.launch {
             delay(1500)
