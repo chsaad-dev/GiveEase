@@ -5,13 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.giveease.R
 import com.example.giveease.donor.model.Chat
 
-class ChatAdapter(private val chatList: List<Chat>) :
-    RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+class ChatAdapter(
+    private val chatList: List<Chat>,
+    private val onChatClick: (Chat) -> Unit
+) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     inner class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val ngoName: TextView = view.findViewById(R.id.tvNgoName)
@@ -39,7 +40,7 @@ class ChatAdapter(private val chatList: List<Chat>) :
         }
 
         holder.itemView.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "Opening chat with ${chat.ngoName}", Toast.LENGTH_SHORT).show()
+            onChatClick(chat)
         }
     }
 

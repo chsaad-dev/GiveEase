@@ -8,6 +8,7 @@ import com.example.giveease.R
 import com.example.giveease.databinding.FragmentDonorChatBinding
 import com.example.giveease.donor.adapter.ChatAdapter
 import com.example.giveease.donor.model.Chat
+import com.example.giveease.donor.ChatDetailFragment
 
 class DonorChatFragment : Fragment() {
     private lateinit var binding: FragmentDonorChatBinding
@@ -21,9 +22,19 @@ class DonorChatFragment : Fragment() {
         )
 
         binding.recyclerViewChats.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerViewChats.adapter = ChatAdapter(chatList)
+        binding.recyclerViewChats.adapter = ChatAdapter(chatList) { selectedChat ->
+            val chatDetailFragment = ChatDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString("ngoName", selectedChat.ngoName)
+                }
+            }
+
+            parentFragmentManager.beginTransaction()
+                .replace((view?.parent as ViewGroup).id, chatDetailFragment)
+                .addToBackStack(null)
+                .commit()
+        }
 
         return binding.root
     }
 }
-
