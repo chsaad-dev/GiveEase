@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.giveease.auth.LoginFragment
 import com.example.giveease.utils.RoleManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ class SplashActivity : AppCompatActivity() {
                 "donor" -> Intent(this@SplashActivity, MainActivity::class.java).putExtra("role", "donor")
                 "ngo" -> Intent(this@SplashActivity, MainActivity::class.java).putExtra("role", "ngo")
                 "admin" -> Intent(this@SplashActivity, MainActivity::class.java).putExtra("role", "admin")
-                else -> Intent(this@SplashActivity, MainActivity::class.java)
+                else -> Intent(this@SplashActivity, MainActivity::class.java).putExtra("role", "login")  // ✅ Fixed!
             }
 
             startActivity(nextIntent)

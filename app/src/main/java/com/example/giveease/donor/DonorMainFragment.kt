@@ -1,47 +1,47 @@
 package com.example.giveease.donor
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import com.example.giveease.R
-import com.example.giveease.databinding.FragmentDonorMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.fragment.app.commit
 
 class DonorMainFragment : Fragment() {
 
-    private var _binding: FragmentDonorMainBinding? = null
-    private val binding get() = _binding!!
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentDonorMainBinding.inflate(inflater, container, false)
-        setupBottomNavigation()
-        loadDefaultFragment()
-        return binding.root
+        return inflater.inflate(R.layout.fragment_donor_main, container, false)
     }
 
-    private fun setupBottomNavigation() {
-        binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> childFragmentManager.commit {
-                    replace(R.id.fragmentContainer, DonorHomeFragment())
-                }
-                R.id.nav_profile -> {} // Add your Profile fragment
-                R.id.nav_settings -> {} // Add your Settings fragment
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val bottomNav = view.findViewById<BottomNavigationView>(R.id.bottom_nav_donor)
+
+        // Load default fragment
+        if (savedInstanceState == null) {
+            childFragmentManager.commit {
+                replace(R.id.fragment_container_donor, DonorHomeFragment())
             }
+        }
+
+        bottomNav.setOnItemSelectedListener { item ->
+            val newFragment = when (item.itemId) {
+                R.id.nav_home -> DonorHomeFragment()
+                R.id.nav_feed -> DonorFeedFragment()
+                R.id.nav_chat -> DonorChatFragment()
+                R.id.nav_profile -> DonorProfileFragment()
+                else -> DonorHomeFragment()
+            }
+
+            val currentFragment = childFragmentManager.findFragmentById(R.id.fragment_container_donor)
+
+            if (currentFragment?.javaClass != newFragment.javaClass) {
+                childFragmentManager.commit {
+                    replace(R.id.fragment_container_donor, newFragment)
+                }
+            }
+
             true
         }
-    }
 
-    private fun loadDefaultFragment() {
-        childFragmentManager.commit {
-            replace(R.id.fragmentContainer, DonorHomeFragment())
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

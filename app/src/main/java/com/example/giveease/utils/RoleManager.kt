@@ -5,11 +5,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
 object RoleManager {
-    private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
 
     suspend fun getCurrentUserRole(): String? {
-        val uid = auth.currentUser?.uid ?: return null
+        val auth = FirebaseAuth.getInstance()
+        val db = FirebaseFirestore.getInstance()
+
+        val currentUser = auth.currentUser ?: return null
+        val uid = currentUser.uid
+
+        if (uid.isBlank()) return null // Extra safety
+
         val snapshot = db.collection("users").document(uid).get().await()
         return snapshot.getString("role")
     }

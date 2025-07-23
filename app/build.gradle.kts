@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -28,12 +29,14 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+        }
     }
 
     buildFeatures {
@@ -50,6 +53,7 @@ dependencies {
     implementation(libs.jetbrains.kotlinx.coroutines.play.services.v164)
 
     implementation(libs.material)
+    implementation(platform(libs.firebase.bom))
 
     // Firebase
     implementation(libs.firebase.auth.ktx)
@@ -58,6 +62,7 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation("com.google.android.material:material:1.12.0")
 
     // Optional: Firebase crash reporting
     implementation(libs.firebase.crashlytics.buildtools)

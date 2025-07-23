@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.example.giveease.donor.DonorMainFragment
 import com.example.giveease.ngo.NgoMainFragment
 import com.example.giveease.admin.AdminMainFragment
+import com.example.giveease.auth.LoginFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,7 +21,8 @@ class MainActivity : AppCompatActivity() {
             "donor" -> DonorMainFragment()
             "ngo" -> NgoMainFragment()
             "admin" -> AdminMainFragment()
-            else -> DonorMainFragment() // default fallback
+            "login" -> LoginFragment()
+            else -> LoginFragment()
         }
 
         supportFragmentManager.beginTransaction()

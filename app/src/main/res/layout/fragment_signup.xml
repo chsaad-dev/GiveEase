@@ -18,16 +18,28 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome Back"
+            android:text="Create Account"
             android:textAppearance="?attr/textAppearanceHeadlineSmall"
             android:textColor="@color/primary_blue"
             android:layout_gravity="center"/>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:hint="Full Name"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:hint="Email"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEmail"
@@ -37,10 +49,10 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:hint="Password"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPassword"
@@ -49,27 +61,49 @@
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <RadioGroup
+            android:id="@+id/rgRole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/rbDonor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Donor"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbNgo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NGO" />
+        </RadioGroup>
+
+
         <CheckBox
-            android:id="@+id/cbTerms"
+            android:id="@+id/cbAgree"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="I agree to Terms &amp; Conditions and Privacy Policy"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="Sign Up"
             style="@style/Widget.Material3.Button"
             android:backgroundTint="@color/primary_blue"
             android:textColor="@color/white"
             android:layout_marginTop="12dp"/>
 
         <TextView
-            android:id="@+id/tvSignupLink"
+            android:id="@+id/tvLoginLink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Don't have an account? Sign up"
+            android:text="Already have an account? Login"
             android:textColor="@color/primary_blue"
             android:layout_gravity="center"
             android:layout_marginTop="12dp"/>
