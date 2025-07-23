@@ -4,55 +4,59 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="12dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/outline"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="12dp">
 
         <ImageView
             android:id="@+id/imgCampaign"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="140dp"
             android:scaleType="centerCrop"
-            android:src="@android:drawable/ic_menu_gallery"
-            />
+            android:src="@drawable/sample_compaign1"
+            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:id="@+id/tvCampaignTitle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Food Drive by Saylani"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:paddingTop="8dp"/>
+            android:text="Flood Relief Fund"
+            android:textAppearance="@style/TextAppearance.Material3.TitleSmall"/>
 
         <TextView
             android:id="@+id/tvCampaignDesc"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Help us feed 1000+ people this month."
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:paddingTop="4dp"/>
+            android:text="Help with shelter and food."
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:layout_marginTop="2dp"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="12dp"
-            android:progress="60"
-            android:progressTint="@color/primary"/>
+            android:layout_height="10dp"
+            android:progress="65"
+            android:progressTint="@color/progress"
+            android:layout_marginTop="8dp"/>
 
         <Button
             android:id="@+id/btnDonate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Donate Now"
+            android:text="Donate"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:textSize="12sp"
+            android:minHeight="32dp"
             android:layout_gravity="end"
-            style="@style/Widget.Material3.Button"
             android:layout_marginTop="8dp"/>
-
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+
