@@ -1,5 +1,6 @@
 [versions]
 agp = "8.11.1"
+firebaseBom = "34.0.0"
 jetbrainsKotlinxCoroutinesPlayServices = "1.10.2"
 kotlin = "2.2.0"
 coreKtx = "1.16.0"
@@ -22,6 +23,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 jetbrains-kotlinx-coroutines-play-services-v164 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "jetbrainsKotlinxCoroutinesPlayServices" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 

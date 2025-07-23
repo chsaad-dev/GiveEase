@@ -7,4 +7,49 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="primary_blue">#1976D2</color>
+    <color name="primary_blue_dark">#1565C0</color>
+    <color name="light_gray">#F5F5F5</color>
+
+<!-- Primary Theme Colors -->
+<color name="primary">#4CAF50</color> <!-- Soft green -->
+<color name="onPrimary">#FFFFFF</color>
+<color name="primaryContainer">#E8F5E9</color>
+<color name="onPrimaryContainer">#1B5E20</color>
+
+<!-- Secondary Accent -->
+<color name="secondary">#03A9F4</color>
+<color name="onSecondary">#FFFFFF</color>
+
+<!-- Background / Surface -->
+<color name="background">#FAFAFA</color>
+<color name="surface">#FFFFFF</color>
+<color name="onSurface">#212121</color>
+
+<!-- CardView / Shadow -->
+<color name="cardShadow">#33000000</color> <!-- 20% Black -->
+
+<!-- Outline -->
+<color name="outline">#BDBDBD</color>
+
+<!-- Texts -->
+<color name="textPrimary">#212121</color>
+<color name="textSecondary">#757575</color>
+
+<!-- Status Colors -->
+<color name="success">#4CAF50</color>
+<color name="warning">#FF9800</color>
+<color name="error">#F44336</color>
+<color name="info">#2196F3</color>
+
+<!-- Progress Bar -->
+<color name="progress">#66BB6A</color>
+
+<!-- Chat Bubble BG (optional) -->
+<color name="chatBubbleSender">#E0F2F1</color>
+<color name="chatBubbleReceiver">#FFFFFF</color>
+
+<!-- Bottom Navigation -->
+<color name="navSelected">#4CAF50</color>
+<color name="navUnselected">#757575</color>
 </resources>

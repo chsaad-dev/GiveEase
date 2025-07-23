@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imgCampaign"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_menu_gallery"
+            />
+
+        <TextView
+            android:id="@+id/tvCampaignTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Food Drive by Saylani"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:paddingTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvCampaignDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Help us feed 1000+ people this month."
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:paddingTop="4dp"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:progress="60"
+            android:progressTint="@color/primary"/>
+
+        <Button
+            android:id="@+id/btnDonate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Donate Now"
+            android:layout_gravity="end"
+            style="@style/Widget.Material3.Button"
+            android:layout_marginTop="8dp"/>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
