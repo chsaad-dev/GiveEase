@@ -22,8 +22,8 @@ class DonorProfileFragment : Fragment() {
         }
 
         binding.btnGoToSettings.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, DonorSettingsFragment())
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_donor, DonorSettingsFragment())
                 .addToBackStack(null)
                 .commit()
         }
