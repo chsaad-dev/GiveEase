@@ -4,95 +4,143 @@
     android:id="@+id/scrollViewProfile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="0dp"
     android:background="@color/background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:padding="0dp">
 
-        <!-- Profile Card -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- Enhanced Profile Card with Banner -->
+        <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_profile_banner">
+
+            <ImageView
+                android:id="@+id/imgProfile"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/circle_background"
+                android:src="@drawable/sample_profile"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"
+                android:elevation="5dp" />
+
+            <!-- Edit Profile Button -->
+            <ImageButton
+                android:id="@+id/btnEditProfile"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="16dp"
+                android:background="@drawable/rounded_button_bg"
+                android:src="@drawable/ic_edit"
+                app:tint="@color/secondary"
+                android:contentDescription="Edit Profile" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvDonorName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
+            android:text="Muhammad Saad"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:layout_marginTop="4dp"
+            android:textStyle="bold"
+            android:textColor="@color/secondary" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvDonorEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="saad@example.com"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/secondary" />
+
+        <TextView
+            android:id="@+id/tvRole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Role: Donor"
+            android:textColor="@color/secondary"
+            android:layout_marginTop="2dp"
+            android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
+
+        <!-- Badges/Tags Section -->
+        <LinearLayout
+            android:id="@+id/llBadges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:padding="20dp">
+                android:text="⭐ Top Donor"
+                android:padding="6dp"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:background="@drawable/bg_badge"
+                android:textColor="@color/secondary"
+                android:layout_marginEnd="8dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🥇 5 Years"
+                android:padding="6dp"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:background="@drawable/bg_badge"
+                android:textColor="@color/secondary"/>
+        </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/imgProfile"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/sample_profile"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/circle_background"
-                    android:clipToOutline="true"
-                    android:elevation="2dp" />
-
-                <TextView
-                    android:id="@+id/tvDonorName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Muhammad Saad"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                    android:layout_marginTop="12dp" />
-
-                <TextView
-                    android:id="@+id/tvDonorEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="saad@example.com"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
-
-                <TextView
-                    android:id="@+id/tvRole"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Role: Donor"
-                    android:textColor="@color/primary"
-                    android:layout_marginTop="4dp"
-                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Stats Section -->
+        <!-- Stats Section with icons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="14dp">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                android:layout_marginEnd="8dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="12dp">
+                    android:padding="14dp">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_donation"
+                        app:tint="@color/secondary" />
 
                     <TextView
                         android:id="@+id/tvTotalDonations"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="15"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -106,23 +154,32 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                android:layout_marginStart="8dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="12dp">
+                    android:padding="14dp">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_ngo"
+                        app:tint="@color/secondary" />
 
                     <TextView
                         android:id="@+id/tvNGOsSupported"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="6"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -133,49 +190,113 @@
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <!-- History Preview Card -->
+        <!-- Progress Bar Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Goal Progress"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:layout_marginEnd="10dp"/>
+
+            <ProgressBar
+                android:id="@+id/progressDonationGoal"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="170dp"
+                android:layout_height="18dp"
+                android:progress="70"
+                android:max="100"
+                android:progressTint="@color/primary"
+                android:backgroundTint="@color/secondary"/>
+            <TextView
+                android:id="@+id/tvProgressPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="70%"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="14dp"
             app:cardElevation="2dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="14dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="18dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Recent Donations"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                    android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                    android:textStyle="bold"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="• Food for All (Jul 10, 2025)\n• Health Help (Jun 26, 2025)"
-                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                    android:layout_marginTop="4dp" />
+                    android:orientation="vertical"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="• Food for All  |  Jul 10, 2025  |  Rs 15000"
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        android:textColor="@color/secondary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="• Health Help  |  Jun 26, 2025  |  RS 1500"
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        android:textColor="@color/secondary"/>
+                </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Buttons -->
-        <Button
-            android:id="@+id/btnDonationHistory"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="View Full Donation History"
-            style="@style/Widget.Material3.Button"
-            android:layout_marginBottom="8dp" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="2"
+            android:layout_marginBottom="12dp">
 
-        <Button
-            android:id="@+id/btnGoToSettings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Settings"
-            style="@style/Widget.Material3.Button" />
+            <Button
+                android:id="@+id/btnDonationHistory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Donation History"
+                style="@style/Widget.Material3.Button"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:drawableStart="@drawable/ic_history"
+                android:drawablePadding="8dp"/>
+
+            <Button
+                android:id="@+id/btnGoToSettings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Settings"
+                style="@style/Widget.Material3.Button"
+                android:drawableStart="@drawable/ic_settings"
+                android:layout_marginEnd="8dp"
+                android:drawablePadding="8dp"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
