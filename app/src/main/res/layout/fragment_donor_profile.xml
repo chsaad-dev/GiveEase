@@ -4,19 +4,20 @@
     android:id="@+id/scrollViewProfile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/background">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:spacing="12dp">
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
         <!-- Profile Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp">
 
@@ -24,57 +25,157 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:padding="20dp">
 
                 <ImageView
                     android:id="@+id/imgProfile"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:src="@drawable/sample_profile"
                     android:scaleType="centerCrop"
-                    android:layout_marginBottom="12dp"/>
+                    android:background="@drawable/circle_background"
+                    android:clipToOutline="true"
+                    android:elevation="2dp" />
 
                 <TextView
                     android:id="@+id/tvDonorName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Muhammad Saad"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:layout_marginTop="12dp" />
 
                 <TextView
                     android:id="@+id/tvDonorEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="saad@example.com"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
                 <TextView
                     android:id="@+id/tvRole"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Role: Donor"
-                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                     android:textColor="@color/primary"
-                    android:layout_marginTop="4dp"/>
+                    android:layout_marginTop="4dp"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Donation History Button -->
+        <!-- Stats Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                android:layout_marginEnd="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tvTotalDonations"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="15"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Donations"
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                android:layout_marginStart="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tvNGOsSupported"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="6"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="NGOs Supported"
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- History Preview Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recent Donations"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="• Food for All (Jul 10, 2025)\n• Health Help (Jun 26, 2025)"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Buttons -->
         <Button
             android:id="@+id/btnDonationHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Donation History"
-            style="@style/Widget.Material3.Button"/>
+            android:text="View Full Donation History"
+            style="@style/Widget.Material3.Button"
+            android:layout_marginBottom="8dp" />
 
-        <!-- Settings Button -->
         <Button
             android:id="@+id/btnGoToSettings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Settings"
-            style="@style/Widget.Material3.Button"
-            android:layout_marginTop="8dp"/>
+            style="@style/Widget.Material3.Button" />
     </LinearLayout>
 </ScrollView>
