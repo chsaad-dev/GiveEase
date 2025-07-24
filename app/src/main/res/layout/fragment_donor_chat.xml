@@ -11,6 +11,15 @@
         android:padding="16dp"
         tools:context=".donor.DonorChatFragment">
 
+        <TextView
+            android:id="@+id/tvAppTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GiveEase"
+            android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="12dp"/>
+
         <!-- Title -->
         <TextView
             android:id="@+id/tvChatTitle"
@@ -18,8 +27,8 @@
             android:layout_height="wrap_content"
             android:text="Chats"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-            android:textColor="@color/primary_blue"
-            android:layout_marginBottom="12dp" />
+            android:textColor="@color/black"
+            android:layout_marginBottom="14dp" />
 
         <!-- RecyclerView for chats -->
         <androidx.recyclerview.widget.RecyclerView

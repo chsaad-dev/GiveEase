@@ -2,14 +2,13 @@ package com.example.giveease
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.giveease.auth.LoginFragment
 import com.example.giveease.utils.RoleManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
 
 
 class SplashActivity : AppCompatActivity() {
