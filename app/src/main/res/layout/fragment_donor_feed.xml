@@ -5,27 +5,113 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:padding="16dp">
+    android:padding="0dp">
 
-    <!-- App Title -->
-    <TextView
-        android:id="@+id/tvAppTitle"
-        android:layout_width="wrap_content"
+    <!-- App bar with optional avatar -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="GiveEase"
-        android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
-        android:textColor="@color/primary_blue"
-        android:layout_marginBottom="12dp"/>
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="10dp"
+        android:gravity="center_vertical">
 
-    <!-- Section Title -->
-    <TextView
-        android:id="@+id/tvSectionTitle"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tvAppTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="GiveEase"
+            android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+            android:textColor="@color/primary_blue"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/imgUserAvatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/sample_profile"
+            android:background="@drawable/circle_background"
+            android:scaleType="centerCrop"
+            android:layout_marginStart="8dp"
+            android:contentDescription="User profile" />
+    </LinearLayout>
+
+    <!-- Quick Filters/Chips -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Donation Campaigns"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:textColor="@color/onSurface"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chipAll"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:text="All"
+                android:checked="true"
+                android:layout_marginEnd="8dp"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chipHealth"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:text="Health"
+                android:layout_marginEnd="8dp"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chipFood"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:text="Food"
+                android:layout_marginEnd="8dp"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chipEducation"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:text="Education"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Section Title & Subtitle -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:id="@+id/tvSectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Donation Campaigns"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="@color/onSurface"
+            android:layout_marginBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/tvSectionSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Find a cause and make a difference today!"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:textColor="@color/black"/>
+    </LinearLayout>
 
     <!-- Campaign Feed -->
     <androidx.recyclerview.widget.RecyclerView
@@ -35,6 +121,8 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:scrollbars="vertical"
-        android:paddingBottom="8dp"/>
-
+        android:paddingTop="4dp"
+        android:paddingBottom="12dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"/>
 </LinearLayout>
