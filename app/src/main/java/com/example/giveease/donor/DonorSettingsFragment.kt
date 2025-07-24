@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.giveease.R
 import com.example.giveease.databinding.FragmentDonorSettingsBinding
 
 class DonorSettingsFragment : Fragment() {
@@ -11,6 +12,10 @@ class DonorSettingsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentDonorSettingsBinding.inflate(inflater, container, false)
+
+        binding.btnBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
 
         binding.cardEditProfile.setOnClickListener {
             Toast.makeText(requireContext(), "Edit Profile clicked", Toast.LENGTH_SHORT).show()
@@ -26,7 +31,7 @@ class DonorSettingsFragment : Fragment() {
 
         binding.btnLogout.setOnClickListener {
             Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
-            // TODO: Handle actual Firebase logout and navigation
+            // TODO: Handle Firebase logout and navigation
         }
 
         return binding.root
