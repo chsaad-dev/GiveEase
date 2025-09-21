@@ -125,13 +125,13 @@
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
-                    android:layout_marginBottom="7dp" />
+                    android:layout_marginBottom="5dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="8dp">
 
                     <!-- Donor Role Card -->
                     <com.google.android.material.card.MaterialCardView
@@ -152,15 +152,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="16dp"
+                            android:padding="12dp"
                             android:gravity="center">
 
                             <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
                                 android:src="@drawable/ic_heart"
                                 app:tint="@android:color/white"
-                                android:layout_marginBottom="8dp" />
+                                android:layout_marginBottom="2dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -168,14 +168,14 @@
                                 android:text="Donor"
                                 android:textColor="@android:color/white"
                                 android:textStyle="bold"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Make donations"
                                 android:textColor="@android:color/white"
-                                android:textSize="12sp"
+                                android:textSize="10sp"
                                 android:alpha="0.8" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -199,15 +199,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="16dp"
+                            android:padding="12dp"
                             android:gravity="center">
 
                             <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
                                 android:src="@drawable/ic_organization"
                                 app:tint="@color/secondary"
-                                android:layout_marginBottom="8dp" />
+                                android:layout_marginBottom="2dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -215,7 +215,7 @@
                                 android:text="NGO"
                                 android:textColor="@color/secondary"
                                 android:textStyle="bold"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -231,51 +231,64 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:orientation="vertical"
                     android:layout_marginBottom="1dp">
 
-                    <CheckBox
-                        android:id="@+id/cbAgree"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/secondary" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="I agree to "
-                        android:textSize="12sp"
-                        android:textColor="#666666" />
+                        <CheckBox
+                            android:id="@+id/cbAgree"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/secondary" />
 
-                    <TextView
-                        android:id="@+id/tvTermsLink"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Terms &amp; Conditions"
-                        android:textSize="12sp"
-                        android:textColor="@color/secondary"
-                        android:textStyle="bold"
-                        android:clickable="true"
-                        android:focusable="true" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="I agree to "
+                            android:textSize="14sp"
+                            android:textColor="#666666" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" and "
-                        android:textSize="12sp"
-                        android:textColor="#666666" />
+                        <TextView
+                            android:id="@+id/tvTermsLink"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Terms &amp; Conditions"
+                            android:textSize="14sp"
+                            android:textColor="@color/secondary"
+                            android:textStyle="bold"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tvPrivacyLink"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Privacy Policy"
-                        android:textSize="12sp"
-                        android:textColor="@color/secondary"
-                        android:textStyle="bold"
-                        android:clickable="true"
-                        android:focusable="true" />
+                        android:orientation="horizontal"
+                        android:layout_marginStart="45dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="and "
+                            android:textSize="14sp"
+                            android:textColor="#666666" />
+
+                        <TextView
+                            android:id="@+id/tvPrivacyLink"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Privacy Policy"
+                            android:textSize="14sp"
+                            android:textColor="@color/secondary"
+                            android:textStyle="bold"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <!-- Sign Up Button -->
