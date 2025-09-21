@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.giveease.MainActivity
+import com.example.giveease.R
 import com.example.giveease.databinding.FragmentDonorSettingsBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -23,7 +24,10 @@ class DonorSettingsFragment : Fragment() {
         }
 
         binding.cardEditProfile.setOnClickListener {
-            Toast.makeText(requireContext(), "Edit Profile clicked", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_donor, EditProfileFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.cardChangePassword.setOnClickListener {

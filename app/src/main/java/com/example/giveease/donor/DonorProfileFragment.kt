@@ -7,9 +7,13 @@ import com.example.giveease.R
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.giveease.databinding.FragmentDonorProfileBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class DonorProfileFragment : Fragment() {
     private lateinit var binding: FragmentDonorProfileBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -18,36 +22,53 @@ class DonorProfileFragment : Fragment() {
     ): View {
         binding = FragmentDonorProfileBinding.inflate(inflater, container, false)
 
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+
         setupProfile()
         setupListeners()
         setupProgressBar()
+        loadUserData()
+
         return binding.root
+    }
+
+    private fun loadUserData() {
+        val userId = auth.currentUser?.uid ?: return
+
+        firestore.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    binding.apply {
+                        tvDonorName.text = document.getString("name") ?: "User Name"
+                        tvDonorEmail.text = document.getString("email") ?: auth.currentUser?.email
+
+                        // Load other profile data
+                        // You can add more fields as needed
+                    }
+                }
+            }
+            .addOnFailureListener {
+                // Handle error - maybe show default values
+                binding.apply {
+                    tvDonorName.text = auth.currentUser?.displayName ?: "User Name"
+                    tvDonorEmail.text = auth.currentUser?.email ?: "user@example.com"
+                }
+            }
     }
 
     private fun setupProfile() {
         binding.apply {
-            // Set profile information
+            // Set profile information with Firebase data or defaults
             tvProfileTitle.text = "Profile"
-            tvDonorName.text = "Muhammad Saad"
-            tvDonorEmail.text = "saad@example.com"
 
-            // Set statistics
+            // Set statistics (you can load these from Firebase)
             tvTotalDonations.text = "15"
             tvNGOsSupported.text = "6"
 
             // Set progress
             progressDonationGoal.progress = 70
             tvProgressPercent.text = "70%"
-
-            // Load profile image (assuming you're using Glide)
-            /*
-            Glide.with(requireContext())
-                .load(R.drawable.sample_profile)
-                .placeholder(R.drawable.profile_placeholder)
-                .error(R.drawable.profile_error)
-                .circleCrop()
-                .into(imgProfile)
-            */
         }
     }
 
@@ -55,20 +76,12 @@ class DonorProfileFragment : Fragment() {
         binding.apply {
             // Edit Profile Button
             btnEditProfile.setOnClickListener {
-                Toast.makeText(
-                    requireContext(),
-                    "Edit profile coming soon",
-                    Toast.LENGTH_SHORT
-                ).show()
+                navigateToEditProfile()
             }
 
             // Profile Image Click
             imgProfile.setOnClickListener {
-                Toast.makeText(
-                    requireContext(),
-                    "Change profile picture coming soon",
-                    Toast.LENGTH_SHORT
-                ).show()
+                navigateToEditProfile()
             }
 
             // Donation History Button
@@ -99,6 +112,13 @@ class DonorProfileFragment : Fragment() {
             progress = 70
             max = 100
         }
+    }
+
+    private fun navigateToEditProfile() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_donor, EditProfileFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun navigateToSettings() {
