@@ -25,7 +25,7 @@ class DonorSettingsFragment : Fragment() {
 
         binding.cardEditProfile.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_donor, EditProfileFragment())
+                .replace(R.id.fragment_container_donor, ChangeEmailFragment())
                 .addToBackStack(null)
                 .commit()
         }
