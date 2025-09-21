@@ -1,4 +1,4 @@
-package com.example.giveease.ui.auth
+package com.example.giveease.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
