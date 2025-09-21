@@ -31,7 +31,10 @@ class DonorSettingsFragment : Fragment() {
         }
 
         binding.cardChangePassword.setOnClickListener {
-            Toast.makeText(requireContext(), "Change Password clicked", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_donor, ChangePasswordFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.cardFaq.setOnClickListener {
