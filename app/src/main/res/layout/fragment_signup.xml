@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Header Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,7 +20,6 @@
             android:layout_marginTop="1dp"
             android:layout_marginBottom="6dp">
 
-            <!-- App Logo/Icon -->
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -47,7 +45,6 @@
                 android:gravity="center" />
         </LinearLayout>
 
-        <!-- Form Container -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,7 +59,6 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <!-- Full Name Input -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -79,7 +75,6 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Email Input -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEmail"
                     android:layout_width="match_parent"
@@ -97,7 +92,6 @@
                         android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Password Input -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilPassword"
                     android:layout_width="match_parent"
@@ -117,7 +111,6 @@
                         android:inputType="textPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Role Selection -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -133,7 +126,6 @@
                     android:orientation="horizontal"
                     android:layout_marginBottom="8dp">
 
-                    <!-- Donor Role Card -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardDonor"
                         android:layout_width="0dp"
@@ -180,7 +172,6 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- NGO Role Card -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardNGO"
                         android:layout_width="0dp"
@@ -227,7 +218,6 @@
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
-                <!-- Terms and Conditions -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -291,7 +281,6 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Sign Up Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSignup"
                     android:layout_width="match_parent"
@@ -305,7 +294,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Login Link -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

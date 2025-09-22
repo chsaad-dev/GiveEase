@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -83,7 +82,6 @@
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Chat Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -96,7 +94,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!-- Date Header -->
             <TextView
                 android:id="@+id/tvDateHeader"
                 android:layout_width="wrap_content"
@@ -110,7 +107,6 @@
                 android:textColor="#757575"
                 android:textSize="12sp" />
 
-            <!-- Messages RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewMessages"
                 android:layout_width="match_parent"
@@ -123,7 +119,6 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Message Input Area -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
