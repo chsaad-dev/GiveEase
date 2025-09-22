@@ -51,7 +51,6 @@ class ChangePasswordFragment : Fragment() {
                 changePassword()
             }
 
-            // Real-time password validation
             etNewPassword.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -72,7 +71,6 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun setupPasswordStrengthChecker() {
-        // Initialize requirement indicators
         updateRequirementIndicator(binding.icLength, binding.tvLength, false)
         updateRequirementIndicator(binding.icUppercase, binding.tvUppercase, false)
         updateRequirementIndicator(binding.icNumber, binding.tvNumber, false)
@@ -156,13 +154,11 @@ class ChangePasswordFragment : Fragment() {
             return
         }
 
-        // Re-authenticate user with current password
         val credential = EmailAuthProvider.getCredential(user.email!!, currentPassword)
 
         user.reauthenticate(credential)
             .addOnCompleteListener { reAuthTask ->
                 if (reAuthTask.isSuccessful) {
-                    // Update password
                     user.updatePassword(newPassword)
                         .addOnCompleteListener { updateTask ->
                             loadingDialog.dismiss()
@@ -189,7 +185,6 @@ class ChangePasswordFragment : Fragment() {
             val newPassword = etNewPassword.text.toString()
             val confirmPassword = etConfirmPassword.text.toString()
 
-            // Clear previous errors
             tilCurrentPassword.error = null
             tilNewPassword.error = null
             tilConfirmPassword.error = null

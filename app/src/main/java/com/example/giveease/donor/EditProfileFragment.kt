@@ -88,10 +88,8 @@ class EditProfileFragment : Fragment() {
 
             btnChangePhoto.setOnClickListener {
                 Toast.makeText(requireContext(), "Photo upload feature coming soon", Toast.LENGTH_SHORT).show()
-                // Temporarily disabled until Firebase Storage is available
             }
 
-            // Track changes
             etFullName.setOnFocusChangeListener { _, _ -> isDataChanged = true }
             etPhone.setOnFocusChangeListener { _, _ -> isDataChanged = true }
             etCity.setOnFocusChangeListener { _, _ -> isDataChanged = true }
@@ -121,11 +119,8 @@ class EditProfileFragment : Fragment() {
                         switchEmailNotifications.isChecked = document.getBoolean("emailNotifications") ?: true
                         switchPushNotifications.isChecked = document.getBoolean("pushNotifications") ?: true
 
-                        // Load profile image if available
                         val profileImageUrl = document.getString("profileImageUrl")
                         if (!profileImageUrl.isNullOrEmpty()) {
-                            // Load image using Glide or Picasso
-                            // For now, keeping default image
                         }
                     }
                 }
@@ -153,7 +148,6 @@ class EditProfileFragment : Fragment() {
             "updatedAt" to System.currentTimeMillis()
         )
 
-        // Save profile without image upload since Firebase Storage requires Blaze plan
         updateUserData(userId, userData)
     }
 

@@ -43,13 +43,10 @@ class DonorProfileFragment : Fragment() {
                         tvDonorName.text = document.getString("name") ?: "User Name"
                         tvDonorEmail.text = document.getString("email") ?: auth.currentUser?.email
 
-                        // Load other profile data
-                        // You can add more fields as needed
                     }
                 }
             }
             .addOnFailureListener {
-                // Handle error - maybe show default values
                 binding.apply {
                     tvDonorName.text = auth.currentUser?.displayName ?: "User Name"
                     tvDonorEmail.text = auth.currentUser?.email ?: "user@example.com"
@@ -59,14 +56,9 @@ class DonorProfileFragment : Fragment() {
 
     private fun setupProfile() {
         binding.apply {
-            // Set profile information with Firebase data or defaults
             tvProfileTitle.text = "Profile"
-
-            // Set statistics (you can load these from Firebase)
             tvTotalDonations.text = "15"
             tvNGOsSupported.text = "6"
-
-            // Set progress
             progressDonationGoal.progress = 70
             tvProgressPercent.text = "70%"
         }
@@ -74,17 +66,12 @@ class DonorProfileFragment : Fragment() {
 
     private fun setupListeners() {
         binding.apply {
-            // Edit Profile Button
             btnEditProfile.setOnClickListener {
                 navigateToEditProfile()
             }
-
-            // Profile Image Click
             imgProfile.setOnClickListener {
                 navigateToEditProfile()
             }
-
-            // Donation History Button
             btnDonationHistory.setOnClickListener {
                 Toast.makeText(
                     requireContext(),
@@ -92,8 +79,6 @@ class DonorProfileFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-
-            // Settings Button
             btnGoToSettings.setOnClickListener {
                 navigateToSettings()
             }
@@ -102,13 +87,10 @@ class DonorProfileFragment : Fragment() {
 
     private fun setupProgressBar() {
         binding.progressDonationGoal.apply {
-            // Set progress bar color
             progressDrawable?.setColorFilter(
                 ContextCompat.getColor(requireContext(), R.color.primary),
                 android.graphics.PorterDuff.Mode.SRC_IN
             )
-
-            // Set progress
             progress = 70
             max = 100
         }
@@ -143,7 +125,6 @@ class DonorProfileFragment : Fragment() {
         )
     }
 
-    // Data class for donation items
     data class DonationItem(
         val ngoName: String,
         val date: String,

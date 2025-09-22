@@ -13,7 +13,7 @@ object RoleManager {
         val currentUser = auth.currentUser ?: return null
         val uid = currentUser.uid
 
-        if (uid.isBlank()) return null // Extra safety
+        if (uid.isBlank()) return null
 
         val snapshot = db.collection("users").document(uid).get().await()
         return snapshot.getString("role")

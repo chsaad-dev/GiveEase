@@ -120,7 +120,6 @@ class DonorSettingsFragment : Fragment() {
             .setTitle("Contact Support")
             .setMessage("Need help? Choose how you'd like to contact our support team:")
             .setPositiveButton("Email") { _, _ ->
-                // Open email app
                 val intent = Intent(Intent.ACTION_SEND).apply {
                     type = "message/rfc822"
                     putExtra(Intent.EXTRA_EMAIL, arrayOf("support@giveease.com"))
@@ -146,7 +145,6 @@ class DonorSettingsFragment : Fragment() {
             }
             .addOnFailureListener {
                 Toast.makeText(requireContext(), "Failed to update notification preference", Toast.LENGTH_SHORT).show()
-                // Revert switch state
                 binding.switchNotifications.isChecked = !enabled
             }
     }
@@ -220,18 +218,15 @@ class DonorSettingsFragment : Fragment() {
 
         loadingDialog.show()
 
-        // Re-authenticate user before deletion
         val credential = EmailAuthProvider.getCredential(user.email!!, password)
 
         user.reauthenticate(credential)
             .addOnCompleteListener { reAuthTask ->
                 if (reAuthTask.isSuccessful) {
-                    // Delete user data from Firestore first
                     val uid = user.uid
                     firestore.collection("users").document(uid).delete()
                         .addOnCompleteListener { deleteDataTask ->
                             if (deleteDataTask.isSuccessful) {
-                                // Delete user authentication account
                                 user.delete()
                                     .addOnCompleteListener { deleteAccountTask ->
                                         loadingDialog.dismiss()

@@ -58,7 +58,6 @@ class ChangeEmailFragment : Fragment() {
                 initiateEmailChange()
             }
 
-            // Real-time email validation
             etNewEmail.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -98,13 +97,11 @@ class ChangeEmailFragment : Fragment() {
 
         loadingDialog.show()
 
-        // Re-authenticate user with current password
         val credential = EmailAuthProvider.getCredential(currentUser.email!!, currentPassword)
 
         currentUser.reauthenticate(credential)
             .addOnCompleteListener { reAuthTask ->
                 if (reAuthTask.isSuccessful) {
-                    // Send verification email to new address
                     currentUser.verifyBeforeUpdateEmail(newEmail)
                         .addOnCompleteListener { verifyTask ->
                             loadingDialog.dismiss()
@@ -134,7 +131,6 @@ class ChangeEmailFragment : Fragment() {
             val newEmail = etNewEmail.text.toString().trim()
             val currentEmail = auth.currentUser?.email
 
-            // Clear previous errors
             tilCurrentPassword.error = null
             tilNewEmail.error = null
 
@@ -171,7 +167,6 @@ class ChangeEmailFragment : Fragment() {
             .setTitle("Verification Email Sent")
             .setMessage("We've sent a verification link to $newEmail\n\nPlease check your email and click the verification link to complete the email change.\n\nAfter verification, you'll need to sign in again with your new email address.")
             .setPositiveButton("OK") { _, _ ->
-                // Navigate back to settings
                 parentFragmentManager.popBackStack()
             }
             .setNeutralButton("Resend Email") { _, _ ->
