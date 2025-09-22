@@ -29,6 +29,7 @@ class DonorProfileFragment : Fragment() {
         setupListeners()
         setupProgressBar()
         loadUserData()
+        loadDonationStats()
 
         return binding.root
     }
@@ -42,7 +43,11 @@ class DonorProfileFragment : Fragment() {
                     binding.apply {
                         tvDonorName.text = document.getString("name") ?: "User Name"
                         tvDonorEmail.text = document.getString("email") ?: auth.currentUser?.email
-
+                    }
+                } else {
+                    binding.apply {
+                        tvDonorName.text = auth.currentUser?.displayName ?: "User Name"
+                        tvDonorEmail.text = auth.currentUser?.email ?: "user@example.com"
                     }
                 }
             }
@@ -54,31 +59,73 @@ class DonorProfileFragment : Fragment() {
             }
     }
 
-    private fun setupProfile() {
+    private fun loadDonationStats() {
+        val userId = auth.currentUser?.uid ?: return
+
+        // Load donation statistics from Firestore
+        firestore.collection("donations")
+            .whereEqualTo("donorId", userId)
+            .get()
+            .addOnSuccessListener { documents ->
+                val totalDonations = documents.size()
+                val totalAmount = documents.sumOf { doc ->
+                    doc.getDouble("amount") ?: 0.0
+                }.toInt()
+
+                val uniqueNGOs = documents.mapNotNull { doc ->
+                    doc.getString("ngoId")
+                }.distinct().size
+
+                // Estimate people helped (rough calculation: 1 person per Rs 500)
+                val peopleHelped = (totalAmount / 500).coerceAtLeast(0)
+
+                binding.apply {
+                    tvTotalDonations.text = totalDonations.toString()
+                    tvNGOsSupported.text = uniqueNGOs.toString()
+                    tvTotalAmount.text = "Rs ${String.format("%,d", totalAmount)}"
+                    tvPeopleHelped.text = peopleHelped.toString()
+                }
+
+                val monthlyGoal = 10000
+                val monthlyProgress = ((totalAmount % monthlyGoal) * 100 / monthlyGoal).coerceAtMost(100)
+                binding.progressDonationGoal.progress = monthlyProgress
+                binding.tvProgressPercent.text = "$monthlyProgress%"
+            }
+            .addOnFailureListener {
+                setupDummyStats()
+            }
+    }
+
+    private fun setupDummyStats() {
         binding.apply {
-            tvProfileTitle.text = "Profile"
             tvTotalDonations.text = "15"
             tvNGOsSupported.text = "6"
+            tvTotalAmount.text = "Rs 45,500"
+            tvPeopleHelped.text = "127"
             progressDonationGoal.progress = 70
             tvProgressPercent.text = "70%"
         }
     }
 
+    private fun setupProfile() {
+        binding.apply {
+        }
+    }
+
     private fun setupListeners() {
         binding.apply {
-            btnEditProfile.setOnClickListener {
-                navigateToEditProfile()
-            }
             imgProfile.setOnClickListener {
-                navigateToEditProfile()
-            }
-            btnDonationHistory.setOnClickListener {
                 Toast.makeText(
                     requireContext(),
-                    "Donation history coming soon",
+                    "Profile picture update available in Settings",
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
+//            btnDonationHistory.setOnClickListener {
+//                navigateToDonationHistory()
+//            }
+
             btnGoToSettings.setOnClickListener {
                 navigateToSettings()
             }
@@ -88,20 +135,19 @@ class DonorProfileFragment : Fragment() {
     private fun setupProgressBar() {
         binding.progressDonationGoal.apply {
             progressDrawable?.setColorFilter(
-                ContextCompat.getColor(requireContext(), R.color.primary),
+                ContextCompat.getColor(requireContext(), R.color.secondary),
                 android.graphics.PorterDuff.Mode.SRC_IN
             )
-            progress = 70
             max = 100
         }
     }
 
-    private fun navigateToEditProfile() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, EditProfileFragment())
-            .addToBackStack(null)
-            .commit()
-    }
+//    private fun navigateToDonationHistory() {
+//        parentFragmentManager.beginTransaction()
+//            .replace(R.id.fragment_container_donor, DonationHistoryFragment())
+//            .addToBackStack(null)
+//            .commit()
+//    }
 
     private fun navigateToSettings() {
         parentFragmentManager.beginTransaction()
@@ -110,25 +156,19 @@ class DonorProfileFragment : Fragment() {
             .commit()
     }
 
-    private fun getDummyDonationData(): List<DonationItem> {
-        return listOf(
-            DonationItem(
-                ngoName = "Food for All",
-                date = "Jul 10, 2025",
-                amount = "Rs 15,000"
-            ),
-            DonationItem(
-                ngoName = "Health Help",
-                date = "Jun 26, 2025",
-                amount = "Rs 1,500"
-            )
-        )
-    }
+    // Data classes for future use
+    data class DonationStats(
+        val totalDonations: Int,
+        val totalAmount: Double,
+        val ngosSupported: Int,
+        val peopleHelped: Int
+    )
 
-    data class DonationItem(
-        val ngoName: String,
-        val date: String,
-        val amount: String
+    data class Achievement(
+        val title: String,
+        val description: String,
+        val icon: String,
+        val dateEarned: Long
     )
 
     companion object {
