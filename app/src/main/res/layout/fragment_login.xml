@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Header Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,7 +20,6 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp">
 
-            <!-- App Logo/Icon -->
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -47,7 +45,6 @@
                 android:gravity="center" />
         </LinearLayout>
 
-        <!-- Form Container -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,7 +59,6 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
-                <!-- Email Input -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEmail"
                     android:layout_width="match_parent"
@@ -80,7 +76,6 @@
                         android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Password Input -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilPassword"
                     android:layout_width="match_parent"
@@ -99,9 +94,6 @@
                         android:inputType="textPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Forgot Password Link -->
-
-                <!-- Terms and Conditions -->
                 <TextView
                     android:id="@+id/tvForgotPassword"
                     android:layout_width="wrap_content"
@@ -180,7 +172,6 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Login Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
@@ -195,7 +186,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Divider -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -224,7 +214,6 @@
                 android:background="#E0E0E0" />
         </LinearLayout>
 
-        <!-- Social Login Buttons -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGoogleLogin"
             android:layout_width="match_parent"
@@ -242,7 +231,6 @@
             android:backgroundTint="@android:color/white"
             style="@style/Widget.Material3.Button.OutlinedButton" />
 
-        <!-- Sign Up Link -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -272,7 +260,6 @@
                 android:padding="8dp" />
         </LinearLayout>
 
-        <!-- Version Info -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

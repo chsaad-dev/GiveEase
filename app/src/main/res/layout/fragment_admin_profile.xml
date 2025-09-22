@@ -17,6 +17,5 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="24dp" />
 
-    <!-- Add more profile-related UI elements here -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

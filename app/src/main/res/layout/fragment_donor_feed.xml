@@ -7,7 +7,6 @@
     android:background="@color/background"
     android:padding="0dp">
 
-    <!-- App bar with optional avatar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,7 +38,6 @@
             android:contentDescription="User profile" />
     </LinearLayout>
 
-    <!-- Quick Filters/Chips -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -85,7 +83,6 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- Section Title & Subtitle -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -113,7 +110,6 @@
             android:textColor="@color/black"/>
     </LinearLayout>
 
-    <!-- Campaign Feed -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCampaigns"
         android:layout_width="match_parent"
