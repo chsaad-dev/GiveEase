@@ -62,7 +62,6 @@ class DonorProfileFragment : Fragment() {
     private fun loadDonationStats() {
         val userId = auth.currentUser?.uid ?: return
 
-        // Load donation statistics from Firestore
         firestore.collection("donations")
             .whereEqualTo("donorId", userId)
             .get()
@@ -76,7 +75,6 @@ class DonorProfileFragment : Fragment() {
                     doc.getString("ngoId")
                 }.distinct().size
 
-                // Estimate people helped (rough calculation: 1 person per Rs 500)
                 val peopleHelped = (totalAmount / 500).coerceAtLeast(0)
 
                 binding.apply {
@@ -122,14 +120,25 @@ class DonorProfileFragment : Fragment() {
                 ).show()
             }
 
-//            btnDonationHistory.setOnClickListener {
-//                navigateToDonationHistory()
-//            }
+            btnDonationHistory.setOnClickListener {
+                navigateToDonationHistory()
+            }
+
+            btnMyCampaigns.setOnClickListener {
+                navigateToCampaigns()
+            }
 
             btnGoToSettings.setOnClickListener {
                 navigateToSettings()
             }
         }
+    }
+
+    private fun navigateToCampaigns() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_donor, DonorCampaignsFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupProgressBar() {
@@ -142,12 +151,12 @@ class DonorProfileFragment : Fragment() {
         }
     }
 
-//    private fun navigateToDonationHistory() {
-//        parentFragmentManager.beginTransaction()
-//            .replace(R.id.fragment_container_donor, DonationHistoryFragment())
-//            .addToBackStack(null)
-//            .commit()
-//    }
+    private fun navigateToDonationHistory() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_donor, DonationHistoryFragment())
+            .addToBackStack(null)
+            .commit()
+    }
 
     private fun navigateToSettings() {
         parentFragmentManager.beginTransaction()
@@ -156,7 +165,6 @@ class DonorProfileFragment : Fragment() {
             .commit()
     }
 
-    // Data classes for future use
     data class DonationStats(
         val totalDonations: Int,
         val totalAmount: Double,
