@@ -39,7 +39,7 @@
                     android:id="@+id/tvDonorName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Muhammad Saad"
+                    android:text="GiveEase User"
                     android:textSize="24sp"
                     android:textColor="@android:color/white"
                     android:textStyle="bold"
@@ -126,7 +126,7 @@
                             android:id="@+id/tvTotalDonations"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="15"
+                            android:text="0"
                             android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/black"
@@ -169,7 +169,7 @@
                             android:id="@+id/tvNGOsSupported"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="6"
+                            android:text="0"
                             android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/black"
@@ -244,7 +244,7 @@
                             android:layout_width="0dp"
                             android:layout_height="8dp"
                             android:layout_weight="1"
-                            android:progress="70"
+                            android:progress="0"
                             android:progressTint="@color/secondary"
                             android:progressBackgroundTint="#E0E0E0" />
 
@@ -252,7 +252,7 @@
                             android:id="@+id/tvProgressPercent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="70%"
+                            android:text="0%"
                             android:layout_marginStart="12dp"
                             android:textColor="@color/secondary"
                             android:textStyle="bold" />
@@ -274,7 +274,7 @@
                                 android:id="@+id/tvTotalAmount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Rs 45,500"
+                                android:text="Rs 0"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/secondary" />
@@ -303,7 +303,7 @@
                                 android:id="@+id/tvPeopleHelped"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="127"
+                                android:text="0"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/secondary" />
