@@ -96,13 +96,20 @@ class DonorHomeFragment : Fragment() {
             }
 
             tvViewAllCampaigns.setOnClickListener {
-                navigateToAllCampaigns()
+                navigateToMyCampaigns()
             }
 
             tvViewAllActivity.setOnClickListener {
                 navigateToDonationHistory()
             }
         }
+    }
+
+    private fun navigateToMyCampaigns() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_donor, DonorCampaignsFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun navigateToCreateCampaign() {

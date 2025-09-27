@@ -10,6 +10,7 @@ import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentCreateCampaignBinding
@@ -23,19 +24,21 @@ class CreateCampaignFragment : Fragment() {
     private lateinit var loadingDialog: AlertDialog
     private var selectedProofUri: Uri? = null
 
-    private val categories = arrayOf(
-        "Education",
-        "Healthcare",
-        "Food & Nutrition",
-        "Disaster Relief",
-        "Environment",
-        "Child Welfare",
-        "Women Empowerment",
-        "Elderly Care",
-        "Animal Welfare",
-        "Community Development",
-        "Other"
+    private val itemTypes = arrayOf(
+        "Food Items",
+        "Clothing",
+        "Medicines",
+        "Books & Stationery",
+        "Toys & Games",
+        "Household Items",
+        "Electronics",
+        "Furniture",
+        "Medical Equipment",
+        "Sports Equipment",
+        "Other Items"
     )
+
+    private var isDonatingMoney = true
 
     private val documentPickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -56,6 +59,8 @@ class CreateCampaignFragment : Fragment() {
 
         setupProgressDialog()
         setupCategorySpinner()
+        setupItemTypeSpinner()
+        setupDonationTypeSelection()
         setupClickListeners()
 
         return binding.root
@@ -69,8 +74,68 @@ class CreateCampaignFragment : Fragment() {
     }
 
     private fun setupCategorySpinner() {
+        val categories = arrayOf(
+            "Education",
+            "Healthcare",
+            "Food & Nutrition",
+            "Disaster Relief",
+            "Environment",
+            "Child Welfare",
+            "Women Empowerment",
+            "Elderly Care",
+            "Animal Welfare",
+            "Community Development",
+            "Other"
+        )
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories)
         binding.spinnerCategory.setAdapter(adapter)
+    }
+
+    private fun setupItemTypeSpinner() {
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, itemTypes)
+        binding.spinnerItemType.setAdapter(adapter)
+    }
+
+    private fun setupDonationTypeSelection() {
+        updateDonationTypeSelection(true)
+
+        binding.cardMoneyDonation.setOnClickListener {
+            updateDonationTypeSelection(true)
+        }
+
+        binding.cardItemDonation.setOnClickListener {
+            updateDonationTypeSelection(false)
+        }
+    }
+
+    private fun updateDonationTypeSelection(isMoney: Boolean) {
+        isDonatingMoney = isMoney
+
+        if (isMoney) {
+            binding.cardMoneyDonation.apply {
+                strokeColor = ContextCompat.getColor(requireContext(), R.color.secondary)
+                setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.secondary))
+            }
+            binding.cardItemDonation.apply {
+                strokeColor = ContextCompat.getColor(requireContext(), android.R.color.darker_gray)
+                setCardBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+            }
+
+            binding.layoutMoneyDonation.visibility = View.VISIBLE
+            binding.layoutItemDonation.visibility = View.GONE
+        } else {
+            binding.cardItemDonation.apply {
+                strokeColor = ContextCompat.getColor(requireContext(), R.color.secondary)
+                setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.secondary))
+            }
+            binding.cardMoneyDonation.apply {
+                strokeColor = ContextCompat.getColor(requireContext(), android.R.color.darker_gray)
+                setCardBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+            }
+
+            binding.layoutMoneyDonation.visibility = View.GONE
+            binding.layoutItemDonation.visibility = View.VISIBLE
+        }
     }
 
     private fun setupClickListeners() {
@@ -158,15 +223,26 @@ class CreateCampaignFragment : Fragment() {
             "donorName" to (auth.currentUser?.displayName ?: "Anonymous Donor"),
             "title" to binding.etCampaignTitle.text.toString().trim(),
             "description" to binding.etCampaignDescription.text.toString().trim(),
-            "amount" to binding.etDonationAmount.text.toString().toDoubleOrNull(),
+            "donationType" to if (isDonatingMoney) "money" else "items",
             "category" to binding.spinnerCategory.text.toString(),
-            "status" to "active", // active, completed, cancelled
+            "status" to "active",
             "createdAt" to System.currentTimeMillis(),
             "updatedAt" to System.currentTimeMillis(),
             "hasProof" to (selectedProofUri != null),
             "contactCount" to 0,
             "interestedNGOs" to emptyList<String>()
         )
+
+        if (isDonatingMoney) {
+            campaignData["amount"] = binding.etDonationAmount.text.toString().toDoubleOrNull() as Any
+        } else {
+            campaignData["itemType"] = binding.spinnerItemType.text.toString()
+            campaignData["itemDetails"] = binding.etItemDetails.text.toString().trim()
+            val estimatedValue = binding.etEstimatedValue.text.toString().toDoubleOrNull()
+            if (estimatedValue != null && estimatedValue > 0) {
+                campaignData["estimatedValue"] = estimatedValue
+            }
+        }
 
         firestore.collection("donor_campaigns").document(campaignId)
             .set(campaignData)
@@ -188,7 +264,6 @@ class CreateCampaignFragment : Fragment() {
         binding.apply {
             val title = etCampaignTitle.text.toString().trim()
             val description = etCampaignDescription.text.toString().trim()
-            val amountStr = etDonationAmount.text.toString().trim()
             val category = spinnerCategory.text.toString()
 
             if (title.isEmpty()) {
@@ -215,29 +290,54 @@ class CreateCampaignFragment : Fragment() {
                 return false
             }
 
-            if (amountStr.isEmpty()) {
-                etDonationAmount.error = "Donation amount is required"
-                etDonationAmount.requestFocus()
-                return false
-            }
-
-            val amount = amountStr.toDoubleOrNull()
-            if (amount == null || amount <= 0) {
-                etDonationAmount.error = "Enter a valid amount"
-                etDonationAmount.requestFocus()
-                return false
-            }
-
-            if (amount < 100) {
-                etDonationAmount.error = "Minimum donation amount is Rs 100"
-                etDonationAmount.requestFocus()
-                return false
-            }
-
             if (category.isEmpty()) {
                 spinnerCategory.error = "Please select a category"
                 spinnerCategory.requestFocus()
                 return false
+            }
+
+            if (isDonatingMoney) {
+                val amountStr = etDonationAmount.text.toString().trim()
+
+                if (amountStr.isEmpty()) {
+                    etDonationAmount.error = "Donation amount is required"
+                    etDonationAmount.requestFocus()
+                    return false
+                }
+
+                val amount = amountStr.toDoubleOrNull()
+                if (amount == null || amount <= 0) {
+                    etDonationAmount.error = "Enter a valid amount"
+                    etDonationAmount.requestFocus()
+                    return false
+                }
+
+                if (amount < 100) {
+                    etDonationAmount.error = "Minimum donation amount is Rs 100"
+                    etDonationAmount.requestFocus()
+                    return false
+                }
+            } else {
+                val itemType = spinnerItemType.text.toString()
+                val itemDetails = etItemDetails.text.toString().trim()
+
+                if (itemType.isEmpty()) {
+                    spinnerItemType.error = "Please select an item type"
+                    spinnerItemType.requestFocus()
+                    return false
+                }
+
+                if (itemDetails.isEmpty()) {
+                    etItemDetails.error = "Item details are required"
+                    etItemDetails.requestFocus()
+                    return false
+                }
+
+                if (itemDetails.length < 20) {
+                    etItemDetails.error = "Please provide more detailed description (at least 20 characters)"
+                    etItemDetails.requestFocus()
+                    return false
+                }
             }
 
             return true

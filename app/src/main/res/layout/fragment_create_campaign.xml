@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Header -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="120dp"
@@ -57,7 +56,6 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <!-- Form Content -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,7 +63,6 @@
             android:padding="20dp"
             android:layout_marginTop="-20dp">
 
-            <!-- Campaign Info Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,7 +86,6 @@
                         android:textColor="@android:color/black"
                         android:layout_marginBottom="20dp" />
 
-                    <!-- Campaign Title -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -107,7 +103,6 @@
                             android:maxLines="2" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Campaign Description -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -126,25 +121,182 @@
                             android:maxLines="6" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Donation Amount -->
-                    <com.google.android.material.textfield.TextInputLayout
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Donation Type"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="12dp" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:hint="Donation Amount (Rs)"
-                        app:startIconDrawable="@drawable/ic_money"
-                        app:errorEnabled="true"
-                        app:helperText="Amount you want to donate"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="20dp">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etDonationAmount"
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardMoneyDonation"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="2dp"
+                            app:strokeColor="@color/secondary"
+                            app:cardBackgroundColor="@color/secondary">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="12dp"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_money"
+                                    app:tint="@android:color/white"
+                                    android:layout_marginBottom="4dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Money"
+                                    android:textColor="@android:color/white"
+                                    android:textStyle="bold"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardItemDonation"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="2dp"
+                            app:strokeColor="#E0E0E0"
+                            app:cardBackgroundColor="@android:color/white">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="12dp"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_gift"
+                                    app:tint="@color/secondary"
+                                    android:layout_marginBottom="4dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Items"
+                                    android:textColor="@color/secondary"
+                                    android:textStyle="bold"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutMoneyDonation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_marginBottom="16dp"
+                            android:hint="Donation Amount (Rs)"
+                            app:startIconDrawable="@drawable/ic_money"
+                            app:errorEnabled="true"
+                            app:helperText="Amount you want to donate"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
-                    <!-- Category Spinner -->
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etDonationAmount"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutItemDonation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:hint="Item Type"
+                            app:startIconDrawable="@drawable/ic_gift"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerItemType"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:hint="Item Details"
+                            app:startIconDrawable="@drawable/ic_description"
+                            app:errorEnabled="true"
+                            app:helperText="Describe what items you're donating"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etItemDetails"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine"
+                                android:lines="3"
+                                android:maxLines="5" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:hint="Estimated Value (Rs) - Optional"
+                            app:startIconDrawable="@drawable/ic_money"
+                            app:errorEnabled="true"
+                            app:helperText="Approximate market value of items"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etEstimatedValue"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -162,7 +314,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Proof Upload Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -194,7 +345,6 @@
                         android:textColor="#666666"
                         android:layout_marginBottom="20dp" />
 
-                    <!-- Upload Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnUploadProof"
                         android:layout_width="match_parent"
@@ -211,7 +361,6 @@
                         style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_marginBottom="16dp" />
 
-                    <!-- Selected File Display -->
                     <LinearLayout
                         android:id="@+id/layoutSelectedFile"
                         android:layout_width="match_parent"
@@ -251,7 +400,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Info Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -301,7 +449,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Action Buttons -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCreateCampaign"
                 android:layout_width="match_parent"
