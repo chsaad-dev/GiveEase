@@ -15,14 +15,16 @@
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_back"
-            android:contentDescription="Back"
-            android:clickable="true"
-            android:focusable="true"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Back"
+            android:focusable="true"
             android:padding="4dp"
+            android:src="@drawable/ic_back"
             app:tint="@android:color/white" />
 
         <LinearLayout
@@ -63,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             app:cardCornerRadius="20dp"
-            app:cardElevation="4dp"
+            app:cardElevation="3dp"
             app:cardBackgroundColor="@android:color/white">
 
             <LinearLayout
