@@ -87,19 +87,31 @@ class DonorSettingsFragment : Fragment() {
         }
 
         binding.cardFaq.setOnClickListener {
-            Toast.makeText(requireContext(), "FAQs coming soon", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_donor, FAQFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.cardSupport.setOnClickListener {
-            showContactSupportDialog()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_donor, ContactSupportFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.cardPrivacy.setOnClickListener {
-            Toast.makeText(requireContext(), "Privacy Policy coming soon", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_donor, PrivacyPolicyFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.cardTerms.setOnClickListener {
-            Toast.makeText(requireContext(), "Terms & Conditions coming soon", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_donor, TermsConditionsFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.switchNotifications.setOnCheckedChangeListener { _, isChecked ->
@@ -113,25 +125,6 @@ class DonorSettingsFragment : Fragment() {
         binding.btnDeleteAccount.setOnClickListener {
             showDeleteAccountWarning()
         }
-    }
-
-    private fun showContactSupportDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Contact Support")
-            .setMessage("Need help? Choose how you'd like to contact our support team:")
-            .setPositiveButton("Email") { _, _ ->
-                val intent = Intent(Intent.ACTION_SEND).apply {
-                    type = "message/rfc822"
-                    putExtra(Intent.EXTRA_EMAIL, arrayOf("support@giveease.com"))
-                    putExtra(Intent.EXTRA_SUBJECT, "GiveEase Support Request")
-                }
-                startActivity(Intent.createChooser(intent, "Send Email"))
-            }
-            .setNeutralButton("Call") { _, _ ->
-                Toast.makeText(requireContext(), "Call support: +92-300-1234567", Toast.LENGTH_LONG).show()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
     }
 
     private fun updateNotificationPreference(enabled: Boolean) {
