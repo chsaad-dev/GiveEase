@@ -24,8 +24,11 @@ class AdminMainFragment : Fragment() {
     private fun setupBottomNavigation() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_home -> childFragmentManager.commit {
-                    replace(R.id.fragmentContainer, AdminDashboardFragment())
+                R.id.nav_home -> {
+                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    childFragmentManager.commit {
+                        replace(R.id.fragmentContainer, AdminDashboardFragment())
+                    }
                 }
                 R.id.nav_profile -> {}
                 R.id.nav_settings -> {}
@@ -38,6 +41,29 @@ class AdminMainFragment : Fragment() {
         childFragmentManager.commit {
             replace(R.id.fragmentContainer, AdminDashboardFragment())
         }
+    }
+
+    /**
+     * Handles back press navigation
+     * @return true if back press was handled, false if should exit app
+     */
+    fun handleBackPress(): Boolean {
+        val currentFragment = childFragmentManager.findFragmentById(R.id.fragmentContainer)
+
+        if (childFragmentManager.backStackEntryCount > 0) {
+            childFragmentManager.popBackStack()
+            return true
+        }
+
+        if (currentFragment !is AdminDashboardFragment) {
+            binding.bottomNavigationView.selectedItemId = R.id.nav_home
+            childFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, AdminDashboardFragment())
+                .commit()
+            return true
+        }
+
+        return false
     }
 
     override fun onDestroyView() {

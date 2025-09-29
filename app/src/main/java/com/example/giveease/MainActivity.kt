@@ -12,14 +12,16 @@ import com.example.giveease.admin.AdminMainFragment
 
 class MainActivity : AppCompatActivity() {
 
+    private var currentRole: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_GiveEase)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val role = intent.getStringExtra("role")
+        currentRole = intent.getStringExtra("role")
 
-        val fragment: Fragment = when (role) {
+        val fragment: Fragment = when (currentRole) {
             "donor" -> DonorMainFragment()
             "ngo" -> NgoMainFragment()
             "admin" -> AdminMainFragment()
@@ -31,10 +33,28 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .commit()
 
-        // Handle system back press with confirmation
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                showExitConfirmation()
+                val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+
+                when (currentFragment) {
+                    is DonorMainFragment -> {
+                        if (!currentFragment.handleBackPress()) {
+                            showExitConfirmation()
+                        }
+                    }
+                    is NgoMainFragment -> {
+                        if (!currentFragment.handleBackPress()) {
+                            showExitConfirmation()
+                        }
+                    }
+                    is AdminMainFragment -> {
+                        if (!currentFragment.handleBackPress()) {
+                            showExitConfirmation()
+                        }
+                    }
+                    else -> showExitConfirmation()
+                }
             }
         })
     }
