@@ -10,6 +10,8 @@ import androidx.fragment.app.commit
 
 class DonorMainFragment : Fragment() {
 
+    private lateinit var bottomNav: BottomNavigationView
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -19,9 +21,8 @@ class DonorMainFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val bottomNav = view.findViewById<BottomNavigationView>(R.id.bottom_nav_donor)
+        bottomNav = view.findViewById(R.id.bottom_nav_donor)
 
-        // Handle bottom nav visibility on backstack changes
         childFragmentManager.addOnBackStackChangedListener {
             val currentFragment = childFragmentManager.findFragmentById(R.id.fragment_container_donor)
             if (currentFragment is ChatDetailFragment) {
@@ -31,7 +32,6 @@ class DonorMainFragment : Fragment() {
             }
         }
 
-        // Load default fragment
         if (savedInstanceState == null) {
             childFragmentManager.commit {
                 replace(R.id.fragment_container_donor, DonorHomeFragment())
@@ -51,13 +51,37 @@ class DonorMainFragment : Fragment() {
                 childFragmentManager.findFragmentById(R.id.fragment_container_donor)
 
             if (currentFragment?.javaClass != newFragment.javaClass) {
+                childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
                 childFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container_donor, newFragment)
-                    .addToBackStack(null)
                     .commit()
             }
 
             true
         }
+    }
+
+    /**
+     * Handles back press navigation
+     * @return true if back press was handled, false if should exit app
+     */
+    fun handleBackPress(): Boolean {
+        val currentFragment = childFragmentManager.findFragmentById(R.id.fragment_container_donor)
+
+        if (childFragmentManager.backStackEntryCount > 0) {
+            childFragmentManager.popBackStack()
+            return true
+        }
+
+        if (currentFragment !is DonorHomeFragment) {
+            bottomNav.selectedItemId = R.id.nav_home
+            childFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_donor, DonorHomeFragment())
+                .commit()
+            return true
+        }
+
+        return false
     }
 }
