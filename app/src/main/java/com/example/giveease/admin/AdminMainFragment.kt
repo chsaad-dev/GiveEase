@@ -30,8 +30,18 @@ class AdminMainFragment : Fragment() {
                         replace(R.id.fragmentContainer, AdminDashboardFragment())
                     }
                 }
-                R.id.nav_profile -> {}
-                R.id.nav_settings -> {}
+                R.id.nav_profile -> {
+                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    childFragmentManager.commit {
+                        replace(R.id.fragmentContainer, AdminProfileFragment())
+                    }
+                }
+                R.id.nav_settings -> {
+                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    childFragmentManager.commit {
+                        replace(R.id.fragmentContainer, AdminSettingsFragment())
+                    }
+                }
             }
             true
         }
@@ -43,10 +53,6 @@ class AdminMainFragment : Fragment() {
         }
     }
 
-    /**
-     * Handles back press navigation
-     * @return true if back press was handled, false if should exit app
-     */
     fun handleBackPress(): Boolean {
         val currentFragment = childFragmentManager.findFragmentById(R.id.fragmentContainer)
 

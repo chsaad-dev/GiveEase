@@ -19,6 +19,9 @@
     <color name="primary_blue">#1976D2</color>
     <color name="primary_blue_dark">#1565C0</color>
     <color name="light_gray">#F5F5F5</color>
+    <color name="chip_unselected">#E0E0E0</color>
+    <color name="chip_selected">#1976D2</color>
+
 
     <!-- Primary Theme Colors -->
     <color name="primary">#4CAF50</color>
