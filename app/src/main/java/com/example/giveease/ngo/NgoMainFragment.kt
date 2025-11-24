@@ -30,8 +30,30 @@ class NgoMainFragment : Fragment() {
                         replace(R.id.fragmentContainer, NgoHomeFragment())
                     }
                 }
-                R.id.nav_profile -> {}
-                R.id.nav_settings -> {}
+                R.id.nav_chat -> {
+                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    childFragmentManager.commit {
+                        replace(R.id.fragmentContainer, ChatListFragment())
+                    }
+                }
+                R.id.nav_campaign -> {
+                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    childFragmentManager.commit {
+                        replace(R.id.fragmentContainer, CreateCampaignFragment())
+                    }
+                }
+                R.id.nav_history -> {
+                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    childFragmentManager.commit {
+                        replace(R.id.fragmentContainer, NgoHistoryFragment())
+                    }
+                }
+                R.id.nav_profile -> {
+                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    childFragmentManager.commit {
+                        replace(R.id.fragmentContainer, NgoProfileFragment())
+                    }
+                }
             }
             true
         }
@@ -43,10 +65,6 @@ class NgoMainFragment : Fragment() {
         }
     }
 
-    /**
-     * Handles back press navigation
-     * @return true if back press was handled, false if should exit app
-     */
     fun handleBackPress(): Boolean {
         val currentFragment = childFragmentManager.findFragmentById(R.id.fragmentContainer)
 
