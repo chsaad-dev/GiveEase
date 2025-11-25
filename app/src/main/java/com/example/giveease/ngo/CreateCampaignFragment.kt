@@ -14,7 +14,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentNgoCreateNewCampaignBinding
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,9 +26,13 @@ class CreateCampaignFragment : Fragment() {
 
     private var _binding: FragmentNgoCreateNewCampaignBinding? = null
     private val binding get() = _binding!!
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
 
     private val selectedImages = mutableListOf<Uri>()
     private var selectedEndDate: Long = 0
+    private var ngoName: String = ""
 
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.GetMultipleContents()
@@ -47,6 +50,11 @@ class CreateCampaignFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNgoCreateNewCampaignBinding.inflate(inflater, container, false)
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+        storage = FirebaseStorage.getInstance()
+
+        loadNgoName()
         return binding.root
     }
 
@@ -56,6 +64,15 @@ class CreateCampaignFragment : Fragment() {
         setupSpinners()
         setupClickListeners()
         setupTextWatchers()
+    }
+
+    private fun loadNgoName() {
+        val uid = auth.currentUser?.uid ?: return
+
+        firestore.collection("users").document(uid).get()
+            .addOnSuccessListener { document ->
+                ngoName = document.getString("name") ?: "NGO"
+            }
     }
 
     private fun setupSpinners() {
@@ -142,7 +159,7 @@ class CreateCampaignFragment : Fragment() {
     }
 
     private fun updateImageCount() {
-
+        Toast.makeText(requireContext(), "${selectedImages.size} image(s) selected", Toast.LENGTH_SHORT).show()
     }
 
     private fun createCampaign() {
@@ -156,16 +173,15 @@ class CreateCampaignFragment : Fragment() {
             if (selectedImages.isNotEmpty()) {
                 uploadImages(campaignData)
             } else {
-                saveCampaignToFirebase(campaignData, emptyList())
+                saveCampaignToFirestore(campaignData, emptyList())
             }
         }
     }
 
     private fun checkVerificationBeforeAction(onVerified: () -> Unit) {
-        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val uid = auth.currentUser?.uid ?: return
 
-        FirebaseFirestore.getInstance()
-            .collection("users").document(uid).get()
+        firestore.collection("users").document(uid).get()
             .addOnSuccessListener { document ->
                 val verificationStatus = document.getString("verificationStatus") ?: "pending"
 
@@ -240,8 +256,8 @@ class CreateCampaignFragment : Fragment() {
         }
 
         return CampaignData(
-            ngoId = getCurrentNgoId(),
-            ngoName = getCurrentNgoName(),
+            ngoId = auth.currentUser?.uid ?: "",
+            ngoName = ngoName,
             category = binding.spinnerCategory.selectedItem.toString(),
             title = binding.etTitle.text.toString().trim(),
             description = binding.etDescription.text.toString().trim(),
@@ -249,7 +265,7 @@ class CreateCampaignFragment : Fragment() {
             unit = binding.spinnerUnit.selectedItem.toString(),
             endDate = selectedEndDate,
             urgencyLevel = urgency,
-            itemCondition = condition,
+            itemCondition = condition ?: "",
             specificRequirements = binding.etSpecificNeeds.text.toString().trim(),
             autoClose = binding.switchAutoClose.isChecked,
             createdAt = System.currentTimeMillis(),
@@ -258,7 +274,6 @@ class CreateCampaignFragment : Fragment() {
     }
 
     private fun uploadImages(campaignData: CampaignData) {
-        val storage = FirebaseStorage.getInstance()
         val imageUrls = mutableListOf<String>()
         var uploadCount = 0
 
@@ -267,51 +282,56 @@ class CreateCampaignFragment : Fragment() {
                 .child("campaigns/${campaignData.ngoId}/${System.currentTimeMillis()}_$index.jpg")
 
             ref.putFile(uri)
-                .addOnSuccessListener { _: com.google.firebase.storage.UploadTask.TaskSnapshot ->
-                    ref.downloadUrl.addOnSuccessListener { downloadUri: Uri ->
+                .addOnSuccessListener {
+                    ref.downloadUrl.addOnSuccessListener { downloadUri ->
                         imageUrls.add(downloadUri.toString())
                         uploadCount++
 
                         if (uploadCount == selectedImages.size) {
-                            saveCampaignToFirebase(campaignData, imageUrls)
+                            saveCampaignToFirestore(campaignData, imageUrls)
                         }
                     }
                 }
-                .addOnFailureListener { e: Exception ->
+                .addOnFailureListener { e ->
                     showLoading(false)
                     showToast("Image upload failed: ${e.message}")
                 }
         }
     }
 
-    private fun saveCampaignToFirebase(campaignData: CampaignData, imageUrls: List<String>) {
-        val database = FirebaseDatabase.getInstance()
-        val campaignsRef = database.getReference("campaigns")
-        val campaignId = campaignsRef.push().key ?: return
-
-        val campaign = campaignData.copy(
-            id = campaignId,
-            imageUrls = imageUrls
+    private fun saveCampaignToFirestore(campaignData: CampaignData, imageUrls: List<String>) {
+        val campaignMap = hashMapOf<String, Any>(
+            "ngoId" to campaignData.ngoId,
+            "ngoName" to campaignData.ngoName,
+            "category" to campaignData.category,
+            "title" to campaignData.title,
+            "description" to campaignData.description,
+            "targetQuantity" to campaignData.targetQuantity,
+            "currentQuantity" to 0,
+            "unit" to campaignData.unit,
+            "endDate" to campaignData.endDate,
+            "urgencyLevel" to campaignData.urgencyLevel,
+            "itemCondition" to (campaignData.itemCondition ?: ""),
+            "specificRequirements" to campaignData.specificRequirements,
+            "autoClose" to campaignData.autoClose,
+            "imageUrls" to imageUrls,
+            "createdAt" to campaignData.createdAt,
+            "status" to campaignData.status,
+            "donorCount" to 0,
+            "shareCount" to 0
         )
 
-        campaignsRef.child(campaignId).setValue(campaign)
-            .addOnSuccessListener { _: Void? ->
+        firestore.collection("campaigns")
+            .add(campaignMap)
+            .addOnSuccessListener {
                 showLoading(false)
                 showToast("Campaign created successfully!")
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
-            .addOnFailureListener { e: Exception ->
+            .addOnFailureListener { e ->
                 showLoading(false)
                 showToast("Failed to create campaign: ${e.message}")
             }
-    }
-
-    private fun getCurrentNgoId(): String {
-        return "ngo_${System.currentTimeMillis()}"
-    }
-
-    private fun getCurrentNgoName(): String {
-        return "Edhi Foundation"
     }
 
     private fun showLoading(show: Boolean) {
