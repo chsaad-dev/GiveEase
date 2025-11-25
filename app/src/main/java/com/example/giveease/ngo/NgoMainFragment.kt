@@ -8,6 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentNgoMainBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import android.app.AlertDialog
+import android.widget.Toast
+import com.example.giveease.verification.IdentityVerificationFragment
 
 class NgoMainFragment : Fragment() {
 
@@ -18,6 +23,7 @@ class NgoMainFragment : Fragment() {
         _binding = FragmentNgoMainBinding.inflate(inflater, container, false)
         setupBottomNavigation()
         loadDefaultFragment()
+        checkVerificationStatus()
         return binding.root
     }
 
@@ -63,6 +69,54 @@ class NgoMainFragment : Fragment() {
         childFragmentManager.commit {
             replace(R.id.fragmentContainer, NgoHomeFragment())
         }
+    }
+
+    private fun checkVerificationStatus() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        FirebaseFirestore.getInstance()
+            .collection("users").document(uid).get()
+            .addOnSuccessListener { document ->
+                val verificationStatus = document.getString("verificationStatus") ?: "pending"
+
+                if (verificationStatus == "pending") {
+                    showVerificationPopup()
+                } else if (verificationStatus == "rejected") {
+                    val reason = document.getString("rejectionReason") ?: "Unknown reason"
+                    showRejectedPopup(reason)
+                }
+            }
+    }
+
+    private fun showVerificationPopup() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Verify Your NGO")
+            .setMessage("To create campaigns, please verify your NGO by uploading government registration documents.\n\nYou can browse but cannot create campaigns until verified.")
+            .setPositiveButton("Verify Now") { _, _ ->
+                navigateToVerification()
+            }
+            .setNegativeButton("Later", null)
+            .show()
+    }
+
+    private fun showRejectedPopup(reason: String) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Verification Rejected")
+            .setMessage("Your NGO verification was rejected.\n\nReason: $reason\n\nPlease resubmit your documents.")
+            .setPositiveButton("Resubmit") { _, _ ->
+                navigateToVerification()
+            }
+            .setNegativeButton("Contact Support") { _, _ ->
+                Toast.makeText(requireContext(), "support@giveease.com", Toast.LENGTH_LONG).show()
+            }
+            .show()
+    }
+
+    private fun navigateToVerification() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, IdentityVerificationFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
     fun handleBackPress(): Boolean {

@@ -37,7 +37,6 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupFormValidation() {
-        // Real-time email validation
         binding.etEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -107,11 +106,10 @@ class LoginFragment : Fragment() {
         val email = binding.etEmail.text.toString().trim()
         val password = binding.etPassword.text.toString().trim()
 
-        // Clear previous errors
         binding.tilEmail.error = null
         binding.tilPassword.error = null
 
-        // Validation
+
         when {
             email.isEmpty() -> {
                 binding.tilEmail.error = "Email is required"
@@ -146,14 +144,14 @@ class LoginFragment : Fragment() {
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     if (user?.isEmailVerified == true) {
-                        // Email is verified, proceed with login
+
                         val uid = user.uid
                         firestore.collection("users").document(uid).get()
                             .addOnSuccessListener { document ->
                                 loadingDialog.dismiss()
                                 if (document.exists()) {
                                     val role = document.getString("role") ?: "donor"
-                                    // Update email verification status in Firestore
+
                                     updateEmailVerificationStatus(uid)
                                     loadMainFragment(role)
                                     Toast.makeText(requireContext(), "Welcome back!", Toast.LENGTH_SHORT).show()
@@ -166,7 +164,7 @@ class LoginFragment : Fragment() {
                                 Toast.makeText(requireContext(), "Error fetching user data: ${it.message}", Toast.LENGTH_SHORT).show()
                             }
                     } else {
-                        // Email not verified
+
                         loadingDialog.dismiss()
                         showEmailVerificationDialog(user?.email ?: email)
                     }
@@ -247,7 +245,7 @@ class LoginFragment : Fragment() {
                 resendVerificationEmail()
             }
             .setNegativeButton("Cancel") { _, _ ->
-                auth.signOut() // Sign out unverified user
+                auth.signOut()
             }
             .setNeutralButton("I Verified") { _, _ ->
                 checkEmailVerificationStatus()
@@ -263,7 +261,7 @@ class LoginFragment : Fragment() {
                 loadingDialog.dismiss()
                 if (task.isSuccessful) {
                     Toast.makeText(requireContext(), "Verification email sent", Toast.LENGTH_SHORT).show()
-                    auth.signOut() // Sign out until verified
+                    auth.signOut()
                 } else {
                     Toast.makeText(requireContext(), "Failed to send email: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                     auth.signOut()
@@ -278,16 +276,31 @@ class LoginFragment : Fragment() {
             if (task.isSuccessful) {
                 val user = auth.currentUser
                 if (user?.isEmailVerified == true) {
-                    // Now verified, proceed with login
                     val uid = user.uid
                     firestore.collection("users").document(uid).get()
                         .addOnSuccessListener { document ->
+                            loadingDialog.dismiss()
                             if (document.exists()) {
                                 val role = document.getString("role") ?: "donor"
+                                val verificationStatus = document.getString("verificationStatus") ?: "pending"
+
                                 updateEmailVerificationStatus(uid)
-                                loadMainFragment(role)
-                                Toast.makeText(requireContext(), "Email verified successfully!", Toast.LENGTH_SHORT).show()
+
+                                if (verificationStatus == "pending") {
+                                    showIdentityVerificationDialog(role)
+                                } else if (verificationStatus == "rejected") {
+                                    showRejectedVerificationDialog(document.getString("rejectionReason") ?: "Unknown reason")
+                                } else {
+                                    loadMainFragment(role)
+                                    Toast.makeText(requireContext(), "Welcome back!", Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                Toast.makeText(requireContext(), "User data not found", Toast.LENGTH_SHORT).show()
                             }
+                        }
+                        .addOnFailureListener {
+                            loadingDialog.dismiss()
+                            Toast.makeText(requireContext(), "Error fetching user data: ${it.message}", Toast.LENGTH_SHORT).show()
                         }
                 } else {
                     Toast.makeText(requireContext(), "Email still not verified. Please check your email.", Toast.LENGTH_SHORT).show()
@@ -305,6 +318,41 @@ class LoginFragment : Fragment() {
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton("OK", null)
+            .show()
+    }
+
+    private fun showIdentityVerificationDialog(role: String) {
+        val message = if (role == "ngo") {
+            "To use GiveEase, please verify your NGO identity by uploading your government registration documents."
+        } else {
+            "To donate and use GiveEase fully, please verify your identity by uploading a government-issued ID."
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Identity Verification Required")
+            .setMessage(message)
+            .setPositiveButton("Verify Now") { _, _ ->
+                loadMainFragment(role)
+            }
+            .setNegativeButton("Later") { _, _ ->
+                loadMainFragment(role)
+
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun showRejectedVerificationDialog(reason: String) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Verification Rejected")
+            .setMessage("Your identity verification was rejected.\n\nReason: $reason\n\nPlease contact support or resubmit your documents.")
+            .setPositiveButton("Contact Support") { _, _ ->
+                Toast.makeText(requireContext(), "Support: support@giveease.com", Toast.LENGTH_LONG).show()
+            }
+            .setNegativeButton("Close") { _, _ ->
+                auth.signOut()
+            }
+            .setCancelable(false)
             .show()
     }
 

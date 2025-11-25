@@ -19,7 +19,7 @@ class SignupFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var loadingDialog: AlertDialog
-    private var selectedRole: String = "donor" // Default role
+    private var selectedRole: String = "donor"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -37,7 +37,6 @@ class SignupFragment : Fragment() {
     }
 
     private fun setupRoleSelection() {
-        // Set initial state - Donor selected by default
         updateRoleSelection("donor")
 
         binding.cardDonor.setOnClickListener {
@@ -53,7 +52,7 @@ class SignupFragment : Fragment() {
         selectedRole = role
 
         if (role == "donor") {
-            // Donor selected
+
             binding.cardDonor.apply {
                 strokeColor = ContextCompat.getColor(requireContext(), R.color.primary)
                 setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary))
@@ -63,7 +62,7 @@ class SignupFragment : Fragment() {
                 setCardBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.white))
             }
         } else {
-            // NGO selected
+
             binding.cardNGO.apply {
                 strokeColor = ContextCompat.getColor(requireContext(), R.color.primary)
                 setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary))
@@ -76,7 +75,7 @@ class SignupFragment : Fragment() {
     }
 
     private fun setupFormValidation() {
-        // Real-time email validation
+
         binding.etEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -85,7 +84,7 @@ class SignupFragment : Fragment() {
             }
         })
 
-        // Real-time password validation
+
         binding.etPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -139,11 +138,11 @@ class SignupFragment : Fragment() {
         val email = binding.etEmail.text.toString().trim()
         val password = binding.etPassword.text.toString().trim()
 
-        // Clear previous errors
+
         binding.tilEmail.error = null
         binding.tilPassword.error = null
 
-        // Validation
+
         when {
             name.isEmpty() -> {
                 binding.etName.error = "Name is required"
@@ -190,7 +189,7 @@ class SignupFragment : Fragment() {
                     user?.sendEmailVerification()
                         ?.addOnCompleteListener { verificationTask ->
                             if (verificationTask.isSuccessful) {
-                                // Save user data to Firestore
+
                                 saveUserToFirestore(user.uid, name, email, selectedRole)
                             } else {
                                 loadingDialog.dismiss()
@@ -218,9 +217,18 @@ class SignupFragment : Fragment() {
             "email" to email,
             "role" to role,
             "emailVerified" to false,
+            "verificationStatus" to "pending",
+            "identityDocumentUrl" to "",
             "createdAt" to System.currentTimeMillis(),
             "updatedAt" to System.currentTimeMillis()
         )
+
+
+        if (role == "ngo") {
+            userMap["ngoName"] = ""
+            userMap["registrationNumber"] = ""
+            userMap["governmentDocumentUrl"] = ""
+        }
 
         firestore.collection("users").document(uid).set(userMap)
             .addOnSuccessListener {
@@ -238,7 +246,7 @@ class SignupFragment : Fragment() {
             .setTitle("Verify Your Email")
             .setMessage("We've sent a verification link to $email.\n\nPlease check your email and click the verification link to activate your account.\n\nAfter verification, you can login to your account.")
             .setPositiveButton("OK") { _, _ ->
-                // Sign out user until they verify email
+
                 auth.signOut()
                 navigateToLogin()
             }
