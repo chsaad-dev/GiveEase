@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="24dp"
-            android:background="@drawable/home_header_gradient">
+            android:background="@drawable/h">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,28 +55,12 @@
                     android:text="Campaign History"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="#1A237E"
+                    android:textColor="#FFFFFF"
                     android:fontFamily="sans-serif-medium"
                     android:layout_marginStart="16dp"
                     android:gravity="center_vertical" />
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    app:cardCornerRadius="22dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="#E3F2FD"
-                    android:clickable="true"
-                    android:focusable="true">
 
-                    <ImageView
-                        android:id="@+id/ivFilter"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_filter"
-                        app:tint="#1565C0" />
-                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
             <!-- Stats Overview -->
@@ -93,7 +77,7 @@
                     android:layout_weight="1"
                     android:text="Your campaign journey"
                     android:textSize="16sp"
-                    android:textColor="#1A237E"
+                    android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
                 <TextView
@@ -102,7 +86,8 @@
                     android:layout_height="wrap_content"
                     android:text="12 Total Campaigns"
                     android:textSize="14sp"
-                    android:textColor="#546E7A"
+                    android:textColor="#090909"
+                    android:textStyle="bold"
                     android:background="#F0F4FF"
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="6dp"
@@ -176,7 +161,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🎉 Successfully Completed"
+                    android:text="Successfully Completed"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#1A237E"
