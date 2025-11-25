@@ -16,6 +16,10 @@ import com.example.giveease.R
 import com.example.giveease.databinding.FragmentNgoCreateNewCampaignBinding
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import android.app.AlertDialog
+import com.example.giveease.verification.IdentityVerificationFragment
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -138,21 +142,49 @@ class CreateCampaignFragment : Fragment() {
     }
 
     private fun updateImageCount() {
-        // Update the image count text
+
     }
 
     private fun createCampaign() {
-        if (!validateInputs()) return
+        checkVerificationBeforeAction {
+            if (!validateInputs()) return@checkVerificationBeforeAction
 
-        showLoading(true)
+            showLoading(true)
 
-        val campaignData = collectCampaignData()
+            val campaignData = collectCampaignData()
 
-        if (selectedImages.isNotEmpty()) {
-            uploadImages(campaignData)
-        } else {
-            saveCampaignToFirebase(campaignData, emptyList())
+            if (selectedImages.isNotEmpty()) {
+                uploadImages(campaignData)
+            } else {
+                saveCampaignToFirebase(campaignData, emptyList())
+            }
         }
+    }
+
+    private fun checkVerificationBeforeAction(onVerified: () -> Unit) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        FirebaseFirestore.getInstance()
+            .collection("users").document(uid).get()
+            .addOnSuccessListener { document ->
+                val verificationStatus = document.getString("verificationStatus") ?: "pending"
+
+                if (verificationStatus == "verified") {
+                    onVerified()
+                } else {
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Verification Required")
+                        .setMessage("Please verify your NGO documents to create campaigns.")
+                        .setPositiveButton("Verify Now") { _, _ ->
+                            requireActivity().supportFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_container, IdentityVerificationFragment())
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                        .setNegativeButton("Cancel", null)
+                        .show()
+                }
+            }
     }
 
     private fun validateInputs(): Boolean {

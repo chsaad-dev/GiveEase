@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User Name"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A237E" />
+
+                <TextView
+                    android:id="@+id/tvEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="user@email.com"
+                    android:textSize="14sp"
+                    android:textColor="#546E7A"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/tvRole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Donor"
+                android:textColor="@android:color/white"
+                app:chipBackgroundColor="#1565C0"
+                style="@style/Widget.Material3.Chip.Assist" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvRegistrationNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reg: NGO-12345"
+            android:textSize="13sp"
+            android:textColor="#546E7A"
+            android:visibility="gone"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submitted: 25 Nov 2024"
+            android:textSize="12sp"
+            android:textColor="#9E9E9E"
+            android:layout_marginBottom="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnViewDocument"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View Document"
+            android:textSize="14sp"
+            app:icon="@drawable/ic_document"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnApprove"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Approve"
+                android:textSize="14sp"
+                android:layout_marginEnd="4dp"
+                app:icon="@drawable/ic_check"
+                app:backgroundTint="#4CAF50" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Reject"
+                android:textSize="14sp"
+                android:layout_marginStart="4dp"
+                app:icon="@drawable/ic_close"
+                app:backgroundTint="#F44336" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

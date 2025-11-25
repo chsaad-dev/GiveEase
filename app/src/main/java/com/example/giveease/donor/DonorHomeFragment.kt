@@ -8,6 +8,8 @@ import com.example.giveease.R
 import com.example.giveease.databinding.FragmentDonorHomeBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.app.AlertDialog
+import com.example.giveease.verification.IdentityVerificationFragment
 
 class DonorHomeFragment : Fragment() {
     private lateinit var binding: FragmentDonorHomeBinding
@@ -120,7 +122,9 @@ class DonorHomeFragment : Fragment() {
     }
 
     private fun navigateToQuickDonate() {
-        Toast.makeText(requireContext(), "Quick Donate feature coming soon", Toast.LENGTH_SHORT).show()
+        checkVerificationBeforeAction {
+            Toast.makeText(requireContext(), "Quick Donate feature coming soon", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun navigateToExploreCauses() {
@@ -143,7 +147,9 @@ class DonorHomeFragment : Fragment() {
     }
 
     private fun navigateToDonateToCampaign() {
-        Toast.makeText(requireContext(), "Donate to campaign feature coming soon", Toast.LENGTH_SHORT).show()
+        checkVerificationBeforeAction {
+            Toast.makeText(requireContext(), "Donate to campaign feature coming soon", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun navigateToAllCampaigns() {
@@ -156,6 +162,39 @@ class DonorHomeFragment : Fragment() {
     private fun navigateToDonationHistory() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container_donor, DonationHistoryFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun checkVerificationBeforeAction(onVerified: () -> Unit) {
+        val uid = auth.currentUser?.uid ?: return
+
+        firestore.collection("users").document(uid).get()
+            .addOnSuccessListener { document ->
+                val verificationStatus = document.getString("verificationStatus") ?: "pending"
+
+                if (verificationStatus == "verified") {
+                    onVerified()
+                } else {
+                    showVerificationRequiredDialog()
+                }
+            }
+    }
+
+    private fun showVerificationRequiredDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Verification Required")
+            .setMessage("Please verify your identity to donate.")
+            .setPositiveButton("Verify Now") { _, _ ->
+                navigateToVerification()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun navigateToVerification() {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, IdentityVerificationFragment())
             .addToBackStack(null)
             .commit()
     }
