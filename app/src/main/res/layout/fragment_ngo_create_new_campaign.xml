@@ -408,10 +408,11 @@
                                 android:layout_height="wrap_content"
                                 android:text="Low"
                                 android:textSize="13sp"
+                                android:checkable="true"
                                 app:chipBackgroundColor="@color/background"
                                 app:chipStrokeColor="#1565C0"
                                 app:chipStrokeWidth="1dp"
-                                app:checkedIconVisible="false" />
+                                style="@style/Widget.Material3.Chip.Filter" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chipMedium"
@@ -419,10 +420,11 @@
                                 android:layout_height="wrap_content"
                                 android:text="Medium"
                                 android:textSize="13sp"
+                                android:checkable="true"
                                 app:chipBackgroundColor="@color/background"
                                 app:chipStrokeColor="#1565C0"
                                 app:chipStrokeWidth="1dp"
-                                app:checkedIconVisible="false" />
+                                style="@style/Widget.Material3.Chip.Filter" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chipHigh"
@@ -430,10 +432,11 @@
                                 android:layout_height="wrap_content"
                                 android:text="High"
                                 android:textSize="13sp"
+                                android:checkable="true"
                                 app:chipBackgroundColor="@color/background"
                                 app:chipStrokeColor="#1565C0"
                                 app:chipStrokeWidth="1dp"
-                                app:checkedIconVisible="false" />
+                                style="@style/Widget.Material3.Chip.Filter" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chipEmergency"
@@ -441,10 +444,11 @@
                                 android:layout_height="wrap_content"
                                 android:text="Emergency"
                                 android:textSize="13sp"
+                                android:checkable="true"
                                 app:chipBackgroundColor="@color/background"
                                 app:chipStrokeColor="#1565C0"
                                 app:chipStrokeWidth="1dp"
-                                app:checkedIconVisible="false" />
+                                style="@style/Widget.Material3.Chip.Filter" />
                         </com.google.android.material.chip.ChipGroup>
                     </LinearLayout>
                 </LinearLayout>
@@ -657,9 +661,11 @@
                                 android:layout_height="wrap_content"
                                 android:text="New"
                                 android:textSize="13sp"
+                                android:checkable="true"
                                 app:chipBackgroundColor="@color/background"
                                 app:chipStrokeColor="#1565C0"
-                                app:chipStrokeWidth="1dp" />
+                                app:chipStrokeWidth="1dp"
+                                style="@style/Widget.Material3.Chip.Filter" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chipUsed"
@@ -667,9 +673,11 @@
                                 android:layout_height="wrap_content"
                                 android:text="Used - Good"
                                 android:textSize="13sp"
+                                android:checkable="true"
                                 app:chipBackgroundColor="@color/background"
                                 app:chipStrokeColor="#1565C0"
-                                app:chipStrokeWidth="1dp" />
+                                app:chipStrokeWidth="1dp"
+                                style="@style/Widget.Material3.Chip.Filter" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chipRefurbished"
@@ -677,9 +685,11 @@
                                 android:layout_height="wrap_content"
                                 android:text="Refurbished"
                                 android:textSize="13sp"
+                                android:checkable="true"
                                 app:chipBackgroundColor="@color/background"
                                 app:chipStrokeColor="#1565C0"
-                                app:chipStrokeWidth="1dp" />
+                                app:chipStrokeWidth="1dp"
+                                style="@style/Widget.Material3.Chip.Filter" />
                         </com.google.android.material.chip.ChipGroup>
                     </LinearLayout>
 
