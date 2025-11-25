@@ -1,42 +1,81 @@
 package com.example.giveease.donor.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.giveease.R
-import com.example.giveease.donor.model.Campaign
+import com.example.giveease.databinding.ItemCampaignBinding
+import com.example.giveease.ngo.CampaignData
+import java.text.SimpleDateFormat
+import java.util.*
 
-class CampaignAdapter(private val campaigns: List<Campaign>) :
-    RecyclerView.Adapter<CampaignAdapter.CampaignViewHolder>() {
+class CampaignAdapter(
+    private val campaigns: List<CampaignData>,
+    private val onCampaignClick: (CampaignData) -> Unit
+) : RecyclerView.Adapter<CampaignAdapter.CampaignViewHolder>() {
 
-    inner class CampaignViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val title: TextView = view.findViewById(R.id.tvCampaignTitle)
-        val desc: TextView = view.findViewById(R.id.tvCampaignDesc)
-        val image: ImageView = view.findViewById(R.id.imgCampaign)
-        val progressBar: ProgressBar = view.findViewById(R.id.progressBar)
-        val donateButton: Button = view.findViewById(R.id.btnDonate)
+    inner class CampaignViewHolder(private val binding: ItemCampaignBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(campaign: CampaignData) {
+            binding.apply {
+                tvCampaignTitle.text = campaign.title
+                tvCampaignDesc.text = campaign.description
+                tvNgoName.text = campaign.ngoName
+                tvCategory.text = campaign.category
+
+                // Progress
+                val progress = campaign.getProgress()
+                progressBar.progress = progress
+                tvProgress.text = "$progress%"
+
+                // Quantity
+                tvQuantity.text = "${campaign.currentQuantity} / ${campaign.targetQuantity} ${campaign.unit}"
+
+                // Days left
+                val daysLeft = campaign.getDaysLeft()
+                tvDaysLeft.text = if (daysLeft > 0) "$daysLeft days left" else "Expired"
+
+                // Urgency badge
+                tvUrgency.text = campaign.urgencyLevel
+                tvUrgency.setBackgroundColor(getUrgencyColor(campaign.urgencyLevel))
+
+                // Load image
+                if (campaign.imageUrls.isNotEmpty()) {
+                    Glide.with(itemView.context)
+                        .load(campaign.imageUrls.first())
+                        .placeholder(R.drawable.sample_compaign1)
+                        .into(imgCampaign)
+                } else {
+                    imgCampaign.setImageResource(R.drawable.sample_compaign1)
+                }
+
+                // Click listeners
+                root.setOnClickListener { onCampaignClick(campaign) }
+                btnDonate.setOnClickListener { onCampaignClick(campaign) }
+            }
+        }
+
+        private fun getUrgencyColor(urgency: String): Int {
+            return when (urgency) {
+                "Emergency" -> 0xFFFF5252.toInt()
+                "High" -> 0xFFFF9800.toInt()
+                "Medium" -> 0xFFFFC107.toInt()
+                else -> 0xFF4CAF50.toInt()
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CampaignViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_compaign, parent, false)
-        return CampaignViewHolder(view)
+        val binding = ItemCampaignBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return CampaignViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CampaignViewHolder, position: Int) {
-        val campaign = campaigns[position]
-        holder.title.text = campaign.title
-        holder.desc.text = campaign.description
-        holder.image.setImageResource(campaign.imageRes)
-        holder.progressBar.progress = campaign.progress
-        holder.donateButton.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "Donate clicked", Toast.LENGTH_SHORT).show()
-        }
+        holder.bind(campaigns[position])
     }
 
     override fun getItemCount() = campaigns.size
