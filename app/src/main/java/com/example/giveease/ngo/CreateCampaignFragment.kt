@@ -21,6 +21,9 @@ import android.app.AlertDialog
 import com.example.giveease.verification.IdentityVerificationFragment
 import java.text.SimpleDateFormat
 import java.util.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import java.io.ByteArrayOutputStream
 
 class CreateCampaignFragment : Fragment() {
 
@@ -273,29 +276,89 @@ class CreateCampaignFragment : Fragment() {
         )
     }
 
+    private fun compressImage(uri: Uri): ByteArray {
+        val inputStream = requireContext().contentResolver.openInputStream(uri)
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+        inputStream?.close()
+
+        // Calculate scaling to max 1200px width while maintaining aspect ratio
+        val maxWidth = 1200
+        val scale = if (bitmap.width > maxWidth) {
+            maxWidth.toFloat() / bitmap.width.toFloat()
+        } else {
+            1.0f
+        }
+
+        val scaledBitmap = if (scale < 1.0f) {
+            val newWidth = (bitmap.width * scale).toInt()
+            val newHeight = (bitmap.height * scale).toInt()
+            Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+        } else {
+            bitmap
+        }
+
+        // Compress to JPEG with 80% quality
+        val outputStream = ByteArrayOutputStream()
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+
+        // Clean up
+        if (scaledBitmap != bitmap) {
+            scaledBitmap.recycle()
+        }
+        bitmap.recycle()
+
+        return outputStream.toByteArray()
+    }
+
     private fun uploadImages(campaignData: CampaignData) {
         val imageUrls = mutableListOf<String>()
         var uploadCount = 0
 
         selectedImages.forEachIndexed { index, uri ->
-            val ref = storage.reference
-                .child("campaigns/${campaignData.ngoId}/${System.currentTimeMillis()}_$index.jpg")
+            try {
+                // Compress image before upload
+                val compressedImage = compressImage(uri)
 
-            ref.putFile(uri)
-                .addOnSuccessListener {
-                    ref.downloadUrl.addOnSuccessListener { downloadUri ->
-                        imageUrls.add(downloadUri.toString())
-                        uploadCount++
+                val ref = storage.reference
+                    .child("campaigns/${campaignData.ngoId}/${System.currentTimeMillis()}_$index.jpg")
 
-                        if (uploadCount == selectedImages.size) {
-                            saveCampaignToFirestore(campaignData, imageUrls)
+                ref.putBytes(compressedImage)
+                    .addOnSuccessListener {
+                        ref.downloadUrl.addOnSuccessListener { downloadUri ->
+                            imageUrls.add(downloadUri.toString())
+                            uploadCount++
+
+                            if (uploadCount == selectedImages.size) {
+                                saveCampaignToFirestore(campaignData, imageUrls)
+                            }
                         }
                     }
+                    .addOnFailureListener { e ->
+                        uploadCount++
+                        showToast("Image upload failed: ${e.message}")
+
+                        if (uploadCount == selectedImages.size) {
+                            if (imageUrls.isNotEmpty()) {
+                                saveCampaignToFirestore(campaignData, imageUrls)
+                            } else {
+                                showLoading(false)
+                                showToast("All images failed to upload")
+                            }
+                        }
+                    }
+            } catch (e: Exception) {
+                uploadCount++
+                showToast("Error processing image: ${e.message}")
+
+                if (uploadCount == selectedImages.size) {
+                    if (imageUrls.isNotEmpty()) {
+                        saveCampaignToFirestore(campaignData, imageUrls)
+                    } else {
+                        showLoading(false)
+                        showToast("All images failed to process")
+                    }
                 }
-                .addOnFailureListener { e ->
-                    showLoading(false)
-                    showToast("Image upload failed: ${e.message}")
-                }
+            }
         }
     }
 
