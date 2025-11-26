@@ -139,7 +139,7 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:id="@+id/layoutDonateWithoutRequest"
+                            android:id="@+id/layoutImpactDashboard"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -148,20 +148,20 @@
                             android:background="@drawable/action_button_bg"
                             android:clickable="true"
                             android:focusable="true"
-                            android:padding="16dp"
+                            android:padding="15dp"
                             android:layout_marginEnd="8dp">
 
                             <ImageView
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
-                                android:src="@drawable/ic_campaign"
+                                android:src="@drawable/ic_leaderboard1"
                                 app:tint="@color/secondary"
                                 android:layout_marginBottom="8dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Create Campaign"
+                                android:text="Impact Dashboard"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/secondary"
