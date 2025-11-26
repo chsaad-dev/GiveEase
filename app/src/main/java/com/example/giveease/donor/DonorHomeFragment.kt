@@ -207,8 +207,8 @@ class DonorHomeFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.apply {
-            layoutDonateWithoutRequest.setOnClickListener {
-                navigateToCreateCampaign()
+            layoutImpactDashboard.setOnClickListener {
+                navigateToImpactDashboard()
             }
 
             layoutQuickDonate.setOnClickListener {
@@ -269,10 +269,10 @@ class DonorHomeFragment : Fragment() {
             .commit()
     }
 
-    private fun navigateToCreateCampaign() {
+    private fun navigateToImpactDashboard() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, CreateCampaignFragment())
+            .replace(R.id.fragment_container_donor, ImpactDashboardFragment())
             .addToBackStack(null)
             .commit()
     }
