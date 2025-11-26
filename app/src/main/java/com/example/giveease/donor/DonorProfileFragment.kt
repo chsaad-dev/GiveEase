@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import com.example.giveease.R
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.giveease.databinding.FragmentDonorProfileBinding
@@ -27,7 +26,6 @@ class DonorProfileFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        setupProfile()
         setupListeners()
         setupProgressBar()
         loadUserData()
@@ -46,7 +44,7 @@ class DonorProfileFragment : Fragment() {
 
                 if (document.exists()) {
                     binding.apply {
-                        tvDonorName.text = document.getString("name") ?: "User Name"
+                        tvDonorName.text = document.getString("name") ?: "GiveEase User"
                         tvDonorEmail.text = document.getString("email") ?: auth.currentUser?.email
 
                         val profileImageUrl = document.getString("profileImageUrl")
@@ -59,20 +57,24 @@ class DonorProfileFragment : Fragment() {
                                     .circleCrop()
                                     .into(imgProfile)
                             }
+                        } else {
+                            imgProfile.setImageResource(R.drawable.sample_profile)
                         }
                     }
                 } else {
                     binding.apply {
-                        tvDonorName.text = auth.currentUser?.displayName ?: "User Name"
+                        tvDonorName.text = auth.currentUser?.displayName ?: "GiveEase User"
                         tvDonorEmail.text = auth.currentUser?.email ?: "user@example.com"
+                        imgProfile.setImageResource(R.drawable.sample_profile)
                     }
                 }
             }
             .addOnFailureListener {
                 if (!isAdded || _binding == null) return@addOnFailureListener
                 binding.apply {
-                    tvDonorName.text = auth.currentUser?.displayName ?: "User Name"
+                    tvDonorName.text = auth.currentUser?.displayName ?: "GiveEase User"
                     tvDonorEmail.text = auth.currentUser?.email ?: "user@example.com"
+                    imgProfile.setImageResource(R.drawable.sample_profile)
                 }
             }
     }
@@ -101,23 +103,30 @@ class DonorProfileFragment : Fragment() {
                 binding.apply {
                     tvTotalDonations.text = totalDonations.toString()
                     tvNGOsSupported.text = uniqueNGOs.toString()
-                    tvTotalAmount.text = totalItems.toString()
+                    tvTotalAmount.text = "$totalItems Items"
                     tvPeopleHelped.text = peopleHelped.toString()
                 }
 
                 val monthlyGoal = 100
-                val monthlyProgress = ((totalItems % monthlyGoal) * 100 / monthlyGoal).coerceAtMost(100)
+                val monthlyProgress = if (totalItems > 0) {
+                    ((totalItems.toFloat() / monthlyGoal) * 100).toInt().coerceAtMost(100)
+                } else {
+                    0
+                }
                 binding.progressDonationGoal.progress = monthlyProgress
                 binding.tvProgressPercent.text = "$monthlyProgress%"
             }
             .addOnFailureListener {
                 if (!isAdded || _binding == null) return@addOnFailureListener
+                binding.apply {
+                    tvTotalDonations.text = "0"
+                    tvNGOsSupported.text = "0"
+                    tvTotalAmount.text = "0 Items"
+                    tvPeopleHelped.text = "0"
+                    progressDonationGoal.progress = 0
+                    tvProgressPercent.text = "0%"
+                }
             }
-    }
-
-    private fun setupProfile() {
-        binding.apply {
-        }
     }
 
     private fun setupListeners() {
@@ -135,7 +144,7 @@ class DonorProfileFragment : Fragment() {
             }
 
             btnMyCampaigns.setOnClickListener {
-                navigateToCampaigns()
+                navigateToImpactDashboard()
             }
 
             btnGoToSettings.setOnClickListener {
@@ -144,10 +153,10 @@ class DonorProfileFragment : Fragment() {
         }
     }
 
-    private fun navigateToCampaigns() {
+    private fun navigateToImpactDashboard() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, DonorCampaignsFragment())
+            .replace(R.id.fragment_container_donor, ImpactDashboardFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -181,6 +190,7 @@ class DonorProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         loadUserData()
+        loadDonationStats()
     }
 
     override fun onDestroyView() {
