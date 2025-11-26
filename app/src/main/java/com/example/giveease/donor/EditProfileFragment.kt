@@ -3,6 +3,8 @@ package com.example.giveease.donor
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -10,18 +12,25 @@ import android.view.*
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.example.giveease.R
 import com.example.giveease.databinding.FragmentEditProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 import java.util.UUID
 
 class EditProfileFragment : Fragment() {
-    private lateinit var binding: FragmentEditProfileBinding
+    private var _binding: FragmentEditProfileBinding? = null
+    private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
     private var selectedImageUri: Uri? = null
     private var isDataChanged = false
     private lateinit var loadingDialog: AlertDialog
+    private var currentProfileImageUrl: String? = null
 
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -36,10 +45,11 @@ class EditProfileFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentEditProfileBinding.inflate(inflater, container, false)
+        _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
+        storage = FirebaseStorage.getInstance()
 
         setupProgressDialog()
         setupListeners()
@@ -50,7 +60,7 @@ class EditProfileFragment : Fragment() {
 
     private fun setupProgressDialog() {
         loadingDialog = AlertDialog.Builder(requireContext())
-            .setView(com.example.giveease.R.layout.dialog_loading)
+            .setView(R.layout.dialog_loading)
             .setCancelable(false)
             .create()
     }
@@ -82,12 +92,11 @@ class EditProfileFragment : Fragment() {
             }
 
             imgProfile.setOnClickListener {
-                Toast.makeText(requireContext(), "Photo upload feature coming soon", Toast.LENGTH_SHORT).show()
-                // Temporarily disabled until Firebase Storage is available
+                showImagePickerDialog()
             }
 
             btnChangePhoto.setOnClickListener {
-                Toast.makeText(requireContext(), "Photo upload feature coming soon", Toast.LENGTH_SHORT).show()
+                showImagePickerDialog()
             }
 
             etFullName.setOnFocusChangeListener { _, _ -> isDataChanged = true }
@@ -102,11 +111,17 @@ class EditProfileFragment : Fragment() {
 
     private fun loadUserData() {
         val userId = auth.currentUser?.uid ?: return
+        if (!isAdded || _binding == null) return
 
         loadingDialog.show()
 
         firestore.collection("users").document(userId).get()
             .addOnSuccessListener { document ->
+                if (!isAdded || _binding == null) {
+                    loadingDialog.dismiss()
+                    return@addOnSuccessListener
+                }
+
                 loadingDialog.dismiss()
                 if (document.exists()) {
                     binding.apply {
@@ -119,16 +134,49 @@ class EditProfileFragment : Fragment() {
                         switchEmailNotifications.isChecked = document.getBoolean("emailNotifications") ?: true
                         switchPushNotifications.isChecked = document.getBoolean("pushNotifications") ?: true
 
-                        val profileImageUrl = document.getString("profileImageUrl")
-                        if (!profileImageUrl.isNullOrEmpty()) {
+                        currentProfileImageUrl = document.getString("profileImageUrl")
+                        if (!currentProfileImageUrl.isNullOrEmpty()) {
+                            context?.let { ctx ->
+                                Glide.with(ctx)
+                                    .load(currentProfileImageUrl)
+                                    .placeholder(R.drawable.sample_profile)
+                                    .error(R.drawable.sample_profile)
+                                    .circleCrop()
+                                    .into(imgProfile)
+                            }
                         }
                     }
                 }
             }
             .addOnFailureListener { exception ->
+                if (!isAdded || _binding == null) return@addOnFailureListener
                 loadingDialog.dismiss()
                 Toast.makeText(requireContext(), "Error loading profile: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun showImagePickerDialog() {
+        val options = arrayOf("Choose from Gallery", "Remove Photo")
+        AlertDialog.Builder(requireContext())
+            .setTitle("Profile Photo")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> openImagePicker()
+                    1 -> removeProfilePhoto()
+                }
+            }
+            .show()
+    }
+
+    private fun openImagePicker() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        imagePickerLauncher.launch(intent)
+    }
+
+    private fun removeProfilePhoto() {
+        selectedImageUri = null
+        binding.imgProfile.setImageResource(R.drawable.sample_profile)
+        isDataChanged = true
     }
 
     private fun saveProfile() {
@@ -138,6 +186,118 @@ class EditProfileFragment : Fragment() {
 
         loadingDialog.show()
 
+        if (selectedImageUri != null) {
+            uploadProfileImage(userId)
+        } else {
+            val userData = buildUserData(currentProfileImageUrl)
+            updateUserData(userId, userData)
+        }
+    }
+
+    private fun uploadProfileImage(userId: String) {
+        selectedImageUri?.let { uri ->
+            try {
+                // Log for debugging
+                android.util.Log.d("ProfileUpload", "User ID: $userId")
+                android.util.Log.d("ProfileUpload", "Auth UID: ${auth.currentUser?.uid}")
+
+                val inputStream = requireContext().contentResolver.openInputStream(uri)
+                val originalBitmap = BitmapFactory.decodeStream(inputStream)
+                inputStream?.close()
+
+                val compressedBytes = compressImage(originalBitmap)
+
+                val fileName = "${System.currentTimeMillis()}.jpg"
+                val storagePath = "profile_images/$userId/$fileName"
+
+                // Log the path
+                android.util.Log.d("ProfileUpload", "Storage path: $storagePath")
+
+                val storageRef = storage.reference.child(storagePath)
+
+                storageRef.putBytes(compressedBytes)
+                    .addOnSuccessListener {
+                        android.util.Log.d("ProfileUpload", "Upload successful")
+                        storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                            if (!isAdded || _binding == null) return@addOnSuccessListener
+
+                            if (currentProfileImageUrl != null && currentProfileImageUrl!!.contains("profile_images/")) {
+                                deleteOldProfileImage(currentProfileImageUrl!!)
+                            }
+
+                            val userData = buildUserData(downloadUri.toString())
+                            updateUserData(userId, userData)
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        if (!isAdded || _binding == null) return@addOnFailureListener
+                        loadingDialog.dismiss()
+
+                        // Detailed error logging
+                        android.util.Log.e("ProfileUpload", "Upload failed: ${exception.message}", exception)
+                        Toast.makeText(
+                            requireContext(),
+                            "Upload failed: ${exception.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+            } catch (e: Exception) {
+                loadingDialog.dismiss()
+                android.util.Log.e("ProfileUpload", "Processing error: ${e.message}", e)
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun compressImage(bitmap: Bitmap): ByteArray {
+        val maxWidth = 1024
+        val maxHeight = 1024
+
+        val width = bitmap.width
+        val height = bitmap.height
+
+        val scale = Math.min(
+            maxWidth.toFloat() / width,
+            maxHeight.toFloat() / height
+        )
+
+        val scaledBitmap = if (scale < 1) {
+            Bitmap.createScaledBitmap(
+                bitmap,
+                (width * scale).toInt(),
+                (height * scale).toInt(),
+                true
+            )
+        } else {
+            bitmap
+        }
+
+        val outputStream = ByteArrayOutputStream()
+        var quality = 85
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+
+        while (outputStream.size() > 500 * 1024 && quality > 20) {
+            outputStream.reset()
+            quality -= 10
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+        }
+
+        if (scaledBitmap != bitmap) {
+            scaledBitmap.recycle()
+        }
+
+        return outputStream.toByteArray()
+    }
+
+    private fun deleteOldProfileImage(imageUrl: String) {
+        try {
+            val oldImageRef = storage.getReferenceFromUrl(imageUrl)
+            oldImageRef.delete()
+        } catch (e: Exception) {
+        }
+    }
+
+    private fun buildUserData(profileImageUrl: String?): HashMap<String, Any> {
         val userData = hashMapOf<String, Any>(
             "name" to binding.etFullName.text.toString().trim(),
             "phone" to binding.etPhone.text.toString().trim(),
@@ -148,7 +308,13 @@ class EditProfileFragment : Fragment() {
             "updatedAt" to System.currentTimeMillis()
         )
 
-        updateUserData(userId, userData)
+        if (profileImageUrl != null) {
+            userData["profileImageUrl"] = profileImageUrl
+        } else if (selectedImageUri == null && currentProfileImageUrl != null) {
+            userData["profileImageUrl"] = ""
+        }
+
+        return userData
     }
 
     private fun showUnsavedChangesDialog() {
@@ -169,12 +335,14 @@ class EditProfileFragment : Fragment() {
         firestore.collection("users").document(userId)
             .update(userData)
             .addOnSuccessListener {
+                if (!isAdded || _binding == null) return@addOnSuccessListener
                 loadingDialog.dismiss()
                 Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show()
                 isDataChanged = false
                 parentFragmentManager.popBackStack()
             }
             .addOnFailureListener { exception ->
+                if (!isAdded || _binding == null) return@addOnFailureListener
                 loadingDialog.dismiss()
                 Toast.makeText(requireContext(), "Error updating profile: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
@@ -201,18 +369,11 @@ class EditProfileFragment : Fragment() {
         }
     }
 
-    private fun showImagePickerDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Photo Upload")
-            .setMessage("Photo upload feature will be available when Firebase Storage is enabled.")
-            .setPositiveButton("OK", null)
-            .show()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         if (::loadingDialog.isInitialized && loadingDialog.isShowing) {
             loadingDialog.dismiss()
         }
+        _binding = null
     }
 }
