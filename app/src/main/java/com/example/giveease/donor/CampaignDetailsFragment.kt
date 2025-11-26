@@ -12,6 +12,7 @@ import com.example.giveease.databinding.FragmentCampaignDetailsBinding
 import com.example.giveease.donor.adapter.ImageSliderAdapter
 import com.example.giveease.ngo.CampaignData
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -165,9 +166,45 @@ class CampaignDetailsFragment : Fragment() {
         startActivity(android.content.Intent.createChooser(shareIntent, "Share Campaign"))
     }
 
+
     private fun handleDonate() {
-        Toast.makeText(requireContext(), "Opening donation form for ${campaign.title}", Toast.LENGTH_SHORT).show()
-        // TODO: Navigate to donation form or show donation dialog
+        val dialog = DonationDialogFragment.newInstance(campaign)
+        dialog.show(childFragmentManager, "DonationDialog")
+    }
+
+    fun refreshCampaignData() {
+        // Reload campaign from Firestore to get updated values
+        val firestore = FirebaseFirestore.getInstance()
+
+        firestore.collection("campaigns").document(campaign.id).get()
+            .addOnSuccessListener { document ->
+                try {
+                    campaign = CampaignData(
+                        id = document.id,
+                        ngoId = document.getString("ngoId") ?: "",
+                        ngoName = document.getString("ngoName") ?: "",
+                        category = document.getString("category") ?: "",
+                        title = document.getString("title") ?: "",
+                        description = document.getString("description") ?: "",
+                        targetQuantity = document.getLong("targetQuantity")?.toInt() ?: 0,
+                        currentQuantity = document.getLong("currentQuantity")?.toInt() ?: 0,
+                        unit = document.getString("unit") ?: "",
+                        endDate = document.getLong("endDate") ?: 0,
+                        urgencyLevel = document.getString("urgencyLevel") ?: "",
+                        itemCondition = document.getString("itemCondition"),
+                        specificRequirements = document.getString("specificRequirements") ?: "",
+                        autoClose = document.getBoolean("autoClose") ?: false,
+                        imageUrls = (document.get("imageUrls") as? List<*>)?.mapNotNull { it as? String } ?: emptyList(),
+                        createdAt = document.getLong("createdAt") ?: 0,
+                        status = document.getString("status") ?: "Active",
+                        donorCount = document.getLong("donorCount")?.toInt() ?: 0,
+                        shareCount = document.getLong("shareCount")?.toInt() ?: 0
+                    )
+                    setupUI() // Refresh the UI with new data
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "Error refreshing: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     override fun onDestroyView() {
