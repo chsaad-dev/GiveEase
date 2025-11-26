@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.giveease.MainActivity
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentDonorSettingsBinding
@@ -15,13 +16,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class DonorSettingsFragment : Fragment() {
-    private lateinit var binding: FragmentDonorSettingsBinding
+    private var _binding: FragmentDonorSettingsBinding? = null
+    private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var loadingDialog: AlertDialog
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentDonorSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentDonorSettingsBinding.inflate(inflater, container, false)
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
@@ -41,19 +43,34 @@ class DonorSettingsFragment : Fragment() {
 
     private fun loadUserData() {
         val user = auth.currentUser
-        if (user != null) {
+        if (user != null && isAdded && _binding != null) {
             val uid = user.uid
             firestore.collection("users").document(uid).get()
                 .addOnSuccessListener { document ->
+                    if (!isAdded || _binding == null) return@addOnSuccessListener
+
                     if (document.exists()) {
                         binding.tvUserName.text = document.getString("name") ?: "User Name"
                         binding.tvUserEmail.text = document.getString("email") ?: user.email
+
+                        val profileImageUrl = document.getString("profileImageUrl")
+                        if (!profileImageUrl.isNullOrEmpty()) {
+                            context?.let { ctx ->
+                                Glide.with(ctx)
+                                    .load(profileImageUrl)
+                                    .placeholder(R.drawable.sample_profile)
+                                    .error(R.drawable.sample_profile)
+                                    .circleCrop()
+                                    .into(binding.imgProfile)
+                            }
+                        }
                     } else {
                         binding.tvUserName.text = user.displayName ?: "User Name"
                         binding.tvUserEmail.text = user.email ?: "No email"
                     }
                 }
                 .addOnFailureListener {
+                    if (!isAdded || _binding == null) return@addOnFailureListener
                     binding.tvUserName.text = user.displayName ?: "User Name"
                     binding.tvUserEmail.text = user.email ?: "No email"
                 }
@@ -66,6 +83,7 @@ class DonorSettingsFragment : Fragment() {
         }
 
         binding.btnEditProfile.setOnClickListener {
+            if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_donor, EditProfileFragment())
                 .addToBackStack(null)
@@ -73,6 +91,7 @@ class DonorSettingsFragment : Fragment() {
         }
 
         binding.cardEditProfile.setOnClickListener {
+            if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_donor, ChangeEmailFragment())
                 .addToBackStack(null)
@@ -80,6 +99,7 @@ class DonorSettingsFragment : Fragment() {
         }
 
         binding.cardChangePassword.setOnClickListener {
+            if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_donor, ChangePasswordFragment())
                 .addToBackStack(null)
@@ -87,6 +107,7 @@ class DonorSettingsFragment : Fragment() {
         }
 
         binding.cardFaq.setOnClickListener {
+            if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_donor, FAQFragment())
                 .addToBackStack(null)
@@ -94,6 +115,7 @@ class DonorSettingsFragment : Fragment() {
         }
 
         binding.cardSupport.setOnClickListener {
+            if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_donor, ContactSupportFragment())
                 .addToBackStack(null)
@@ -101,6 +123,7 @@ class DonorSettingsFragment : Fragment() {
         }
 
         binding.cardPrivacy.setOnClickListener {
+            if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_donor, PrivacyPolicyFragment())
                 .addToBackStack(null)
@@ -108,6 +131,7 @@ class DonorSettingsFragment : Fragment() {
         }
 
         binding.cardTerms.setOnClickListener {
+            if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_donor, TermsConditionsFragment())
                 .addToBackStack(null)
@@ -133,10 +157,12 @@ class DonorSettingsFragment : Fragment() {
         firestore.collection("users").document(uid)
             .update("pushNotifications", enabled)
             .addOnSuccessListener {
+                if (!isAdded || _binding == null) return@addOnSuccessListener
                 val message = if (enabled) "Notifications enabled" else "Notifications disabled"
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
                 Toast.makeText(requireContext(), "Failed to update notification preference", Toast.LENGTH_SHORT).show()
                 binding.switchNotifications.isChecked = !enabled
             }
@@ -274,10 +300,16 @@ class DonorSettingsFragment : Fragment() {
         requireActivity().finish()
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadUserData()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         if (::loadingDialog.isInitialized && loadingDialog.isShowing) {
             loadingDialog.dismiss()
         }
+        _binding = null
     }
 }

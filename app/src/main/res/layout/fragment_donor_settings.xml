@@ -83,6 +83,7 @@
                     <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
+                        android:id="@+id/imgProfile"
                         android:src="@drawable/sample_profile"
                         android:scaleType="centerCrop"
                         app:shapeAppearanceOverlay="@style/CircleImageView"
