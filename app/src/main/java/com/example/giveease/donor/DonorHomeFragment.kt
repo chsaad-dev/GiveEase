@@ -18,13 +18,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class DonorHomeFragment : Fragment() {
-    private lateinit var binding: FragmentDonorHomeBinding
+    private var _binding: FragmentDonorHomeBinding? = null
+    private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private var featuredCampaignId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentDonorHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentDonorHomeBinding.inflate(inflater, container, false)
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
@@ -43,6 +44,8 @@ class DonorHomeFragment : Fragment() {
 
         firestore.collection("users").document(userId).get()
             .addOnSuccessListener { document ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
                 if (document.exists()) {
                     val name = document.getString("name") ?: "User"
                     binding.tvUserName.text = name
@@ -51,6 +54,7 @@ class DonorHomeFragment : Fragment() {
                 }
             }
             .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
                 binding.tvUserName.text = auth.currentUser?.displayName ?: "User"
             }
     }
@@ -62,6 +66,8 @@ class DonorHomeFragment : Fragment() {
             .whereEqualTo("donorId", userId)
             .get()
             .addOnSuccessListener { documents ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
                 val totalDonations = documents.size()
                 val totalItems = documents.sumOf { doc ->
                     doc.getLong("quantity") ?: 0L
@@ -71,6 +77,7 @@ class DonorHomeFragment : Fragment() {
                 binding.tvTotalAmount.text = totalItems.toString()
             }
             .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
                 binding.tvDonationsCount.text = "0"
                 binding.tvTotalAmount.text = "0"
             }
@@ -84,6 +91,11 @@ class DonorHomeFragment : Fragment() {
             .limit(1)
             .get()
             .addOnSuccessListener { documents ->
+                if (!isAdded || _binding == null || context == null) {
+                    android.util.Log.d("DonorHome", "Fragment not attached, skipping UI update")
+                    return@addOnSuccessListener
+                }
+
                 if (!documents.isEmpty) {
                     val campaign = documents.documents[0]
                     featuredCampaignId = campaign.id
@@ -96,11 +108,14 @@ class DonorHomeFragment : Fragment() {
 
                     if (!imageUrls.isNullOrEmpty() && ivCampaignImage != null) {
                         android.util.Log.d("DonorHome", "Loading image: ${imageUrls[0]}")
-                        Glide.with(requireContext())
-                            .load(imageUrls[0])
-                            .placeholder(R.drawable.sample_compaign1)
-                            .error(R.drawable.sample_compaign1)
-                            .into(ivCampaignImage)
+
+                        context?.let { ctx ->
+                            Glide.with(ctx)
+                                .load(imageUrls[0])
+                                .placeholder(R.drawable.sample_compaign1)
+                                .error(R.drawable.sample_compaign1)
+                                .into(ivCampaignImage)
+                        }
                     } else {
                         android.util.Log.d("DonorHome", "No images found or ImageView is null")
                     }
@@ -130,7 +145,9 @@ class DonorHomeFragment : Fragment() {
             }
             .addOnFailureListener { exception ->
                 android.util.Log.e("DonorHome", "Failed to load featured campaign: ${exception.message}")
-                binding.cardFeaturedCampaign.visibility = View.GONE
+                if (isAdded && _binding != null) {
+                    binding.cardFeaturedCampaign.visibility = View.GONE
+                }
             }
     }
 
@@ -142,6 +159,8 @@ class DonorHomeFragment : Fragment() {
             .limit(1)
             .get()
             .addOnSuccessListener { documents ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
                 if (!documents.isEmpty) {
                     val donation = documents.documents[0]
 
@@ -164,7 +183,9 @@ class DonorHomeFragment : Fragment() {
                 }
             }
             .addOnFailureListener {
-                binding.recentActivityCard.visibility = View.GONE
+                if (isAdded && _binding != null) {
+                    binding.recentActivityCard.visibility = View.GONE
+                }
             }
     }
 
@@ -212,7 +233,9 @@ class DonorHomeFragment : Fragment() {
                     navigateToCampaignDetail(featuredCampaignId!!)
                 } else {
                     android.util.Log.e("DonorHome", "Campaign ID is null when card clicked")
-                    Toast.makeText(requireContext(), "Campaign not loaded yet", Toast.LENGTH_SHORT).show()
+                    context?.let {
+                        Toast.makeText(it, "Campaign not loaded yet", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
@@ -222,7 +245,9 @@ class DonorHomeFragment : Fragment() {
                     navigateToCampaignDetail(featuredCampaignId!!)
                 } else {
                     android.util.Log.e("DonorHome", "Campaign ID is null when donate button clicked")
-                    Toast.makeText(requireContext(), "Campaign not loaded yet", Toast.LENGTH_SHORT).show()
+                    context?.let {
+                        Toast.makeText(it, "Campaign not loaded yet", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
@@ -237,6 +262,7 @@ class DonorHomeFragment : Fragment() {
     }
 
     private fun navigateToMyCampaigns() {
+        if (!isAdded) return
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container_donor, DonorFeedFragment())
             .addToBackStack(null)
@@ -244,6 +270,7 @@ class DonorHomeFragment : Fragment() {
     }
 
     private fun navigateToCreateCampaign() {
+        if (!isAdded) return
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container_donor, CreateCampaignFragment())
             .addToBackStack(null)
@@ -251,6 +278,7 @@ class DonorHomeFragment : Fragment() {
     }
 
     private fun navigateToQuickDonate() {
+        if (!isAdded) return
         checkVerificationBeforeAction {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_donor, DonorFeedFragment())
@@ -260,6 +288,7 @@ class DonorHomeFragment : Fragment() {
     }
 
     private fun navigateToExploreCauses() {
+        if (!isAdded) return
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container_donor, DonorFeedFragment())
             .addToBackStack(null)
@@ -267,14 +296,20 @@ class DonorHomeFragment : Fragment() {
     }
 
     private fun navigateToLeaderboard() {
-        Toast.makeText(requireContext(), "Leaderboard coming soon", Toast.LENGTH_SHORT).show()
+        context?.let {
+            Toast.makeText(it, "Leaderboard coming soon", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun navigateToNotifications() {
-        Toast.makeText(requireContext(), "Notifications coming soon", Toast.LENGTH_SHORT).show()
+        context?.let {
+            Toast.makeText(it, "Notifications coming soon", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun navigateToCampaignDetail(campaignId: String) {
+        if (!isAdded) return
+
         android.util.Log.d("DonorHome", "Creating CampaignDetailsFragment with campaignId: $campaignId")
 
         val fragment = CampaignDetailsFragment().apply {
@@ -290,6 +325,7 @@ class DonorHomeFragment : Fragment() {
     }
 
     private fun navigateToDonationHistory() {
+        if (!isAdded) return
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container_donor, DonationHistoryFragment())
             .addToBackStack(null)
@@ -301,6 +337,8 @@ class DonorHomeFragment : Fragment() {
 
         firestore.collection("users").document(uid).get()
             .addOnSuccessListener { document ->
+                if (!isAdded) return@addOnSuccessListener
+
                 val verificationStatus = document.getString("verificationStatus") ?: "pending"
 
                 if (verificationStatus == "verified") {
@@ -312,21 +350,29 @@ class DonorHomeFragment : Fragment() {
     }
 
     private fun showVerificationRequiredDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Verification Required")
-            .setMessage("Please verify your identity to donate.")
-            .setPositiveButton("Verify Now") { _, _ ->
-                navigateToVerification()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+        context?.let { ctx ->
+            AlertDialog.Builder(ctx)
+                .setTitle("Verification Required")
+                .setMessage("Please verify your identity to donate.")
+                .setPositiveButton("Verify Now") { _, _ ->
+                    navigateToVerification()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
     }
 
     private fun navigateToVerification() {
+        if (!isAdded) return
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, IdentityVerificationFragment())
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
