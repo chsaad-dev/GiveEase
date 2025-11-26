@@ -20,7 +20,7 @@ data class CampaignData(
     val status: String = "Active",
     val donorCount: Int = 0,
     val shareCount: Int = 0
-) {
+) : java.io.Serializable {
     fun getProgress(): Int {
         return if (targetQuantity > 0) {
             ((currentQuantity.toFloat() / targetQuantity) * 100).toInt()
