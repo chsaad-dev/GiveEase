@@ -33,7 +33,10 @@ class DonationAdapter(
             binding.apply {
                 tvNgoName.text = donation.ngoName
                 tvCampaignTitle.text = donation.campaignTitle
-                tvDonationAmount.text = "Rs ${String.format("%,d", donation.amount.toInt())}"
+
+                val quantity = donation.amount.toInt()
+                tvDonationAmount.text = "$quantity ${if (quantity == 1) "item" else "items"}"
+
                 tvCategory.text = donation.category
                 tvDonationDate.text = formatDate(donation.createdAt)
 
@@ -60,10 +63,9 @@ class DonationAdapter(
                     }
                 }
 
-                if (donation.receiptUrl != null && donation.status == "completed") {
+                if (donation.receiptUrl != null && donation.status.lowercase() == "completed") {
                     ivReceiptDownload.visibility = View.VISIBLE
                     ivReceiptDownload.setOnClickListener {
-                        // TODO: Download receipt
                         android.widget.Toast.makeText(itemView.context, "Downloading receipt...", android.widget.Toast.LENGTH_SHORT).show()
                     }
                 } else {

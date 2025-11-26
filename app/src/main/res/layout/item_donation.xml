@@ -14,23 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="6dp"
+        android:padding="16dp"
         android:gravity="center_vertical">
 
         <View
             android:id="@+id/statusIndicator"
             android:layout_width="4dp"
-            android:layout_height="60dp"
+            android:layout_height="80dp"
             android:background="@android:color/holo_green_dark"
-            android:layout_marginEnd="16dp" />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imgNgoLogo"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/sample_ngo"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/CircleImageView"
             android:layout_marginEnd="16dp" />
 
         <LinearLayout
@@ -43,7 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
 
                 <TextView
                     android:id="@+id/tvNgoName"
@@ -51,36 +43,38 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Edhi Foundation"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
                 <TextView
                     android:id="@+id/tvDonationDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2 days ago"
-                    android:textSize="12sp"
-                    android:textColor="#666666" />
+                    android:text="Today"
+                    android:textSize="13sp"
+                    android:textColor="#999999"
+                    android:layout_marginStart="8dp" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tvCampaignTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Flood Relief Campaign"
                 android:textSize="14sp"
                 android:textColor="#666666"
-                android:layout_marginTop="4dp"
                 android:maxLines="1"
-                android:ellipsize="end" />
+                android:ellipsize="end"
+                android:layout_marginBottom="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="8dp">
+                android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/tvStatus"
@@ -91,49 +85,50 @@
                     android:textStyle="bold"
                     android:textColor="@android:color/white"
                     android:background="@drawable/status_completed_bg"
-                    android:paddingHorizontal="8dp"
+                    android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp" />
 
                 <TextView
                     android:id="@+id/tvCategory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Disaster Relief"
+                    android:text="General"
                     android:textSize="11sp"
                     android:textColor="@color/secondary"
                     android:background="@drawable/category_bg"
-                    android:paddingHorizontal="8dp"
+                    android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Amount -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="end">
+            android:gravity="end"
+            android:layout_marginStart="12dp">
 
             <TextView
                 android:id="@+id/tvDonationAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rs 5,000"
-                android:textSize="18sp"
+                android:text="5 items"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/holo_green_dark" />
+                android:textColor="@android:color/holo_green_dark"
+                android:layout_marginBottom="4dp" />
 
             <ImageView
                 android:id="@+id/ivReceiptDownload"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/ic_download"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
-                android:layout_marginTop="4dp"
-                app:tint="#666666" />
+                android:visibility="invisible"
+                app:tint="#999999" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -18,6 +18,7 @@ class DonationHistoryFragment : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var donationAdapter: DonationAdapter
     private val donationsList = mutableListOf<Donation>()
+    private var allDonations = listOf<Donation>()
     private var currentFilter = "all"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -35,7 +36,6 @@ class DonationHistoryFragment : Fragment() {
 
     private fun setupRecyclerView() {
         donationAdapter = DonationAdapter(donationsList) { donation ->
-            // Handle donation item click
             showDonationDetails(donation)
         }
 
@@ -73,60 +73,93 @@ class DonationHistoryFragment : Fragment() {
         currentFilter = filter
 
         binding.apply {
-            btnFilterAll.backgroundTintList = if (filter == "all")
-                ContextCompat.getColorStateList(requireContext(), R.color.secondary)
-            else ContextCompat.getColorStateList(requireContext(), android.R.color.transparent)
+            val secondaryColor = ContextCompat.getColorStateList(requireContext(), R.color.secondary)
+            val transparentColor = ContextCompat.getColorStateList(requireContext(), android.R.color.transparent)
 
-            btnFilterCompleted.backgroundTintList = if (filter == "completed")
-                ContextCompat.getColorStateList(requireContext(), R.color.secondary)
-            else ContextCompat.getColorStateList(requireContext(), android.R.color.transparent)
-
-            btnFilterPending.backgroundTintList = if (filter == "pending")
-                ContextCompat.getColorStateList(requireContext(), R.color.secondary)
-            else ContextCompat.getColorStateList(requireContext(), android.R.color.transparent)
+            when (filter) {
+                "all" -> {
+                    btnFilterAll.backgroundTintList = secondaryColor
+                    btnFilterAll.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                    btnFilterCompleted.backgroundTintList = transparentColor
+                    btnFilterCompleted.setTextColor(ContextCompat.getColor(requireContext(), R.color.secondary))
+                    btnFilterPending.backgroundTintList = transparentColor
+                    btnFilterPending.setTextColor(ContextCompat.getColor(requireContext(), R.color.secondary))
+                }
+                "completed" -> {
+                    btnFilterAll.backgroundTintList = transparentColor
+                    btnFilterAll.setTextColor(ContextCompat.getColor(requireContext(), R.color.secondary))
+                    btnFilterCompleted.backgroundTintList = secondaryColor
+                    btnFilterCompleted.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                    btnFilterPending.backgroundTintList = transparentColor
+                    btnFilterPending.setTextColor(ContextCompat.getColor(requireContext(), R.color.secondary))
+                }
+                "pending" -> {
+                    btnFilterAll.backgroundTintList = transparentColor
+                    btnFilterAll.setTextColor(ContextCompat.getColor(requireContext(), R.color.secondary))
+                    btnFilterCompleted.backgroundTintList = transparentColor
+                    btnFilterCompleted.setTextColor(ContextCompat.getColor(requireContext(), R.color.secondary))
+                    btnFilterPending.backgroundTintList = secondaryColor
+                    btnFilterPending.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                }
+            }
         }
 
-        loadDonations()
+        applyFilter()
+    }
+
+    private fun applyFilter() {
+        val filtered = when (currentFilter) {
+            "completed" -> allDonations.filter { it.status.lowercase() == "completed" }
+            "pending" -> allDonations.filter { it.status.lowercase() == "pending" }
+            else -> allDonations
+        }
+
+        updateUI(filtered)
     }
 
     private fun loadDonations() {
         val userId = auth.currentUser?.uid ?: return
 
-        var query = firestore.collection("donations")
+        android.util.Log.d("DonationHistory", "Loading donations for userId: $userId")
+
+        firestore.collection("donations")
             .whereEqualTo("donorId", userId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-
-        // Apply filter
-        if (currentFilter != "all") {
-            query = query.whereEqualTo("status", currentFilter)
-        }
-
-        query.get()
+            .get()
             .addOnSuccessListener { documents ->
+                android.util.Log.d("DonationHistory", "Total documents found: ${documents.size()}")
+
                 val donations = documents.mapNotNull { doc ->
                     try {
+                        android.util.Log.d("DonationHistory", "Processing: ${doc.id}")
+
                         Donation(
                             id = doc.id,
                             ngoId = doc.getString("ngoId") ?: "",
                             ngoName = doc.getString("ngoName") ?: "Unknown NGO",
-                            campaignTitle = doc.getString("campaignTitle") ?: "Donation",
-                            amount = doc.getDouble("amount") ?: 0.0,
-                            status = doc.getString("status") ?: "pending",
-                            category = doc.getString("category") ?: "General",
-                            createdAt = doc.getLong("createdAt") ?: 0L,
-                            receiptUrl = doc.getString("receiptUrl")
+                            campaignTitle = doc.getString("campaignTitle") ?: "Unknown Campaign",
+                            amount = doc.getLong("quantity")?.toDouble() ?: 0.0,
+                            status = doc.getString("status") ?: "Completed",
+                            category = "General",
+                            createdAt = doc.getLong("timestamp") ?: System.currentTimeMillis(),
+                            receiptUrl = null
                         )
                     } catch (e: Exception) {
+                        android.util.Log.e("DonationHistory", "Error parsing: ${e.message}")
                         null
                     }
-                }
+                }.sortedByDescending { it.createdAt }
 
-                updateUI(donations)
+                android.util.Log.d("DonationHistory", "Successfully parsed: ${donations.size} donations")
+
+                allDonations = donations
+                applyFilter()
                 updateSummary(donations)
             }
-            .addOnFailureListener {
-                // Show dummy data for testing
-                showDummyData()
+            .addOnFailureListener { exception ->
+                android.util.Log.e("DonationHistory", "Query failed: ${exception.message}")
+                Toast.makeText(requireContext(), "Error: ${exception.message}", Toast.LENGTH_LONG).show()
+                binding.layoutEmptyState.visibility = View.VISIBLE
+                binding.recyclerViewDonations.visibility = View.GONE
             }
     }
 
@@ -146,56 +179,14 @@ class DonationHistoryFragment : Fragment() {
 
     private fun updateSummary(donations: List<Donation>) {
         val totalDonations = donations.size
-        val totalAmount = donations.sumOf { it.amount }
+        val totalItems = donations.sumOf { it.amount.toInt() }
 
         binding.tvTotalDonations.text = totalDonations.toString()
-        binding.tvTotalAmount.text = "Rs ${String.format("%,d", totalAmount.toInt())}"
-    }
-
-    private fun showDummyData() {
-        val dummyDonations = listOf(
-            Donation(
-                id = "1",
-                ngoId = "ngo1",
-                ngoName = "Edhi Foundation",
-                campaignTitle = "Flood Relief Campaign",
-                amount = 5000.0,
-                status = "completed",
-                category = "Disaster Relief",
-                createdAt = System.currentTimeMillis() - 172800000, // 2 days ago
-                receiptUrl = null
-            ),
-            Donation(
-                id = "2",
-                ngoId = "ngo2",
-                ngoName = "Saylani Welfare",
-                campaignTitle = "Food Distribution Drive",
-                amount = 2500.0,
-                status = "completed",
-                category = "Food & Nutrition",
-                createdAt = System.currentTimeMillis() - 604800000, // 1 week ago
-                receiptUrl = null
-            ),
-            Donation(
-                id = "3",
-                ngoId = "ngo3",
-                ngoName = "Shaukat Khanum",
-                campaignTitle = "Cancer Treatment Support",
-                amount = 10000.0,
-                status = "pending",
-                category = "Healthcare",
-                createdAt = System.currentTimeMillis() - 86400000, // 1 day ago
-                receiptUrl = null
-            )
-        )
-
-        updateUI(dummyDonations)
-        updateSummary(dummyDonations)
+        binding.tvTotalAmount.text = totalItems.toString()
     }
 
     private fun showDonationDetails(donation: Donation) {
-        Toast.makeText(requireContext(), "Donation to ${donation.ngoName}", Toast.LENGTH_SHORT).show()
-        // TODO: Implement donation details screen
+        Toast.makeText(requireContext(), "Donated ${donation.amount.toInt()} items to ${donation.campaignTitle}", Toast.LENGTH_SHORT).show()
     }
 
     private fun navigateToHome() {
