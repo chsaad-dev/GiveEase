@@ -32,7 +32,7 @@ class DonorMainFragment : Fragment() {
 
         childFragmentManager.addOnBackStackChangedListener {
             val currentFragment = childFragmentManager.findFragmentById(R.id.fragment_container_donor)
-            if (currentFragment is ChatDetailFragment) {
+            if (currentFragment is ChatDetailFragment || currentFragment is CampaignDetailsFragment) {
                 bottomNav.visibility = View.GONE
             } else {
                 bottomNav.visibility = View.VISIBLE
