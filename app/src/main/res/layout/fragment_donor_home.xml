@@ -294,7 +294,7 @@
                             android:id="@+id/tvTotalAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Rs 0"
+                            android:text="0"
                             android:textColor="@android:color/holo_green_dark"
                             android:textSize="32sp"
                             android:textStyle="bold" />
@@ -304,7 +304,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="Amount Donated"
+                            android:text="Items Donated"
                             android:textColor="#666666"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -322,7 +322,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="Featured Campaigns"
+                    android:text="Featured Campaign"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black" />
@@ -358,6 +358,7 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/ivCampaignImage"
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
                         android:src="@drawable/sample_compaign1"
@@ -373,18 +374,10 @@
                             android:id="@+id/tvFeaturedNgo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Flood Relief by Edhi Foundation"
+                            android:text="Loading campaign..."
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/black"
-                            android:layout_marginBottom="8dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Help flood victims rebuild their lives with emergency supplies and shelter"
-                            android:textSize="14sp"
-                            android:textColor="#666666"
                             android:layout_marginBottom="16dp" />
 
                         <LinearLayout
@@ -395,18 +388,20 @@
                             android:layout_marginBottom="16dp">
 
                             <ProgressBar
+                                android:id="@+id/progressBar"
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="8dp"
-                                android:progress="65"
+                                android:progress="0"
                                 android:progressTint="@color/secondary"
                                 android:progressBackgroundTint="#E0E0E0" />
 
                             <TextView
+                                android:id="@+id/tvProgress"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="65%"
+                                android:text="0%"
                                 android:textColor="@color/secondary"
                                 android:textStyle="bold"
                                 android:layout_marginStart="12dp" />
@@ -425,17 +420,19 @@
                                 android:orientation="vertical">
 
                                 <TextView
+                                    android:id="@+id/tvCurrentAmount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Rs 650,000"
+                                    android:text="0 items"
                                     android:textSize="16sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/secondary" />
 
                                 <TextView
+                                    android:id="@+id/tvTargetAmount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="raised of Rs 1,000,000"
+                                    android:text="of 0 items"
                                     android:textSize="12sp"
                                     android:textColor="#666666" />
                             </LinearLayout>
@@ -486,6 +483,7 @@
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/recentActivityCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -516,26 +514,29 @@
                         android:layout_marginStart="16dp">
 
                         <TextView
+                            android:id="@+id/tvActivityTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Donation Successful"
+                            android:text="No recent activity"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/black" />
 
                         <TextView
+                            android:id="@+id/tvActivitySubtitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Edhi Foundation • 2 days ago"
+                            android:text="Start donating today"
                             android:textSize="14sp"
                             android:textColor="#666666"
                             android:layout_marginTop="4dp" />
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tvActivityAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rs 5,000"
+                        android:text="0 items"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/holo_green_dark" />

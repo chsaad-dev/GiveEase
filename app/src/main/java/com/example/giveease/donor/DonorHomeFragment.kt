@@ -9,12 +9,19 @@ import com.example.giveease.databinding.FragmentDonorHomeBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import android.app.AlertDialog
+import com.bumptech.glide.Glide
 import com.example.giveease.verification.IdentityVerificationFragment
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DonorHomeFragment : Fragment() {
     private lateinit var binding: FragmentDonorHomeBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+    private var featuredCampaignId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentDonorHomeBinding.inflate(inflater, container, false)
@@ -25,6 +32,8 @@ class DonorHomeFragment : Fragment() {
         setupUserData()
         setupClickListeners()
         loadDonationStats()
+        loadFeaturedCampaign()
+        loadRecentActivity()
 
         return binding.root
     }
@@ -54,17 +63,125 @@ class DonorHomeFragment : Fragment() {
             .get()
             .addOnSuccessListener { documents ->
                 val totalDonations = documents.size()
-                val totalAmount = documents.sumOf { doc ->
-                    doc.getDouble("amount") ?: 0.0
+                val totalItems = documents.sumOf { doc ->
+                    doc.getLong("quantity") ?: 0L
                 }.toInt()
 
                 binding.tvDonationsCount.text = totalDonations.toString()
-                binding.tvTotalAmount.text = "Rs ${String.format("%,d", totalAmount)}"
+                binding.tvTotalAmount.text = totalItems.toString()
             }
             .addOnFailureListener {
-                binding.tvDonationsCount.text = "12"
-                binding.tvTotalAmount.text = "Rs 45,000"
+                binding.tvDonationsCount.text = "0"
+                binding.tvTotalAmount.text = "0"
             }
+    }
+
+    private fun loadFeaturedCampaign() {
+        android.util.Log.d("DonorHome", "Starting to load featured campaign")
+
+        firestore.collection("campaigns")
+            .whereEqualTo("status", "Active")
+            .limit(1)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    val campaign = documents.documents[0]
+                    featuredCampaignId = campaign.id
+
+                    android.util.Log.d("DonorHome", "Featured campaign loaded - ID: $featuredCampaignId")
+                    android.util.Log.d("DonorHome", "Campaign data: ${campaign.data}")
+
+                    val imageUrls = campaign.get("imageUrls") as? List<String>
+                    val ivCampaignImage = binding.cardFeaturedCampaign.findViewById<ImageView>(R.id.ivCampaignImage)
+
+                    if (!imageUrls.isNullOrEmpty() && ivCampaignImage != null) {
+                        android.util.Log.d("DonorHome", "Loading image: ${imageUrls[0]}")
+                        Glide.with(requireContext())
+                            .load(imageUrls[0])
+                            .placeholder(R.drawable.sample_compaign1)
+                            .error(R.drawable.sample_compaign1)
+                            .into(ivCampaignImage)
+                    } else {
+                        android.util.Log.d("DonorHome", "No images found or ImageView is null")
+                    }
+
+                    binding.tvFeaturedNgo.text = campaign.getString("title") ?: "Campaign"
+
+                    val currentQty = campaign.getLong("currentQuantity") ?: 0L
+                    val targetQty = campaign.getLong("targetQuantity") ?: 1L
+                    val progress = ((currentQty.toFloat() / targetQty.toFloat()) * 100).toInt()
+
+                    val progressBar = binding.cardFeaturedCampaign.findViewById<ProgressBar>(R.id.progressBar)
+                    val tvProgress = binding.cardFeaturedCampaign.findViewById<TextView>(R.id.tvProgress)
+                    val tvCurrentAmount = binding.cardFeaturedCampaign.findViewById<TextView>(R.id.tvCurrentAmount)
+                    val tvTargetAmount = binding.cardFeaturedCampaign.findViewById<TextView>(R.id.tvTargetAmount)
+
+                    progressBar?.progress = progress
+                    tvProgress?.text = "$progress%"
+                    tvCurrentAmount?.text = "$currentQty items"
+                    tvTargetAmount?.text = "of $targetQty items"
+
+                    binding.cardFeaturedCampaign.visibility = View.VISIBLE
+                    android.util.Log.d("DonorHome", "Featured campaign UI updated successfully")
+                } else {
+                    android.util.Log.d("DonorHome", "No active campaigns found")
+                    binding.cardFeaturedCampaign.visibility = View.GONE
+                }
+            }
+            .addOnFailureListener { exception ->
+                android.util.Log.e("DonorHome", "Failed to load featured campaign: ${exception.message}")
+                binding.cardFeaturedCampaign.visibility = View.GONE
+            }
+    }
+
+    private fun loadRecentActivity() {
+        val userId = auth.currentUser?.uid ?: return
+
+        firestore.collection("donations")
+            .whereEqualTo("donorId", userId)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    val donation = documents.documents[0]
+
+                    val tvActivityTitle = binding.recentActivityCard.findViewById<TextView>(R.id.tvActivityTitle)
+                    val tvActivitySubtitle = binding.recentActivityCard.findViewById<TextView>(R.id.tvActivitySubtitle)
+                    val tvActivityAmount = binding.recentActivityCard.findViewById<TextView>(R.id.tvActivityAmount)
+
+                    tvActivityTitle?.text = "Donation Successful"
+
+                    val ngoName = donation.getString("ngoName") ?: "Unknown NGO"
+                    val timeAgo = formatTimeAgo(donation.getLong("timestamp") ?: System.currentTimeMillis())
+                    tvActivitySubtitle?.text = "$ngoName • $timeAgo"
+
+                    val quantity = donation.getLong("quantity") ?: 0L
+                    tvActivityAmount?.text = "$quantity items"
+
+                    binding.recentActivityCard.visibility = View.VISIBLE
+                } else {
+                    binding.recentActivityCard.visibility = View.GONE
+                }
+            }
+            .addOnFailureListener {
+                binding.recentActivityCard.visibility = View.GONE
+            }
+    }
+
+    private fun formatTimeAgo(timestamp: Long): String {
+        val now = System.currentTimeMillis()
+        val diff = now - timestamp
+
+        return when {
+            diff < 60000 -> "Just now"
+            diff < 3600000 -> "${diff / 60000}m ago"
+            diff < 86400000 -> "${diff / 3600000}h ago"
+            diff < 604800000 -> "${diff / 86400000}d ago"
+            else -> {
+                val sdf = SimpleDateFormat("MMM dd", Locale.getDefault())
+                sdf.format(Date(timestamp))
+            }
+        }
     }
 
     private fun setupClickListeners() {
@@ -90,11 +207,23 @@ class DonorHomeFragment : Fragment() {
             }
 
             cardFeaturedCampaign.setOnClickListener {
-                navigateToCampaignDetail()
+                if (featuredCampaignId != null) {
+                    android.util.Log.d("DonorHome", "Card clicked - Navigating to campaign: $featuredCampaignId")
+                    navigateToCampaignDetail(featuredCampaignId!!)
+                } else {
+                    android.util.Log.e("DonorHome", "Campaign ID is null when card clicked")
+                    Toast.makeText(requireContext(), "Campaign not loaded yet", Toast.LENGTH_SHORT).show()
+                }
             }
 
             btnDonateFeatured.setOnClickListener {
-                navigateToDonateToCampaign()
+                if (featuredCampaignId != null) {
+                    android.util.Log.d("DonorHome", "Donate button clicked - Navigating to campaign: $featuredCampaignId")
+                    navigateToCampaignDetail(featuredCampaignId!!)
+                } else {
+                    android.util.Log.e("DonorHome", "Campaign ID is null when donate button clicked")
+                    Toast.makeText(requireContext(), "Campaign not loaded yet", Toast.LENGTH_SHORT).show()
+                }
             }
 
             tvViewAllCampaigns.setOnClickListener {
@@ -109,7 +238,7 @@ class DonorHomeFragment : Fragment() {
 
     private fun navigateToMyCampaigns() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, DonorCampaignsFragment())
+            .replace(R.id.fragment_container_donor, DonorFeedFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -123,7 +252,10 @@ class DonorHomeFragment : Fragment() {
 
     private fun navigateToQuickDonate() {
         checkVerificationBeforeAction {
-            Toast.makeText(requireContext(), "Quick Donate feature coming soon", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_donor, DonorFeedFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 
@@ -142,19 +274,17 @@ class DonorHomeFragment : Fragment() {
         Toast.makeText(requireContext(), "Notifications coming soon", Toast.LENGTH_SHORT).show()
     }
 
-    private fun navigateToCampaignDetail() {
-        Toast.makeText(requireContext(), "Campaign details coming soon", Toast.LENGTH_SHORT).show()
-    }
+    private fun navigateToCampaignDetail(campaignId: String) {
+        android.util.Log.d("DonorHome", "Creating CampaignDetailsFragment with campaignId: $campaignId")
 
-    private fun navigateToDonateToCampaign() {
-        checkVerificationBeforeAction {
-            Toast.makeText(requireContext(), "Donate to campaign feature coming soon", Toast.LENGTH_SHORT).show()
+        val fragment = CampaignDetailsFragment().apply {
+            arguments = Bundle().apply {
+                putString("campaignId", campaignId)
+            }
         }
-    }
 
-    private fun navigateToAllCampaigns() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, DonorFeedFragment())
+            .replace(R.id.fragment_container_donor, fragment)
             .addToBackStack(null)
             .commit()
     }

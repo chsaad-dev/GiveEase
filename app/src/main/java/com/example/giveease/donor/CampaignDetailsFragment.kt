@@ -21,9 +21,11 @@ class CampaignDetailsFragment : Fragment() {
     private var _binding: FragmentCampaignDetailsBinding? = null
     private val binding get() = _binding!!
     private lateinit var campaign: CampaignData
+    private val firestore = FirebaseFirestore.getInstance()
 
     companion object {
         private const val ARG_CAMPAIGN = "campaign"
+        private const val ARG_CAMPAIGN_ID = "campaignId"
 
         fun newInstance(campaign: CampaignData): CampaignDetailsFragment {
             val fragment = CampaignDetailsFragment()
@@ -41,13 +43,77 @@ class CampaignDetailsFragment : Fragment() {
     ): View {
         _binding = FragmentCampaignDetailsBinding.inflate(inflater, container, false)
 
-        campaign = arguments?.getSerializable(ARG_CAMPAIGN) as? CampaignData
-            ?: return binding.root
+        // Check if we received a campaign object or just an ID
+        val campaignObject = arguments?.getSerializable(ARG_CAMPAIGN) as? CampaignData
+        val campaignId = arguments?.getString(ARG_CAMPAIGN_ID)
 
-        setupUI()
-        setupClickListeners()
+        android.util.Log.d("CampaignDetails", "campaignObject: $campaignObject")
+        android.util.Log.d("CampaignDetails", "campaignId: $campaignId")
+
+        if (campaignObject != null) {
+            campaign = campaignObject
+            setupUI()
+            setupClickListeners()
+        } else if (campaignId != null) {
+            loadCampaignFromFirestore(campaignId)
+        } else {
+            Toast.makeText(requireContext(), "Campaign not found", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
+        }
 
         return binding.root
+    }
+
+    private fun loadCampaignFromFirestore(campaignId: String) {
+        android.util.Log.d("CampaignDetails", "Loading campaign from Firestore: $campaignId")
+
+        binding.progressBar.visibility = View.VISIBLE
+
+        firestore.collection("campaigns").document(campaignId).get()
+            .addOnSuccessListener { document ->
+                try {
+                    android.util.Log.d("CampaignDetails", "Campaign loaded: ${document.data}")
+
+                    campaign = CampaignData(
+                        id = document.id,
+                        ngoId = document.getString("ngoId") ?: "",
+                        ngoName = document.getString("ngoName") ?: "",
+                        category = document.getString("category") ?: "",
+                        title = document.getString("title") ?: "",
+                        description = document.getString("description") ?: "",
+                        targetQuantity = document.getLong("targetQuantity")?.toInt() ?: 0,
+                        currentQuantity = document.getLong("currentQuantity")?.toInt() ?: 0,
+                        unit = document.getString("unit") ?: "",
+                        endDate = document.getLong("endDate") ?: 0,
+                        urgencyLevel = document.getString("urgencyLevel") ?: "",
+                        itemCondition = document.getString("itemCondition"),
+                        specificRequirements = document.getString("specificRequirements") ?: "",
+                        autoClose = document.getBoolean("autoClose") ?: false,
+                        imageUrls = (document.get("imageUrls") as? List<*>)?.mapNotNull { it as? String } ?: emptyList(),
+                        createdAt = document.getLong("createdAt") ?: 0,
+                        status = document.getString("status") ?: "Active",
+                        donorCount = document.getLong("donorCount")?.toInt() ?: 0,
+                        shareCount = document.getLong("shareCount")?.toInt() ?: 0
+                    )
+
+                    binding.progressBar.visibility = View.GONE
+                    setupUI()
+                    setupClickListeners()
+
+                    android.util.Log.d("CampaignDetails", "UI setup complete")
+                } catch (e: Exception) {
+                    android.util.Log.e("CampaignDetails", "Error parsing campaign: ${e.message}")
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Error loading campaign: ${e.message}", Toast.LENGTH_SHORT).show()
+                    parentFragmentManager.popBackStack()
+                }
+            }
+            .addOnFailureListener { exception ->
+                android.util.Log.e("CampaignDetails", "Failed to load campaign: ${exception.message}")
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(requireContext(), "Failed to load campaign", Toast.LENGTH_SHORT).show()
+                parentFragmentManager.popBackStack()
+            }
     }
 
     private fun setupUI() {
@@ -76,7 +142,6 @@ class CampaignDetailsFragment : Fragment() {
             tvCategory.text = campaign.category.ifEmpty { "General" }
             tvDescription.text = campaign.description.ifEmpty { "No description available" }
 
-            // Urgency Badge
             // Urgency Badge
             val urgency = campaign.urgencyLevel?.takeIf { it.isNotEmpty() } ?: "Low"
             tvUrgencyBadge.text = urgency
@@ -117,7 +182,7 @@ class CampaignDetailsFragment : Fragment() {
             // Created Date
             val createdDate = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                 .format(Date(campaign.createdAt))
-            tvCreatedDate.text = "Created on $createdDate"
+            tvCreatedDate.text = createdDate
         }
     }
 
@@ -166,16 +231,12 @@ class CampaignDetailsFragment : Fragment() {
         startActivity(android.content.Intent.createChooser(shareIntent, "Share Campaign"))
     }
 
-
     private fun handleDonate() {
         val dialog = DonationDialogFragment.newInstance(campaign)
         dialog.show(childFragmentManager, "DonationDialog")
     }
 
     fun refreshCampaignData() {
-        // Reload campaign from Firestore to get updated values
-        val firestore = FirebaseFirestore.getInstance()
-
         firestore.collection("campaigns").document(campaign.id).get()
             .addOnSuccessListener { document ->
                 try {
@@ -200,7 +261,7 @@ class CampaignDetailsFragment : Fragment() {
                         donorCount = document.getLong("donorCount")?.toInt() ?: 0,
                         shareCount = document.getLong("shareCount")?.toInt() ?: 0
                     )
-                    setupUI() // Refresh the UI with new data
+                    setupUI()
                 } catch (e: Exception) {
                     Toast.makeText(requireContext(), "Error refreshing: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
