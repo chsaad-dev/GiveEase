@@ -5,101 +5,237 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.giveease.ngo.model.Campaign
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentNgoHomeBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import android.widget.Toast
 
 class NgoHomeFragment : Fragment() {
 
     private var _binding: FragmentNgoHomeBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var campaignAdapter: RecentCampaignAdapter
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNgoHomeBinding.inflate(inflater, container, false)
+
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupViews()
+        loadNgoData()
+        loadCampaignStats()
+        loadRecentCampaign()
         setupClickListeners()
-        loadData()
     }
 
-    private fun setupViews() {
-        // Setup NGO info
-        binding.tvNgoName.text = "Edhi Foundation"
+    private fun loadNgoData() {
+        val userId = auth.currentUser?.uid ?: return
+        if (!isAdded || _binding == null) return
 
-        // Setup stats
-        updateStats()
+        firestore.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
 
-        // Setup recent campaigns recycler (if you want multiple campaigns)
-        // setupCampaignsRecycler()
+                if (document.exists()) {
+                    val ngoName = document.getString("name") ?: "NGO"
+                    val verificationStatus = document.getString("verificationStatus") ?: "pending"
+
+                    binding.tvNgoName.text = ngoName
+
+                    // Show/hide verification badge based on status
+                    if (verificationStatus == "verified") {
+                        // Badge is visible by default in XML
+                    } else {
+                        // You can hide the badge or show different status
+                    }
+                }
+            }
+            .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
+                binding.tvNgoName.text = "NGO Dashboard"
+            }
+    }
+
+    private fun loadCampaignStats() {
+        val userId = auth.currentUser?.uid ?: return
+        if (!isAdded || _binding == null) return
+
+        // Load active campaigns count
+        firestore.collection("campaigns")
+            .whereEqualTo("ngoId", userId)
+            .whereEqualTo("status", "Active")
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
+                val activeCampaigns = documents.size()
+                binding.tvActiveCampaigns.text = activeCampaigns.toString()
+
+                // Load total donations
+                loadDonationStats(userId)
+            }
+            .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
+                binding.tvActiveCampaigns.text = "0"
+            }
+    }
+
+    private fun loadDonationStats(ngoId: String) {
+        if (!isAdded || _binding == null) return
+
+        firestore.collection("donations")
+            .whereEqualTo("ngoId", ngoId)
+            .whereEqualTo("status", "Completed")
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
+                val totalItems = documents.sumOf { doc ->
+                    (doc.getLong("quantity") ?: 0).toInt()
+                }
+
+                binding.tvTotalDonations.text = "$totalItems Items"
+            }
+            .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
+                binding.tvTotalDonations.text = "0 Items"
+            }
+    }
+
+    private fun loadRecentCampaign() {
+        val userId = auth.currentUser?.uid ?: return
+        if (!isAdded || _binding == null) return
+
+        firestore.collection("campaigns")
+            .whereEqualTo("ngoId", userId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
+                if (!documents.isEmpty) {
+                    val campaign = documents.documents[0]
+
+                    binding.tvCampaignTitle.text = campaign.getString("title") ?: "Campaign"
+                    binding.tvCampaignDescription.text = campaign.getString("description") ?: ""
+
+                    val status = campaign.getString("status") ?: "Active"
+                    binding.tvCampaignStatus.text = status
+
+                    // Update status badge color
+                    when (status) {
+                        "Active" -> {
+                            binding.cardCampaignStatus.setCardBackgroundColor(
+                                resources.getColor(android.R.color.holo_green_light, null)
+                            )
+                        }
+                        "Paused" -> {
+                            binding.cardCampaignStatus.setCardBackgroundColor(
+                                resources.getColor(android.R.color.holo_orange_light, null)
+                            )
+                        }
+                        "Completed" -> {
+                            binding.cardCampaignStatus.setCardBackgroundColor(
+                                resources.getColor(android.R.color.darker_gray, null)
+                            )
+                        }
+                    }
+
+                    // Load campaign progress
+                    val targetQuantity = (campaign.getLong("targetQuantity") ?: 100).toInt()
+                    val currentQuantity = (campaign.getLong("currentQuantity") ?: 0).toInt()
+                    val progress = if (targetQuantity > 0) {
+                        (currentQuantity * 100 / targetQuantity).coerceAtMost(100)
+                    } else {
+                        0
+                    }
+
+                    binding.tvCampaignRaised.text = "$currentQuantity Items"
+                    binding.tvCampaignTarget.text = " of $targetQuantity Items"
+                    binding.tvCampaignProgress.text = "$progress% complete"
+                    binding.progressCampaign.progress = progress
+
+                    // Show the campaign card
+                    binding.cardRecentCampaign.visibility = View.VISIBLE
+                } else {
+                    // No campaigns yet - hide the card
+                    binding.cardRecentCampaign.visibility = View.GONE
+                }
+            }
+            .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
+                binding.cardRecentCampaign.visibility = View.GONE
+            }
     }
 
     private fun setupClickListeners() {
         binding.ivNotifications.setOnClickListener {
-            // Navigate to notifications
-            // findNavController().navigate(R.id.action_ngoHome_to_notifications)
+            Toast.makeText(requireContext(), "Notifications coming soon", Toast.LENGTH_SHORT).show()
         }
 
         binding.btnCreateNewCampaign.setOnClickListener {
-            // Navigate to create campaign
-            // findNavController().navigate(R.id.action_ngoHome_to_createCampaign)
+            navigateToCreateCampaign()
         }
 
         binding.tvViewAllCampaigns.setOnClickListener {
-            // Navigate to all campaigns
-            // findNavController().navigate(R.id.action_ngoHome_to_allCampaigns)
+            navigateToMyCampaigns()
+        }
+
+        binding.btnViewAllCampaigns.setOnClickListener {
+            navigateToMyCampaigns()
         }
     }
 
-    private fun updateStats() {
-        // These would come from API in real implementation
-        val activeCampaigns = 12
-        val totalDonations = "₨ 1.85M"
+    private fun navigateToCreateCampaign() {
+        if (!isAdded) return
 
-        // Update UI (if you add IDs to the TextViews in XML)
-        // binding.tvActiveCampaigns.text = activeCampaigns.toString()
-        // binding.tvTotalDonations.text = totalDonations
+        // Check verification status first
+        val userId = auth.currentUser?.uid ?: return
+
+        firestore.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                val verificationStatus = document.getString("verificationStatus") ?: "pending"
+
+                if (verificationStatus == "verified") {
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, CreateCampaignFragment())
+                        .addToBackStack(null)
+                        .commit()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Please complete verification to create campaigns",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
     }
 
-    private fun loadData() {
-        // Simulate loading data
-        // In real app, fetch from API
-        val campaigns = getSampleCampaigns()
-
-        // Update UI with campaign data
-        // campaignAdapter.submitList(campaigns)
+    private fun navigateToMyCampaigns() {
+        if (!isAdded) return
+        Toast.makeText(requireContext(), "My Campaigns coming soon", Toast.LENGTH_SHORT).show()
+        // Will implement MyCampaignsFragment next
     }
 
-    private fun getSampleCampaigns(): List<Campaign> {
-        return listOf(
-            Campaign(
-                id = "1",
-                title = "Flood Relief Emergency",
-                description = "Urgent aid for flood victims",
-                targetAmount = 150000.0,
-                raisedAmount = 85000.0,
-                status = "Active",
-                daysLeft = 15
-            ),
-            Campaign(
-                id = "2",
-                title = "Education for All",
-                description = "Building schools in rural areas",
-                targetAmount = 200000.0,
-                raisedAmount = 120000.0,
-                status = "Active",
-                daysLeft = 30
-            )
-        )
+    override fun onResume() {
+        super.onResume()
+        loadNgoData()
+        loadCampaignStats()
+        loadRecentCampaign()
     }
 
     override fun onDestroyView() {
