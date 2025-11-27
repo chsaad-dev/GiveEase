@@ -10,7 +10,6 @@ import com.example.giveease.databinding.FragmentNgoHomeBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import android.widget.Toast
 
 class NgoHomeFragment : Fragment() {
 
@@ -25,16 +24,13 @@ class NgoHomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNgoHomeBinding.inflate(inflater, container, false)
-
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         loadNgoData()
         loadCampaignStats()
         loadRecentCampaign()
@@ -51,16 +47,7 @@ class NgoHomeFragment : Fragment() {
 
                 if (document.exists()) {
                     val ngoName = document.getString("name") ?: "NGO"
-                    val verificationStatus = document.getString("verificationStatus") ?: "pending"
-
                     binding.tvNgoName.text = ngoName
-
-                    // Show/hide verification badge based on status
-                    if (verificationStatus == "verified") {
-                        // Badge is visible by default in XML
-                    } else {
-                        // You can hide the badge or show different status
-                    }
                 }
             }
             .addOnFailureListener {
@@ -73,18 +60,14 @@ class NgoHomeFragment : Fragment() {
         val userId = auth.currentUser?.uid ?: return
         if (!isAdded || _binding == null) return
 
-        // Load active campaigns count
         firestore.collection("campaigns")
             .whereEqualTo("ngoId", userId)
             .whereEqualTo("status", "Active")
             .get()
             .addOnSuccessListener { documents ->
                 if (!isAdded || _binding == null) return@addOnSuccessListener
-
                 val activeCampaigns = documents.size()
                 binding.tvActiveCampaigns.text = activeCampaigns.toString()
-
-                // Load total donations
                 loadDonationStats(userId)
             }
             .addOnFailureListener {
@@ -106,7 +89,6 @@ class NgoHomeFragment : Fragment() {
                 val totalItems = documents.sumOf { doc ->
                     (doc.getLong("quantity") ?: 0).toInt()
                 }
-
                 binding.tvTotalDonations.text = "$totalItems Items"
             }
             .addOnFailureListener {
@@ -136,7 +118,6 @@ class NgoHomeFragment : Fragment() {
                     val status = campaign.getString("status") ?: "Active"
                     binding.tvCampaignStatus.text = status
 
-                    // Update status badge color
                     when (status) {
                         "Active" -> {
                             binding.cardCampaignStatus.setCardBackgroundColor(
@@ -155,7 +136,6 @@ class NgoHomeFragment : Fragment() {
                         }
                     }
 
-                    // Load campaign progress
                     val targetQuantity = (campaign.getLong("targetQuantity") ?: 100).toInt()
                     val currentQuantity = (campaign.getLong("currentQuantity") ?: 0).toInt()
                     val progress = if (targetQuantity > 0) {
@@ -169,10 +149,8 @@ class NgoHomeFragment : Fragment() {
                     binding.tvCampaignProgress.text = "$progress% complete"
                     binding.progressCampaign.progress = progress
 
-                    // Show the campaign card
                     binding.cardRecentCampaign.visibility = View.VISIBLE
                 } else {
-                    // No campaigns yet - hide the card
                     binding.cardRecentCampaign.visibility = View.GONE
                 }
             }
@@ -183,52 +161,52 @@ class NgoHomeFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        binding.ivNotifications.setOnClickListener {
-            Toast.makeText(requireContext(), "Notifications coming soon", Toast.LENGTH_SHORT).show()
-        }
-
+        // Create New Campaign button
         binding.btnCreateNewCampaign.setOnClickListener {
-            navigateToCreateCampaign()
-        }
+            firestore.collection("users").document(auth.currentUser?.uid ?: "")
+                .get()
+                .addOnSuccessListener { document ->
+                    val verificationStatus = document.getString("verificationStatus") ?: "pending"
 
-        binding.tvViewAllCampaigns.setOnClickListener {
-            navigateToMyCampaigns()
-        }
-
-        binding.btnViewAllCampaigns.setOnClickListener {
-            navigateToMyCampaigns()
-        }
-    }
-
-    private fun navigateToCreateCampaign() {
-        if (!isAdded) return
-
-        // Check verification status first
-        val userId = auth.currentUser?.uid ?: return
-
-        firestore.collection("users").document(userId).get()
-            .addOnSuccessListener { document ->
-                val verificationStatus = document.getString("verificationStatus") ?: "pending"
-
-                if (verificationStatus == "verified") {
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, CreateCampaignFragment())
-                        .addToBackStack(null)
-                        .commit()
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Please complete verification to create campaigns",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    if (verificationStatus == "verified") {
+                        navigateToFragment(CreateCampaignFragment())
+                    } else {
+                        showVerificationRequiredDialog()
+                    }
                 }
-            }
+        }
+
+        // View All Campaigns button
+        binding.btnViewAllCampaigns.setOnClickListener {
+            navigateToFragment(MyCampaignsFragment())
+        }
+
+        // View All text link
+        binding.tvViewAllCampaigns.setOnClickListener {
+            navigateToFragment(MyCampaignsFragment())
+        }
     }
 
-    private fun navigateToMyCampaigns() {
+    private fun navigateToFragment(fragment: Fragment) {
         if (!isAdded) return
-        Toast.makeText(requireContext(), "My Campaigns coming soon", Toast.LENGTH_SHORT).show()
-        // Will implement MyCampaignsFragment next
+
+        // Get the container ID from the current fragment's parent
+        val containerId = (view?.parent as? View)?.id ?: return
+
+        parentFragmentManager.beginTransaction()
+            .replace(containerId, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun showVerificationRequiredDialog() {
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Verification Required")
+            .setMessage("Your organization must be verified before creating campaigns. Please complete the verification process.")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override fun onResume() {
