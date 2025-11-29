@@ -196,7 +196,7 @@
                                     android:layout_height="16dp"
                                     android:src="@drawable/ic_calendar"
                                     app:tint="#546E7A"
-                                    android:layout_marginEnd="4dp" />
+                                    android:layout_marginEnd="2dp" />
 
                                 <TextView
                                     android:id="@+id/tvJoinDate"
@@ -207,10 +207,10 @@
                                     android:textColor="#546E7A" />
 
                                 <View
-                                    android:layout_width="1dp"
-                                    android:layout_height="12dp"
+                                    android:layout_width="0dp"
+                                    android:layout_height="11dp"
                                     android:background="#E0E0E0"
-                                    android:layout_marginHorizontal="8dp" />
+                                    android:layout_marginHorizontal="5dp" />
 
                                 <ImageView
                                     android:layout_width="16dp"
@@ -581,39 +581,94 @@
                             android:gravity="end" />
                     </LinearLayout>
 
-                    <com.google.android.material.card.MaterialCardView
+                    <!-- Two Buttons Horizontal Layout -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="0dp"
-                        app:cardBackgroundColor="#E8F5E9"
-                        app:strokeColor="#C5E1A5"
-                        app:strokeWidth="1dp">
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp"
+                        android:weightSum="2">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <!-- Add Bank Details Button -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/btnAddBankDetails"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:padding="16dp"
-                            android:gravity="center_vertical">
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp"
+                            app:cardBackgroundColor="#2E7D32"
+                            android:clickable="true"
+                            android:focusable="true">
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_verified"
-                                app:tint="#2E7D32"
-                                android:layout_marginEnd="12dp" />
-
-                            <TextView
-                                android:layout_width="0dp"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Tax Exempted NGO under Section 2(36)"
-                                android:textSize="14sp"
-                                android:textColor="#2E7D32"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                                android:orientation="horizontal"
+                                android:padding="16dp"
+                                android:gravity="center_vertical"
+                                android:paddingVertical="12dp">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_add"
+                                    app:tint="@android:color/white"
+                                    android:layout_marginEnd="8dp" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Add Bank"
+                                    android:textSize="14sp"
+                                    android:textColor="@android:color/white"
+                                    android:textStyle="bold"
+                                    android:gravity="center" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Edit Bank Details Button -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/btnEditBankDetails"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp"
+                            app:cardBackgroundColor="#1565C0"
+                            android:clickable="true"
+                            android:focusable="true">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:padding="16dp"
+                                android:gravity="center_vertical"
+                                android:paddingVertical="12dp">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_edit"
+                                    app:tint="@android:color/white"
+                                    android:layout_marginEnd="8dp" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Edit Bank"
+                                    android:textSize="14sp"
+                                    android:textColor="@android:color/white"
+                                    android:textStyle="bold"
+                                    android:gravity="center" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
