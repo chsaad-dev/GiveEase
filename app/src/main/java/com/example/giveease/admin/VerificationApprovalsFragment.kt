@@ -54,12 +54,16 @@ class VerificationApprovalsFragment : Fragment() {
     }
 
     private fun loadPendingVerifications() {
+        if (!isAdded || _binding == null) return
+
         binding.progressBar.visibility = View.VISIBLE
 
         firestore.collection("users")
             .whereEqualTo("verificationStatus", "pending")
             .get()
             .addOnSuccessListener { documents ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
                 binding.progressBar.visibility = View.GONE
                 verificationList.clear()
 
@@ -90,12 +94,16 @@ class VerificationApprovalsFragment : Fragment() {
                 }
             }
             .addOnFailureListener { e ->
+                if (!isAdded || _binding == null) return@addOnFailureListener
+
                 binding.progressBar.visibility = View.GONE
                 Toast.makeText(requireContext(), "Error loading requests: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun showApproveDialog(request: VerificationRequest) {
+        if (!isAdded) return
+
         AlertDialog.Builder(requireContext())
             .setTitle("Approve Verification")
             .setMessage("Approve verification for ${request.name}?")
@@ -116,15 +124,21 @@ class VerificationApprovalsFragment : Fragment() {
         firestore.collection("users").document(request.userId)
             .update(updates)
             .addOnSuccessListener {
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
                 Toast.makeText(requireContext(), "${request.name} approved successfully", Toast.LENGTH_SHORT).show()
                 loadPendingVerifications()
             }
             .addOnFailureListener { e ->
+                if (!isAdded || _binding == null) return@addOnFailureListener
+
                 Toast.makeText(requireContext(), "Error approving: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun showRejectDialog(request: VerificationRequest) {
+        if (!isAdded) return
+
         val input = EditText(requireContext()).apply {
             hint = "Reason for rejection"
             minLines = 3
@@ -156,15 +170,21 @@ class VerificationApprovalsFragment : Fragment() {
         firestore.collection("users").document(request.userId)
             .update(updates)
             .addOnSuccessListener {
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
                 Toast.makeText(requireContext(), "${request.name} rejected", Toast.LENGTH_SHORT).show()
                 loadPendingVerifications()
             }
             .addOnFailureListener { e ->
+                if (!isAdded || _binding == null) return@addOnFailureListener
+
                 Toast.makeText(requireContext(), "Error rejecting: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun openDocument(url: String) {
+        if (!isAdded) return
+
         if (url.isEmpty()) {
             Toast.makeText(requireContext(), "No document available", Toast.LENGTH_SHORT).show()
             return

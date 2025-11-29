@@ -82,7 +82,7 @@
                             android:layout_marginEnd="4dp"
                             android:background="@drawable/bg_notification_badge"
                             android:gravity="center"
-                            android:text="5"
+                            android:text="0"
                             android:textColor="@android:color/white"
                             android:textSize="10sp"
                             android:textStyle="bold" />
@@ -146,7 +146,7 @@
                             android:id="@+id/tvTotalNgos"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="156"
+                            android:text="0"
                             android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="#1A237E" />
@@ -186,7 +186,7 @@
                             android:id="@+id/tvTotalDonors"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2,345"
+                            android:text="0"
                             android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="#1A237E" />
@@ -226,7 +226,7 @@
                             android:id="@+id/tvActiveCampaigns"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="89"
+                            android:text="0"
                             android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="#1A237E" />
@@ -266,7 +266,7 @@
                             android:id="@+id/tvPendingApprovals"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="12"
+                            android:text="0"
                             android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="#1A237E" />
@@ -330,7 +330,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Approve NGOs"
+                                android:text="Approve Donor&amp;NGOs"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="#1A237E" />
@@ -338,7 +338,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Review pending NGO registrations"
+                                android:text="Review pending approval"
                                 android:textSize="13sp"
                                 android:textColor="#546E7A"
                                 android:layout_marginTop="2dp" />
