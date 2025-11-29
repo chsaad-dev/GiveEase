@@ -30,7 +30,7 @@ class NgoEditProfileFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.popBackStack()
         }
 
         binding.btnSave.setOnClickListener {
@@ -59,7 +59,6 @@ class NgoEditProfileFragment : Fragment() {
                     binding.etHeadquarters.setText(document.getString("headquarters") ?: "")
                     binding.etCoverage.setText(document.getString("coverage") ?: "")
 
-                    // Load service categories
                     val services = document.get("serviceCategories") as? List<String> ?: emptyList()
                     binding.chipEducation.isChecked = services.contains("Education")
                     binding.chipHealthcare.isChecked = services.contains("Healthcare")
@@ -83,7 +82,6 @@ class NgoEditProfileFragment : Fragment() {
         val headquarters = binding.etHeadquarters.text.toString().trim()
         val coverage = binding.etCoverage.text.toString().trim()
 
-        // Validation
         if (ngoName.isEmpty()) {
             binding.etNgoName.error = "NGO name is required"
             binding.etNgoName.requestFocus()
@@ -114,7 +112,6 @@ class NgoEditProfileFragment : Fragment() {
             return
         }
 
-        // Get selected service categories
         val serviceCategories = mutableListOf<String>()
         if (binding.chipEducation.isChecked) serviceCategories.add("Education")
         if (binding.chipHealthcare.isChecked) serviceCategories.add("Healthcare")
@@ -128,7 +125,6 @@ class NgoEditProfileFragment : Fragment() {
             return
         }
 
-        // Update Firestore
         val uid = auth.currentUser?.uid ?: return
 
         binding.btnSave.isEnabled = false
@@ -153,7 +149,7 @@ class NgoEditProfileFragment : Fragment() {
             .update(updates)
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Profile updated successfully!", Toast.LENGTH_SHORT).show()
-                parentFragmentManager.popBackStack()
+                requireActivity().supportFragmentManager.popBackStack()
             }
             .addOnFailureListener { e ->
                 Log.e("NgoEditProfile", "Error updating profile", e)

@@ -64,4 +64,11 @@
     <!-- optional secondary for captions etc. -->
     <color name="onSurfaceSecondary">#616161</color>
 
+    <color name="gray_light">#E0E0E0</color>
+    <color name="gray_dark">#666666</color>
+    <color name="text_primary">#1A1A1A</color>
+    <color name="text_secondary">#666666</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="background_light">#F5F7FA</color>
+
 </resources>
