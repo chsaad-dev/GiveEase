@@ -364,18 +364,38 @@ class LoginFragment : Fragment() {
     }
 
     private fun loadMainFragment(role: String) {
-        val (fragment, tag) = when (role) {
-            "donor" -> DonorMainFragment() to "DONOR_MAIN"
-            "ngo" -> NgoMainFragment() to "NGO_MAIN"
-            "admin" -> AdminMainFragment() to "ADMIN_MAIN"
-            else -> DonorMainFragment() to "DONOR_MAIN"
-        }
+        if (role == "donor" || role == "ngo") {
+            loadingDialog.show()
 
-        val existingFragment = parentFragmentManager.findFragmentByTag(tag)
-        if (existingFragment == null) {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment, tag)
-                .commit()
+            com.example.giveease.utils.MaintenanceManager.checkMaintenanceStatus { isActive ->
+                loadingDialog.dismiss()
+
+                if (isActive) {
+                    val intent = android.content.Intent(requireContext(), com.example.giveease.MaintenanceActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                } else {
+                    val (fragment, tag) = when (role) {
+                        "donor" -> DonorMainFragment() to "DONOR_MAIN"
+                        "ngo" -> NgoMainFragment() to "NGO_MAIN"
+                        else -> DonorMainFragment() to "DONOR_MAIN"
+                    }
+
+                    val existingFragment = parentFragmentManager.findFragmentByTag(tag)
+                    if (existingFragment == null) {
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment, tag)
+                            .commit()
+                    }
+                }
+            }
+        } else {
+            val existingFragment = parentFragmentManager.findFragmentByTag("ADMIN_MAIN")
+            if (existingFragment == null) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, AdminMainFragment(), "ADMIN_MAIN")
+                    .commit()
+            }
         }
     }
 
