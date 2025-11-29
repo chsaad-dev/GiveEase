@@ -11,103 +11,164 @@ import com.example.giveease.auth.LoginFragment
 import com.example.giveease.databinding.FragmentAdminSettingsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AdminSettingsFragment : Fragment() {
 
     private var _binding: FragmentAdminSettingsBinding? = null
     private val binding get() = _binding!!
-    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+    private var isMaintenanceMode = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAdminSettingsBinding.inflate(inflater, container, false)
-        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupClickListeners()
         loadSettings()
+        setupClickListeners()
+    }
+
+    private fun loadSettings() {
+        firestore.collection("settings")
+            .document("app_config")
+            .get()
+            .addOnSuccessListener { document ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
+                if (document.exists()) {
+                    isMaintenanceMode = document.getBoolean("maintenanceMode") ?: false
+                    binding.switchMaintenance.isChecked = isMaintenanceMode
+                } else {
+                    createDefaultSettings()
+                }
+            }
+            .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
+                createDefaultSettings()
+            }
+    }
+
+    private fun createDefaultSettings() {
+        val defaultSettings = hashMapOf(
+            "maintenanceMode" to false,
+            "createdAt" to System.currentTimeMillis()
+        )
+
+        firestore.collection("settings")
+            .document("app_config")
+            .set(defaultSettings)
+            .addOnSuccessListener {
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+                binding.switchMaintenance.isChecked = false
+            }
     }
 
     private fun setupClickListeners() {
+        binding.btnLogout.setOnClickListener {
+            showLogoutDialog()
+        }
+
+        binding.switchEmailNotif.setOnCheckedChangeListener { _, isChecked ->
+            Toast.makeText(requireContext(), "Email notifications ${if (isChecked) "enabled" else "disabled"}", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.switchPushNotif.setOnCheckedChangeListener { _, isChecked ->
+            Toast.makeText(requireContext(), "Push notifications ${if (isChecked) "enabled" else "disabled"}", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.switchNgoAlerts.setOnCheckedChangeListener { _, isChecked ->
+            Toast.makeText(requireContext(), "NGO alerts ${if (isChecked) "enabled" else "disabled"}", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.switchAutoApprove.setOnCheckedChangeListener { _, isChecked ->
+            Toast.makeText(requireContext(), "Auto-approve ${if (isChecked) "enabled" else "disabled"}", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.switchMaintenance.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked && !isMaintenanceMode) {
+                showMaintenanceConfirmationDialog()
+            } else if (!isChecked && isMaintenanceMode) {
+                updateMaintenanceMode(false)
+            }
+        }
+
         binding.btnViewLogs.setOnClickListener {
-            Toast.makeText(requireContext(), "System logs feature coming soon", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "View Logs feature coming soon", Toast.LENGTH_SHORT).show()
         }
 
         binding.btnBackupData.setOnClickListener {
-            Toast.makeText(requireContext(), "Database backup feature coming soon", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Backup Data feature coming soon", Toast.LENGTH_SHORT).show()
         }
 
         binding.btnAbout.setOnClickListener {
             showAboutDialog()
         }
-
-        binding.btnLogout.setOnClickListener {
-            showLogoutConfirmation()
-        }
-
-        binding.switchEmailNotif.setOnCheckedChangeListener { _, isChecked ->
-            Toast.makeText(requireContext(), "Email notifications: ${if (isChecked) "ON" else "OFF"}", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.switchPushNotif.setOnCheckedChangeListener { _, isChecked ->
-            Toast.makeText(requireContext(), "Push notifications: ${if (isChecked) "ON" else "OFF"}", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.switchNgoAlerts.setOnCheckedChangeListener { _, isChecked ->
-            Toast.makeText(requireContext(), "NGO alerts: ${if (isChecked) "ON" else "OFF"}", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.switchAutoApprove.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                Toast.makeText(requireContext(), "Auto-approve enabled", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(requireContext(), "Auto-approve disabled", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        binding.switchMaintenance.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                showMaintenanceModeConfirmation()
-            } else {
-                Toast.makeText(requireContext(), "Maintenance mode disabled", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
-    private fun loadSettings() {
-        // TODO: Load settings from Firebase/SharedPreferences
+    private fun showMaintenanceConfirmationDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Enable Maintenance Mode?")
+            .setMessage("This will immediately block all donors and NGOs from using the app. Only admins will have access.\n\nAre you sure?")
+            .setPositiveButton("Enable") { _, _ ->
+                updateMaintenanceMode(true)
+            }
+            .setNegativeButton("Cancel") { _, _ ->
+                binding.switchMaintenance.isChecked = false
+            }
+            .setCancelable(false)
+            .show()
     }
 
-    private fun showLogoutConfirmation() {
+    private fun updateMaintenanceMode(enable: Boolean) {
+        val updates = hashMapOf<String, Any>(
+            "maintenanceMode" to enable,
+            "updatedAt" to System.currentTimeMillis()
+        )
+
+        firestore.collection("settings")
+            .document("app_config")
+            .set(updates, com.google.firebase.firestore.SetOptions.merge())
+            .addOnSuccessListener {
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
+                isMaintenanceMode = enable
+                Toast.makeText(
+                    requireContext(),
+                    "Maintenance mode ${if (enable) "enabled" else "disabled"}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            .addOnFailureListener { e ->
+                if (!isAdded || _binding == null) return@addOnFailureListener
+
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                binding.switchMaintenance.isChecked = !enable
+            }
+    }
+
+    private fun showLogoutDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Logout")
             .setMessage("Are you sure you want to logout?")
             .setPositiveButton("Logout") { _, _ ->
-                performLogout()
+                logout()
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
-    private fun performLogout() {
-        // Sign out from Firebase
-        auth.signOut()
+    private fun logout() {
+        FirebaseAuth.getInstance().signOut()
 
-        // Clear any saved preferences if needed
-        // SharedPreferences can be cleared here if you're using them
-
-        // Navigate back to LoginFragment and clear backstack
-        val loginFragment = LoginFragment()
-
-        // Use requireActivity() to get the parent FragmentManager
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, loginFragment)
+            .replace(R.id.fragment_container, LoginFragment())
             .commit()
 
-        // Clear the entire backstack
         requireActivity().supportFragmentManager.popBackStack(
             null,
             androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
@@ -119,21 +180,8 @@ class AdminSettingsFragment : Fragment() {
     private fun showAboutDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("About GiveEase")
-            .setMessage("GiveEase v1.0.0\n\nA platform connecting donors with verified NGOs to make giving easier and more transparent.\n\nDeveloped for educational purposes.")
+            .setMessage("GiveEase Admin Panel\nVersion 1.0.0\n\nManage donations, NGOs, and user verifications all in one place.")
             .setPositiveButton("OK", null)
-            .show()
-    }
-
-    private fun showMaintenanceModeConfirmation() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Enable Maintenance Mode?")
-            .setMessage("This will temporarily disable user access to the platform. Are you sure?")
-            .setPositiveButton("Enable") { _, _ ->
-                Toast.makeText(requireContext(), "Maintenance mode enabled", Toast.LENGTH_LONG).show()
-            }
-            .setNegativeButton("Cancel") { _, _ ->
-                binding.switchMaintenance.isChecked = false
-            }
             .show()
     }
 
