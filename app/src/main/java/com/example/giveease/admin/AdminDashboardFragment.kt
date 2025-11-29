@@ -52,6 +52,8 @@ class AdminDashboardFragment : Fragment() {
     }
 
     private fun navigateToVerificationApprovals() {
+        if (!isAdded) return
+
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, VerificationApprovalsFragment())
             .addToBackStack(null)
@@ -63,10 +65,14 @@ class AdminDashboardFragment : Fragment() {
 
         firestore.collection("users").document(uid).get()
             .addOnSuccessListener { document ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
                 val name = document.getString("name") ?: "Admin"
                 binding.tvAdminName.text = "Welcome, $name"
             }
             .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
+
                 binding.tvAdminName.text = "Welcome, Admin"
             }
     }
@@ -83,9 +89,13 @@ class AdminDashboardFragment : Fragment() {
             .whereEqualTo("role", "ngo")
             .get()
             .addOnSuccessListener { documents ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
                 binding.tvTotalNgos.text = documents.size().toString()
             }
             .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
+
                 binding.tvTotalNgos.text = "0"
             }
     }
@@ -95,9 +105,13 @@ class AdminDashboardFragment : Fragment() {
             .whereEqualTo("role", "donor")
             .get()
             .addOnSuccessListener { documents ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
                 binding.tvTotalDonors.text = documents.size().toString()
             }
             .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
+
                 binding.tvTotalDonors.text = "0"
             }
     }
@@ -107,6 +121,8 @@ class AdminDashboardFragment : Fragment() {
             .whereEqualTo("verificationStatus", "pending")
             .get()
             .addOnSuccessListener { documents ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
                 val count = documents.size()
                 binding.tvPendingApprovals.text = count.toString()
                 binding.tvNotificationBadge.text = count.toString()
@@ -118,14 +134,27 @@ class AdminDashboardFragment : Fragment() {
                 }
             }
             .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
+
                 binding.tvPendingApprovals.text = "0"
                 binding.tvNotificationBadge.visibility = View.GONE
             }
     }
 
     private fun loadActiveCampaigns() {
-        // TODO: Implement when campaigns are added to Firestore
-        binding.tvActiveCampaigns.text = "0"
+        firestore.collection("campaigns")
+            .whereEqualTo("status", "Active")
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+
+                binding.tvActiveCampaigns.text = documents.size().toString()
+            }
+            .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
+
+                binding.tvActiveCampaigns.text = "0"
+            }
     }
 
     override fun onDestroyView() {
