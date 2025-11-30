@@ -59,12 +59,8 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
             tvCampaignTitle.text = campaign.title
             tvNgoName.text = campaign.ngoName
             tvUnit.text = campaign.unit
-
-            // Show remaining quantity
             val remaining = campaign.targetQuantity - campaign.currentQuantity
             tvRemaining.text = "Remaining: $remaining ${campaign.unit}"
-
-            // Progress info
             val progress = campaign.getProgress()
             tvProgress.text = "${campaign.currentQuantity} / ${campaign.targetQuantity} ${campaign.unit} ($progress%)"
         }
@@ -151,7 +147,6 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
             "status" to "Completed"
         )
 
-        // Save donation record
         firestore.collection("donations")
             .add(donationData)
             .addOnSuccessListener { donationRef ->
@@ -177,7 +172,6 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
             transaction.update(campaignRef, "donorCount", donorCount + 1)
             transaction.update(campaignRef, "updatedAt", System.currentTimeMillis())
 
-            // Auto-close if target reached and auto-close enabled
             if (campaign.autoClose && newQuantity >= campaign.targetQuantity) {
                 transaction.update(campaignRef, "status", "Completed")
             }
@@ -191,16 +185,21 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun showSuccessAndDismiss(quantity: Int, donationId: String) {
-        Toast.makeText(
-            requireContext(),
-            "Thank you! Your donation of $quantity ${campaign.unit} has been recorded.",
-            Toast.LENGTH_LONG
-        ).show()
-
-        // Notify parent fragment to refresh
         (parentFragment as? CampaignDetailsFragment)?.refreshCampaignData()
 
-        dismiss()
+        if (isAdded && context != null) {
+            Toast.makeText(
+                requireContext(),
+                "Thank you! Your donation of $quantity ${campaign.unit} has been recorded.",
+                Toast.LENGTH_SHORT  // Changed to SHORT
+            ).show()
+        }
+
+        view?.postDelayed({
+            if (isAdded) {
+                dismiss()
+            }
+        }, 300)
     }
 
     private fun showLoading(show: Boolean) {
