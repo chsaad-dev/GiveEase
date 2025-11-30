@@ -104,8 +104,6 @@ class EditProfileFragment : Fragment() {
             etCity.setOnFocusChangeListener { _, _ -> isDataChanged = true }
             etBio.setOnFocusChangeListener { _, _ -> isDataChanged = true }
 
-            switchEmailNotifications.setOnCheckedChangeListener { _, _ -> isDataChanged = true }
-            switchPushNotifications.setOnCheckedChangeListener { _, _ -> isDataChanged = true }
         }
     }
 
@@ -131,8 +129,6 @@ class EditProfileFragment : Fragment() {
                         etCity.setText(document.getString("city") ?: "")
                         etBio.setText(document.getString("bio") ?: "")
 
-                        switchEmailNotifications.isChecked = document.getBoolean("emailNotifications") ?: true
-                        switchPushNotifications.isChecked = document.getBoolean("pushNotifications") ?: true
 
                         currentProfileImageUrl = document.getString("profileImageUrl")
                         if (!currentProfileImageUrl.isNullOrEmpty()) {
@@ -303,8 +299,6 @@ class EditProfileFragment : Fragment() {
             "phone" to binding.etPhone.text.toString().trim(),
             "city" to binding.etCity.text.toString().trim(),
             "bio" to binding.etBio.text.toString().trim(),
-            "emailNotifications" to binding.switchEmailNotifications.isChecked,
-            "pushNotifications" to binding.switchPushNotifications.isChecked,
             "updatedAt" to System.currentTimeMillis()
         )
 
