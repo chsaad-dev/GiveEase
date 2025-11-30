@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="#F8FAFF">
 
-    <!-- Header -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -101,7 +100,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="👤 Account Settings"
+                        android:text="Account Settings"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="#1A237E"
@@ -268,7 +267,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🎯 Campaign Settings"
+                        android:text="Campaign Settings"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="#1A237E"
@@ -320,7 +319,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="💳 Payment Settings"
+                        android:text="Payment Settings"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="#1A237E"
@@ -404,7 +403,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🔒 Privacy &amp; Security"
+                        android:text="Privacy &amp; Security"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="#1A237E"
@@ -462,7 +461,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="⚠ Danger Zone"
+                        android:text="Danger Zone"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="#D32F2F"
