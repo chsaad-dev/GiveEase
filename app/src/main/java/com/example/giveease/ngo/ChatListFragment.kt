@@ -24,9 +24,9 @@ class ChatListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.fabNewChat.setOnClickListener {
-            // Navigate to new chat or show donor list
-        }
+        // binding.fabNewChat.setOnClickListener {
+        //     // Navigate to new chat or show donor list
+        // }
     }
 
     override fun onDestroyView() {
