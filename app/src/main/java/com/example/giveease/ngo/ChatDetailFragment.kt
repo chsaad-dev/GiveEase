@@ -51,8 +51,8 @@ class ChatDetailFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        binding.tvNgoName.text = donorName ?: "Donor"
-        binding.tvNgoStatus.text = "Online"
+        // binding.tvNgoName.text = donorName ?: "Donor"
+        // binding.tvNgoStatus.text = "Online"
 
         binding.btnBack.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()

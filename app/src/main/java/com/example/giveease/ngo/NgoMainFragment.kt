@@ -39,7 +39,7 @@ class NgoMainFragment : Fragment() {
                 R.id.nav_chat -> {
                     childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     childFragmentManager.commit {
-                        replace(R.id.fragmentContainer, ChatListFragment())
+                        replace(R.id.fragmentContainer, NgoChatFragment())
                     }
                 }
                 R.id.nav_campaign -> {

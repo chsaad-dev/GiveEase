@@ -17,8 +17,8 @@ class ChatAdapter(
     inner class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val ngoName: TextView = view.findViewById(R.id.tvNgoName)
         val lastMessage: TextView = view.findViewById(R.id.tvLastMessage)
-        val imgNgo: ImageView = view.findViewById(R.id.imgNgo)
-        val tvUnread: TextView = view.findViewById(R.id.tvUnread)
+        // val imgNgo: ImageView = view.findViewById(R.id.imgNgo)
+        // val tvUnread: TextView = view.findViewById(R.id.tvUnread)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
@@ -30,13 +30,13 @@ class ChatAdapter(
         val chat = chatList[position]
         holder.ngoName.text = chat.ngoName
         holder.lastMessage.text = chat.lastMessage
-        holder.imgNgo.setImageResource(chat.imageRes)
+        // holder.imgNgo.setImageResource(chat.imageRes)
 
         if (chat.unreadCount > 0) {
-            holder.tvUnread.visibility = View.VISIBLE
-            holder.tvUnread.text = chat.unreadCount.toString()
+            // holder.tvUnread.visibility = View.VISIBLE
+            // holder.tvUnread.text = chat.unreadCount.toString()
         } else {
-            holder.tvUnread.visibility = View.GONE
+            // holder.tvUnread.visibility = View.GONE
         }
 
         holder.itemView.setOnClickListener {
