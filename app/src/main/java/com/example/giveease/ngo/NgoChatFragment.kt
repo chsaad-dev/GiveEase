@@ -8,39 +8,46 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.giveease.R
+import com.example.giveease.adapter.ChatAdapter
 import com.example.giveease.databinding.FragmentNgoChatBinding
-import com.example.giveease.ngo.model.ChatItem
+import com.example.giveease.donor.ChatDetailFragment
+import com.example.giveease.model.ChatRoom
+import com.example.giveease.utils.UserManager
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 
 class NgoChatFragment : Fragment() {
-
-    private var _binding: FragmentNgoChatBinding? = null
-    private val binding get() = _binding!!
-
-    private lateinit var chatAdapter: NgoChatAdapter
-    private var chatList = mutableListOf<ChatItem>()
-    private var filteredChatList = mutableListOf<ChatItem>()
+    private lateinit var binding: FragmentNgoChatBinding
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var chatAdapter: ChatAdapter
+    private var chatListener: ListenerRegistration? = null
+    private val allChats = mutableListOf<ChatRoom>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNgoChatBinding.inflate(inflater, container, false)
+        binding = FragmentNgoChatBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        firestore = FirebaseFirestore.getInstance()
+
         setupRecyclerView()
-        setupSearchBar()
-        setupClickListeners()
+        setupSearch()
+        // setupSwipeRefresh()
         loadChats()
     }
 
     private fun setupRecyclerView() {
-        chatAdapter = NgoChatAdapter { chatItem ->
-            onChatItemClick(chatItem)
+        chatAdapter = ChatAdapter(UserManager.getUserId(requireContext())) { chatRoom ->
+            openChatDetail(chatRoom)
         }
 
         binding.recyclerViewChats.apply {
@@ -49,7 +56,7 @@ class NgoChatFragment : Fragment() {
         }
     }
 
-    private fun setupSearchBar() {
+    private fun setupSearch() {
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -60,98 +67,93 @@ class NgoChatFragment : Fragment() {
         })
     }
 
-    private fun setupClickListeners() {
-        binding.fabNewChat.setOnClickListener {
-            // Navigate to donor selection or new chat screen
-            // findNavController().navigate(R.id.action_ngoChat_to_selectDonor)
-        }
+    private fun setupSwipeRefresh() {
+        // binding.swipeRefresh.setOnRefreshListener {
+        //     loadChats()
+        // }
     }
 
     private fun loadChats() {
-        // Simulate loading chats (replace with API call)
-        chatList = getSampleChats().toMutableList()
-        filteredChatList = chatList.toMutableList()
+        val userId = UserManager.getUserId(requireContext())
 
-        updateUI()
+        binding.progressBar.visibility = View.VISIBLE
+
+        chatListener?.remove()
+        chatListener = firestore.collection("chats")
+            .whereEqualTo("ngoId", userId)
+            .addSnapshotListener { snapshot, error ->
+                binding.progressBar.visibility = View.GONE
+
+                if (error != null) {
+                    android.util.Log.e("NgoChatFragment", "Listen failed.", error)
+                    try {
+                        android.widget.Toast.makeText(requireContext(), "Error: ${error.message}", android.widget.Toast.LENGTH_LONG).show()
+                    } catch (e: Exception) {}
+                    return@addSnapshotListener
+                }
+
+                allChats.clear()
+                val size = snapshot?.documents?.size ?: 0
+                try {
+                    android.widget.Toast.makeText(requireContext(), "User: $userId | Chats loaded: $size", android.widget.Toast.LENGTH_LONG).show()
+                } catch (e: Exception) {}
+
+                snapshot?.documents?.forEach { doc ->
+                    val chat = doc.toObject(ChatRoom::class.java)
+                    if (chat == null) {
+                        try {
+                            android.widget.Toast.makeText(requireContext(), "Warning: ChatRoom parsed as NULL!", android.widget.Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {}
+                    } else {
+                        allChats.add(chat.copy(id = doc.id))
+                    }
+                }
+
+                allChats.sortByDescending { it.lastMessageTime }
+                updateUI()
+            }
     }
 
     private fun filterChats(query: String) {
-        filteredChatList = if (query.isEmpty()) {
-            chatList.toMutableList()
+        val filtered = if (query.isEmpty()) {
+            allChats
         } else {
-            chatList.filter {
+            allChats.filter {
                 it.donorName.contains(query, ignoreCase = true) ||
-                        it.lastMessage.contains(query, ignoreCase = true) ||
-                        it.campaignName.contains(query, ignoreCase = true)
-            }.toMutableList()
+                        it.campaignName.contains(query, ignoreCase = true) ||
+                        it.lastMessage.contains(query, ignoreCase = true)
+            }
         }
 
-        updateUI()
+        chatAdapter.submitList(filtered)
+        binding.emptyState.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun updateUI() {
-        if (filteredChatList.isEmpty()) {
-            binding.emptyState.visibility = View.VISIBLE
-            binding.recyclerViewChats.visibility = View.GONE
-        } else {
-            binding.emptyState.visibility = View.GONE
-            binding.recyclerViewChats.visibility = View.VISIBLE
-            chatAdapter.submitList(filteredChatList)
-        }
+        chatAdapter.submitList(allChats.toList())
+        binding.emptyState.visibility = if (allChats.isEmpty()) View.VISIBLE else View.GONE
     }
 
-    private fun onChatItemClick(chatItem: ChatItem) {
-        // Navigate to chat detail
-        val bundle = Bundle().apply {
-            putString("donorId", chatItem.donorId)
-            putString("donorName", chatItem.donorName)
-            putString("campaignName", chatItem.campaignName)
-            putString("donorProfileUrl", chatItem.donorProfileUrl)
+    private fun openChatDetail(chatRoom: ChatRoom) {
+        val fragment = ChatDetailFragment().apply {
+            arguments = Bundle().apply {
+                putString("chatRoomId", chatRoom.id)
+                putString("otherUserId", chatRoom.donorId)
+                putString("otherUserName", chatRoom.donorName)
+                putString("otherUserImage", chatRoom.donorImage)
+                putString("campaignName", chatRoom.campaignName)
+                putBoolean("isDonor", false)
+            }
         }
 
-        // findNavController().navigate(R.id.action_ngoChat_to_chatDetail, bundle)
-    }
-
-    private fun getSampleChats(): List<ChatItem> {
-        return listOf(
-            ChatItem(
-                id = "1",
-                donorId = "d1",
-                donorName = "Ahmed Khan",
-                donorProfileUrl = null,
-                lastMessage = "Thank you for your donation! When can we schedule pickup?",
-                timestamp = "2:30 PM",
-                campaignName = "Flood Relief Campaign",
-                unreadCount = 3,
-                isOnline = true
-            ),
-            ChatItem(
-                id = "2",
-                donorId = "d2",
-                donorName = "Sara Ali",
-                donorProfileUrl = null,
-                lastMessage = "I'd like to donate food items",
-                timestamp = "1:15 PM",
-                campaignName = "Food Drive",
-                unreadCount = 0,
-                isOnline = false
-            ),
-            ChatItem(
-                id = "3",
-                donorId = "d3",
-                donorName = "Ali Hassan",
-                donorProfileUrl = null,
-                lastMessage = "Can you provide more details about the project?",
-                timestamp = "Yesterday",
-                campaignName = "Education Support",
-                unreadCount = 1,
-                isOnline = true
-            )
-        )
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        chatListener?.remove()
     }
 }
