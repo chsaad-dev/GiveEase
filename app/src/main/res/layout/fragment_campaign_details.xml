@@ -104,6 +104,7 @@
                         android:layout_gravity="center"
                         android:src="@drawable/ic_share"
                         app:tint="#1565C0" />
+
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
@@ -146,6 +147,7 @@
                         android:textColor="#1565C0"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
+
 
                     <!-- Title -->
                     <TextView
@@ -523,7 +525,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Fixed Donate Button -->
+    <!-- Fixed Buttons -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -532,16 +534,39 @@
         app:cardCornerRadius="0dp"
         app:cardBackgroundColor="@android:color/white">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDonate"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="Donate Now"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:cornerRadius="0dp"
-            app:backgroundTint="#1565C0"
-            android:layout_margin="16dp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnContactNgo"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="Contact NGO"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                app:strokeColor="#1565C0"
+                android:textColor="#1565C0"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDonate"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="Donate Now"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                app:backgroundTint="#4CAF50"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

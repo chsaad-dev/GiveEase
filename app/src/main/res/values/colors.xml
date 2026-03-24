@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_200">#FFBB86FC</color>
-
     <color name="background">#FAFAFA</color>
     <color name="surface">#FFFFFF</color>
     <color name="onSurface">#212121</color>
@@ -22,48 +21,35 @@
     <color name="chip_unselected">#E0E0E0</color>
     <color name="chip_selected">#1976D2</color>
 
-
-    <!-- Primary Theme Colors -->
     <color name="primary">#4CAF50</color>
     <color name="onPrimary">#FFFFFF</color>
     <color name="primaryContainer">#E8F5E9</color>
     <color name="onPrimaryContainer">#1B5E20</color>
-
-    <!-- Secondary Accent -->
     <color name="secondary">#03A9F4</color>
     <color name="onSecondary">#FFFFFF</color>
-    <!-- CardView / Shadow -->
-    <color name="cardShadow">#33000000</color> <!-- 20% Black -->
-
-    <!-- Outline -->
+    <color name="cardShadow">#33000000</color>
     <color name="outline">#BDBDBD</color>
-
-    <!-- Texts -->
     <color name="textPrimary">#000000</color>
     <color name="textSecondary">#000000</color>
-
-    <!-- Status Colors -->
     <color name="success">#4CAF50</color>
     <color name="warning">#FF9800</color>
     <color name="info">#2196F3</color>
-
-    <!-- Progress Bar -->
     <color name="progress">#66BB6A</color>
     <color name="success_green">#2E7D32</color>
     <color name="success_green_light">#A5D6A7</color>
     <color name="primary_blue_light">#BBDEFB</color>
-
-    <!-- Chat Bubble BG (optional) -->
     <color name="chatBubbleSender">#E0F2F1</color>
     <color name="chatBubbleReceiver">#FFFFFF</color>
-
-    <!-- Bottom Navigation -->
     <color name="navSelected">#4CAF50</color>
     <color name="navUnselected">#282626</color>
-
-    <!-- optional secondary for captions etc. -->
+    <color name="whatsapp_green">#25D366</color>
+    <color name="whatsapp_dark_green">#075E54</color>
+    <color name="whatsapp_teal">#128C7E</color>
+    <color name="whatsapp_light_green">#DCF8C6</color>
+    <color name="whatsapp_bg">#ECE5DD</color>
+    <color name="read_receipt_blue">#4FC3F7</color>
+    <color name="online_green">#4CAF50</color>
     <color name="onSurfaceSecondary">#616161</color>
-
     <color name="gray_light">#E0E0E0</color>
     <color name="gray_dark">#666666</color>
     <color name="text_primary">#1A1A1A</color>
