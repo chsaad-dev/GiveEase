@@ -7,10 +7,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.example.giveease.utils.ChatHelper
+import com.example.giveease.donor.ChatDetailFragment
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentCampaignDetailsBinding
 import com.example.giveease.donor.adapter.ImageSliderAdapter
 import com.example.giveease.ngo.CampaignData
+import com.example.giveease.utils.UserManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
@@ -71,6 +74,7 @@ class CampaignDetailsFragment : Fragment() {
 
         firestore.collection("campaigns").document(campaignId).get()
             .addOnSuccessListener { document ->
+                if (_binding == null) return@addOnSuccessListener
                 try {
                     android.util.Log.d("CampaignDetails", "Campaign loaded: ${document.data}")
 
@@ -199,6 +203,8 @@ class CampaignDetailsFragment : Fragment() {
             btnDonate.setOnClickListener {
                 handleDonate()
             }
+            
+            setupChatButton(campaign)
         }
     }
 
@@ -231,6 +237,71 @@ class CampaignDetailsFragment : Fragment() {
         startActivity(android.content.Intent.createChooser(shareIntent, "Share Campaign"))
     }
 
+    private fun setupChatButton(campaign: CampaignData) {
+        binding.btnContactNgo.setOnClickListener {
+            val currentUserId = UserManager.getUserId(requireContext())
+            
+            binding.progressBar.visibility = View.VISIBLE
+            firestore.collection("users").document(currentUserId).get()
+                .addOnSuccessListener { document ->
+                    binding.progressBar.visibility = View.GONE
+                    val donorName = document.getString("name")?.takeIf { it.isNotEmpty() } ?: UserManager.getUserName(requireContext())
+                    val donorImage = ""
+                    
+                    val ngoName = campaign.ngoName.ifEmpty { "NGO" }
+                    val ngoImage = ""
+
+                    // Force cache the name so ChatDetailFragment can use it locally
+                    UserManager.saveUser(requireContext(), currentUserId, "donor", donorName)
+
+                    ChatHelper.openChatFromCampaign(
+                        campaignId = campaign.id,
+                        campaignName = campaign.title,
+                        ngoId = campaign.ngoId,
+                        ngoName = ngoName,
+                        ngoImage = ngoImage,
+                        currentDonorId = currentUserId,
+                        currentDonorName = donorName,
+                        currentDonorImage = donorImage,
+                        onChatRoomCreated = { chatRoomId ->
+                            openChatDetail(chatRoomId, campaign.ngoId, ngoName, ngoImage, campaign.title)
+                        },
+                        onError = {
+                            Toast.makeText(requireContext(), "Failed to start chat", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }
+                .addOnFailureListener {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Failed to check user details", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
+    private fun openChatDetail(
+        chatRoomId: String,
+        ngoId: String,
+        ngoName: String,
+        ngoImage: String,
+        campaignName: String
+    ) {
+        val fragment = ChatDetailFragment().apply {
+            arguments = Bundle().apply {
+                putString("chatRoomId", chatRoomId)
+                putString("otherUserId", ngoId)
+                putString("otherUserName", ngoName)
+                putString("otherUserImage", ngoImage)
+                putString("campaignName", campaignName)
+                putBoolean("isDonor", true)
+            }
+        }
+
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     private fun handleDonate() {
         val dialog = DonationDialogFragment.newInstance(campaign)
         dialog.show(childFragmentManager, "DonationDialog")
@@ -239,6 +310,7 @@ class CampaignDetailsFragment : Fragment() {
     fun refreshCampaignData() {
         firestore.collection("campaigns").document(campaign.id).get()
             .addOnSuccessListener { document ->
+                if (_binding == null) return@addOnSuccessListener
                 try {
                     campaign = CampaignData(
                         id = document.id,
