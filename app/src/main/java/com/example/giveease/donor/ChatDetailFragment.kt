@@ -15,6 +15,9 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.giveease.R
 import com.example.giveease.adapter.MessageAdapter
@@ -89,6 +92,14 @@ class ChatDetailFragment : Fragment() {
         setupUI()
         setupRecyclerView()
         setupListeners()
+
+        // Handle navigation bar overlap
+        ViewCompat.setOnApplyWindowInsetsListener(binding.messageInputLayout) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom + 8) // +8 for visual comfort
+            insets
+        }
+
         loadMessages()
         updateOnlineStatus(true)
         listenForTypingStatus()

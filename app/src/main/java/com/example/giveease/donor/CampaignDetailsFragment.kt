@@ -5,7 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.giveease.utils.ChatHelper
 import com.example.giveease.donor.ChatDetailFragment
@@ -62,6 +66,13 @@ class CampaignDetailsFragment : Fragment() {
         } else {
             Toast.makeText(requireContext(), "Campaign not found", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
+        }
+
+        // Handle navigation bar overlap for the bottom action buttons
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomActionCard) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom + 8)
+            insets
         }
 
         return binding.root
