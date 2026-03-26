@@ -38,7 +38,7 @@
             android:layout_marginTop="4dp"
             android:maxWidth="260dp"
             android:text="Message text"
-            android:textColor="@android:color/white"
+            android:textColor="#222222"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/imgMessage" />
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2:30 PM"
-                android:textColor="#B3E5FC"
+                android:textColor="#777777"
                 android:textSize="11sp" />
 
             <ImageView
@@ -67,7 +67,7 @@
                 android:layout_height="16dp"
                 android:layout_marginStart="4dp"
                 android:src="@drawable/ic_check_double"
-                app:tint="#B3E5FC" />
+                app:tint="#34B7F1" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

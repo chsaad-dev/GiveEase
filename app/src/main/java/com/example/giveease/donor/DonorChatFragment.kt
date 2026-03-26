@@ -40,7 +40,7 @@ class DonorChatFragment : Fragment() {
 
         setupRecyclerView()
         setupSearch()
-        // setupSwipeRefresh()
+        setupSwipeRefresh()
         loadChats()
     }
 
@@ -67,9 +67,9 @@ class DonorChatFragment : Fragment() {
     }
 
     private fun setupSwipeRefresh() {
-        // binding.swipeRefresh.setOnRefreshListener {
-        //     loadChats()
-        // }
+        binding.swipeRefresh.setOnRefreshListener {
+            loadChats()
+        }
     }
 
     private fun loadChats() {
@@ -82,6 +82,7 @@ class DonorChatFragment : Fragment() {
             .whereEqualTo("donorId", userId)
             .addSnapshotListener { snapshot, error ->
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
 
                 if (error != null) {
                     android.util.Log.e("DonorChatFragment", "Listen failed.", error)

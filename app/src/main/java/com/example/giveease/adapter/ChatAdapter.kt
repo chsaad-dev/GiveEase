@@ -39,10 +39,14 @@ class ChatAdapter(
 
             tvName.text = otherUserName
 
-            Glide.with(itemView.context)
-                .load(otherUserImage)
-                .placeholder(R.drawable.sample_profile)
-                .into(imgProfile)
+            if (otherUserImage.isNotEmpty()) {
+                Glide.with(itemView.context)
+                    .load(otherUserImage)
+                    .placeholder(R.drawable.sample_profile)
+                    .into(imgProfile)
+            } else {
+                imgProfile.setImageResource(R.drawable.sample_profile)
+            }
 
             onlineIndicator.visibility = if (isOtherUserOnline) View.VISIBLE else View.GONE
 

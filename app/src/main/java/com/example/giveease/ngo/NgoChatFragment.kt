@@ -41,7 +41,7 @@ class NgoChatFragment : Fragment() {
 
         setupRecyclerView()
         setupSearch()
-        // setupSwipeRefresh()
+        setupSwipeRefresh()
         loadChats()
     }
 
@@ -68,9 +68,9 @@ class NgoChatFragment : Fragment() {
     }
 
     private fun setupSwipeRefresh() {
-        // binding.swipeRefresh.setOnRefreshListener {
-        //     loadChats()
-        // }
+        binding.swipeRefresh.setOnRefreshListener {
+            loadChats()
+        }
     }
 
     private fun loadChats() {
@@ -83,6 +83,7 @@ class NgoChatFragment : Fragment() {
             .whereEqualTo("ngoId", userId)
             .addSnapshotListener { snapshot, error ->
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
 
                 if (error != null) {
                     android.util.Log.e("NgoChatFragment", "Listen failed.", error)
