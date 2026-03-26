@@ -68,15 +68,15 @@ class MessageAdapter(
             when (message.status) {
                 MessageStatus.SENDING -> {
                     imgStatus.setImageResource(R.drawable.ic_access_time)
-                    imgStatus.setColorFilter(itemView.context.getColor(android.R.color.white))
+                    imgStatus.setColorFilter(android.graphics.Color.parseColor("#777777"))
                 }
                 MessageStatus.SENT -> {
                     imgStatus.setImageResource(R.drawable.ic_check)
-                    imgStatus.setColorFilter(itemView.context.getColor(android.R.color.white))
+                    imgStatus.setColorFilter(android.graphics.Color.parseColor("#777777"))
                 }
                 MessageStatus.DELIVERED -> {
                     imgStatus.setImageResource(R.drawable.ic_check_double)
-                    imgStatus.setColorFilter(itemView.context.getColor(android.R.color.white))
+                    imgStatus.setColorFilter(android.graphics.Color.parseColor("#777777"))
                 }
                 MessageStatus.READ -> {
                     imgStatus.setImageResource(R.drawable.ic_check_double)
