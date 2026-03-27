@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/white"
+        android:background="@drawable/home_header_gradient"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="18dp"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="GiveEase"
             android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
-            android:textColor="@color/primary_blue"
+            android:textColor="@android:color/white"
             android:layout_weight="1"/>
 
         <ImageView
