@@ -56,25 +56,29 @@ class MainActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+                if (supportFragmentManager.backStackEntryCount > 0) {
+                    supportFragmentManager.popBackStack()
+                } else {
+                    val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
 
-                when (currentFragment) {
-                    is DonorMainFragment -> {
-                        if (!currentFragment.handleBackPress()) {
-                            showExitConfirmation()
+                    when (currentFragment) {
+                        is DonorMainFragment -> {
+                            if (!currentFragment.handleBackPress()) {
+                                showExitConfirmation()
+                            }
                         }
-                    }
-                    is NgoMainFragment -> {
-                        if (!currentFragment.handleBackPress()) {
-                            showExitConfirmation()
+                        is NgoMainFragment -> {
+                            if (!currentFragment.handleBackPress()) {
+                                showExitConfirmation()
+                            }
                         }
-                    }
-                    is AdminMainFragment -> {
-                        if (!currentFragment.handleBackPress()) {
-                            showExitConfirmation()
+                        is AdminMainFragment -> {
+                            if (!currentFragment.handleBackPress()) {
+                                showExitConfirmation()
+                            }
                         }
+                        else -> showExitConfirmation()
                     }
-                    else -> showExitConfirmation()
                 }
             }
         })

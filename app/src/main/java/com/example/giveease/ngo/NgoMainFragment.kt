@@ -66,8 +66,10 @@ class NgoMainFragment : Fragment() {
     }
 
     private fun loadDefaultFragment() {
-        childFragmentManager.commit {
-            replace(R.id.fragmentContainer, NgoHomeFragment())
+        if (childFragmentManager.findFragmentById(R.id.fragmentContainer) == null) {
+            childFragmentManager.commit {
+                replace(R.id.fragmentContainer, NgoHomeFragment())
+            }
         }
     }
 
