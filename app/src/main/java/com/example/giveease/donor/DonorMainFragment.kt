@@ -39,7 +39,7 @@ class DonorMainFragment : Fragment() {
             }
         }
 
-        if (savedInstanceState == null) {
+        if (childFragmentManager.findFragmentById(R.id.fragment_container_donor) == null) {
             childFragmentManager.commit {
                 replace(R.id.fragment_container_donor, DonorHomeFragment())
             }
