@@ -25,7 +25,14 @@ class DonorMainFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_donor_main, container, false)
     }
 
+    private lateinit var homeFragment: Fragment
+    private lateinit var feedFragment: Fragment
+    private lateinit var chatFragment: Fragment
+    private lateinit var profileFragment: Fragment
+    private lateinit var activeFragment: Fragment
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         bottomNav = view.findViewById(R.id.bottom_nav_donor)
 
         checkVerificationStatus()
@@ -39,32 +46,50 @@ class DonorMainFragment : Fragment() {
             }
         }
 
-        if (childFragmentManager.findFragmentById(R.id.fragment_container_donor) == null) {
-            childFragmentManager.commit {
-                replace(R.id.fragment_container_donor, DonorHomeFragment())
+        if (savedInstanceState == null) {
+            homeFragment = DonorHomeFragment()
+            feedFragment = DonorFeedFragment()
+            chatFragment = DonorChatFragment()
+            profileFragment = DonorProfileFragment()
+            activeFragment = homeFragment
+
+            childFragmentManager.beginTransaction().apply {
+                add(R.id.fragment_container_donor, profileFragment, "profile").hide(profileFragment)
+                add(R.id.fragment_container_donor, chatFragment, "chat").hide(chatFragment)
+                add(R.id.fragment_container_donor, feedFragment, "feed").hide(feedFragment)
+                add(R.id.fragment_container_donor, homeFragment, "home")
+            }.commit()
+        } else {
+            homeFragment = childFragmentManager.findFragmentByTag("home") ?: DonorHomeFragment()
+            feedFragment = childFragmentManager.findFragmentByTag("feed") ?: DonorFeedFragment()
+            chatFragment = childFragmentManager.findFragmentByTag("chat") ?: DonorChatFragment()
+            profileFragment = childFragmentManager.findFragmentByTag("profile") ?: DonorProfileFragment()
+
+            activeFragment = when (bottomNav.selectedItemId) {
+                R.id.nav_home -> homeFragment
+                R.id.nav_feed -> feedFragment
+                R.id.nav_chat -> chatFragment
+                R.id.nav_profile -> profileFragment
+                else -> homeFragment
             }
         }
 
         bottomNav.setOnItemSelectedListener { item ->
-            val newFragment = when (item.itemId) {
-                R.id.nav_home -> DonorHomeFragment()
-                R.id.nav_feed -> DonorFeedFragment()
-                R.id.nav_chat -> DonorChatFragment()
-                R.id.nav_profile -> DonorProfileFragment()
-                else -> DonorHomeFragment()
+            val targetFragment = when (item.itemId) {
+                R.id.nav_home -> homeFragment
+                R.id.nav_feed -> feedFragment
+                R.id.nav_chat -> chatFragment
+                R.id.nav_profile -> profileFragment
+                else -> homeFragment
             }
 
-            val currentFragment =
-                childFragmentManager.findFragmentById(R.id.fragment_container_donor)
-
-            if (currentFragment?.javaClass != newFragment.javaClass) {
-                childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
+            if (activeFragment != targetFragment) {
                 childFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container_donor, newFragment)
+                    .hide(activeFragment)
+                    .show(targetFragment)
                     .commit()
+                activeFragment = targetFragment
             }
-
             true
         }
     }
@@ -125,11 +150,8 @@ class DonorMainFragment : Fragment() {
             return true
         }
 
-        if (currentFragment !is DonorHomeFragment) {
+        if (bottomNav.selectedItemId != R.id.nav_home) {
             bottomNav.selectedItemId = R.id.nav_home
-            childFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_donor, DonorHomeFragment())
-                .commit()
             return true
         }
 
