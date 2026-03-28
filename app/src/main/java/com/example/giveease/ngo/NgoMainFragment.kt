@@ -21,55 +21,74 @@ class NgoMainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentNgoMainBinding.inflate(inflater, container, false)
-        setupBottomNavigation()
-        loadDefaultFragment()
         checkVerificationStatus()
         return binding.root
     }
 
-    private fun setupBottomNavigation() {
-        binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    childFragmentManager.commit {
-                        replace(R.id.fragmentContainer, NgoHomeFragment())
-                    }
-                }
-                R.id.nav_chat -> {
-                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    childFragmentManager.commit {
-                        replace(R.id.fragmentContainer, NgoChatFragment())
-                    }
-                }
-                R.id.nav_campaign -> {
-                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    childFragmentManager.commit {
-                        replace(R.id.fragmentContainer, CreateCampaignFragment())
-                    }
-                }
-                R.id.nav_history -> {
-                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    childFragmentManager.commit {
-                        replace(R.id.fragmentContainer, NgoHistoryFragment())
-                    }
-                }
-                R.id.nav_profile -> {
-                    childFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    childFragmentManager.commit {
-                        replace(R.id.fragmentContainer, NgoProfileFragment())
-                    }
-                }
+    private lateinit var homeFragment: Fragment
+    private lateinit var chatFragment: Fragment
+    private lateinit var campaignFragment: Fragment
+    private lateinit var historyFragment: Fragment
+    private lateinit var profileFragment: Fragment
+    private lateinit var activeFragment: Fragment
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        
+        if (savedInstanceState == null) {
+            homeFragment = NgoHomeFragment()
+            chatFragment = NgoChatFragment()
+            campaignFragment = CreateCampaignFragment()
+            historyFragment = NgoHistoryFragment()
+            profileFragment = NgoProfileFragment()
+            activeFragment = homeFragment
+
+            childFragmentManager.beginTransaction().apply {
+                add(R.id.fragmentContainer, profileFragment, "profile").hide(profileFragment)
+                add(R.id.fragmentContainer, historyFragment, "history").hide(historyFragment)
+                add(R.id.fragmentContainer, campaignFragment, "campaign").hide(campaignFragment)
+                add(R.id.fragmentContainer, chatFragment, "chat").hide(chatFragment)
+                add(R.id.fragmentContainer, homeFragment, "home")
+            }.commit()
+        } else {
+            homeFragment = childFragmentManager.findFragmentByTag("home") ?: NgoHomeFragment()
+            chatFragment = childFragmentManager.findFragmentByTag("chat") ?: NgoChatFragment()
+            campaignFragment = childFragmentManager.findFragmentByTag("campaign") ?: CreateCampaignFragment()
+            historyFragment = childFragmentManager.findFragmentByTag("history") ?: NgoHistoryFragment()
+            profileFragment = childFragmentManager.findFragmentByTag("profile") ?: NgoProfileFragment()
+
+            activeFragment = when (binding.bottomNavigationView.selectedItemId) {
+                R.id.nav_home -> homeFragment
+                R.id.nav_chat -> chatFragment
+                R.id.nav_campaign -> campaignFragment
+                R.id.nav_history -> historyFragment
+                R.id.nav_profile -> profileFragment
+                else -> homeFragment
             }
-            true
         }
+
+        setupBottomNavigation()
     }
 
-    private fun loadDefaultFragment() {
-        if (childFragmentManager.findFragmentById(R.id.fragmentContainer) == null) {
-            childFragmentManager.commit {
-                replace(R.id.fragmentContainer, NgoHomeFragment())
+    private fun setupBottomNavigation() {
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            val targetFragment = when (item.itemId) {
+                R.id.nav_home -> homeFragment
+                R.id.nav_chat -> chatFragment
+                R.id.nav_campaign -> campaignFragment
+                R.id.nav_history -> historyFragment
+                R.id.nav_profile -> profileFragment
+                else -> homeFragment
             }
+
+            if (activeFragment != targetFragment) {
+                childFragmentManager.beginTransaction()
+                    .hide(activeFragment)
+                    .show(targetFragment)
+                    .commit()
+                activeFragment = targetFragment
+            }
+            true
         }
     }
 
@@ -129,11 +148,8 @@ class NgoMainFragment : Fragment() {
             return true
         }
 
-        if (currentFragment !is NgoHomeFragment) {
+        if (binding.bottomNavigationView.selectedItemId != R.id.nav_home) {
             binding.bottomNavigationView.selectedItemId = R.id.nav_home
-            childFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, NgoHomeFragment())
-                .commit()
             return true
         }
 
