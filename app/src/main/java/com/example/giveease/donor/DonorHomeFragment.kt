@@ -112,6 +112,7 @@ class DonorHomeFragment : Fragment() {
                         context?.let { ctx ->
                             Glide.with(ctx)
                                 .load(imageUrls[0])
+                                .centerCrop()
                                 .placeholder(R.drawable.sample_compaign1)
                                 .error(R.drawable.sample_compaign1)
                                 .into(ivCampaignImage)

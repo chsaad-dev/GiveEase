@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFF">
+    android:background="#F5F7FA">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -28,7 +28,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <!-- Image Counter -->
+                <!-- Bottom gradient scrim -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/gradient_image_overlay" />
+
+                <!-- Image Counter (pill shape) -->
                 <TextView
                     android:id="@+id/tvImageCount"
                     android:layout_width="wrap_content"
@@ -37,8 +44,8 @@
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"
-                    android:background="#80000000"
-                    android:paddingHorizontal="12dp"
+                    android:background="@drawable/urgency_badge_bg_low"
+                    android:paddingHorizontal="14dp"
                     android:paddingVertical="6dp"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="16dp" />
@@ -122,13 +129,13 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Campaign Header -->
+            <!-- Campaign Header Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="4dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="14dp"
                 app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
@@ -137,17 +144,30 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- NGO Name -->
-                    <TextView
-                        android:id="@+id/tvNgoName"
+                    <!-- NGO Name with icon -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="NGO Name"
-                        android:textSize="14sp"
-                        android:textColor="#1565C0"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="8dp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="10dp">
 
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_organization"
+                            app:tint="#1565C0"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:id="@+id/tvNgoName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NGO Name"
+                            android:textSize="16sp"
+                            android:textColor="#1565C0"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <!-- Title -->
                     <TextView
@@ -158,35 +178,40 @@
                         android:textSize="22sp"
                         android:textStyle="bold"
                         android:textColor="#1A237E"
-                        android:layout_marginBottom="12dp" />
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="14dp" />
 
                     <!-- Category & Urgency -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        android:gravity="center_vertical"
                         android:layout_marginBottom="16dp">
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/tvCategory"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="36dp"
                             android:text="Category"
                             android:textSize="12sp"
+                            android:textColor="#1565C0"
                             app:chipBackgroundColor="#E3F2FD"
-                            android:layout_marginEnd="8dp" />
+                            app:chipCornerRadius="18dp"
+                            app:chipStrokeWidth="0dp"
+                            android:layout_marginEnd="10dp" />
 
                         <TextView
                             android:id="@+id/tvUrgencyBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="High"
+                            android:text="Emergency"
                             android:textSize="12sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/white"
-                            android:paddingHorizontal="12dp"
+                            android:paddingHorizontal="14dp"
                             android:paddingVertical="6dp"
-                            android:background="#FF9800" />
+                            android:background="@drawable/urgency_badge_bg_emergency" />
                     </LinearLayout>
 
                     <!-- Description -->
@@ -197,7 +222,7 @@
                         android:text="Campaign description goes here..."
                         android:textSize="15sp"
                         android:textColor="#546E7A"
-                        android:lineSpacingExtra="4dp" />
+                        android:lineSpacingExtra="5dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -205,9 +230,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="4dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="14dp"
                 app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
@@ -216,33 +241,50 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
+                    <!-- Section Header with icon -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Campaign Progress"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A237E"
-                        android:layout_marginBottom="16dp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
 
-                    <!-- Progress Bar -->
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_trending_up"
+                            app:tint="#1565C0"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Campaign Progress"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#1A237E" />
+                    </LinearLayout>
+
+                    <!-- Rounded Progress Bar -->
                     <ProgressBar
                         android:id="@+id/progressBar"
                         android:layout_width="match_parent"
-                        android:layout_height="12dp"
+                        android:layout_height="14dp"
                         android:progress="75"
                         android:max="100"
                         style="?android:attr/progressBarStyleHorizontal"
-                        android:progressTint="#4CAF50"
-                        android:layout_marginBottom="12dp" />
+                        android:progressDrawable="@drawable/rounded_progress_bar"
+                        android:layout_marginBottom="14dp" />
 
                     <!-- Progress Info -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        android:gravity="center_vertical"
                         android:layout_marginBottom="20dp">
 
+                        <!-- Collected -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -254,125 +296,143 @@
                                 android:layout_height="wrap_content"
                                 android:text="Collected"
                                 android:textSize="12sp"
-                                android:textColor="#546E7A"
+                                android:textColor="#78909C"
                                 android:layout_marginBottom="4dp" />
 
                             <TextView
                                 android:id="@+id/tvCurrentQuantity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="350 Boxes"
-                                android:textSize="16sp"
+                                android:text="350 Items"
+                                android:textSize="17sp"
                                 android:textStyle="bold"
-                                android:textColor="#4CAF50" />
+                                android:textColor="#2E7D32" />
                         </LinearLayout>
 
+                        <!-- Target -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:gravity="end">
+                            android:gravity="center_horizontal">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Target"
                                 android:textSize="12sp"
-                                android:textColor="#546E7A"
+                                android:textColor="#78909C"
                                 android:layout_marginBottom="4dp" />
 
                             <TextView
                                 android:id="@+id/tvTargetQuantity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="500 Boxes"
-                                android:textSize="16sp"
+                                android:text="500 Items"
+                                android:textSize="17sp"
                                 android:textStyle="bold"
                                 android:textColor="#1A237E" />
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:layout_marginStart="16dp">
+                        <!-- Circular Progress Percent -->
+                        <FrameLayout
+                            android:layout_width="64dp"
+                            android:layout_height="64dp">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/progress_circle_bg" />
 
                             <TextView
                                 android:id="@+id/tvProgressPercent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:text="75%"
-                                android:textSize="24sp"
+                                android:textSize="20sp"
                                 android:textStyle="bold"
-                                android:textColor="#4CAF50" />
-                        </LinearLayout>
+                                android:textColor="#2E7D32"
+                                android:gravity="center" />
+                        </FrameLayout>
                     </LinearLayout>
 
-                    <!-- Stats -->
+                    <!-- Stats Row: Days Left + Donors -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
+                        <!-- Days Left -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:gravity="center"
-                            android:background="#F8F9FF"
-                            android:padding="16dp">
+                            android:background="@drawable/stat_card_bg"
+                            android:padding="16dp"
+                            android:layout_marginEnd="6dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_access_time"
+                                app:tint="#1565C0"
+                                android:layout_marginBottom="6dp" />
 
                             <TextView
                                 android:id="@+id/tvDaysLeft"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="15"
-                                android:textSize="28sp"
+                                android:textSize="26sp"
                                 android:textStyle="bold"
                                 android:textColor="#1565C0"
-                                android:layout_marginBottom="4dp" />
+                                android:layout_marginBottom="2dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Days Left"
                                 android:textSize="12sp"
-                                android:textColor="#546E7A" />
+                                android:textColor="#78909C" />
                         </LinearLayout>
 
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="#E0E0E0" />
-
+                        <!-- Donors -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:gravity="center"
-                            android:background="#F8F9FF"
-                            android:padding="16dp">
+                            android:background="@drawable/stat_card_bg"
+                            android:padding="16dp"
+                            android:layout_marginStart="6dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_person"
+                                app:tint="#2E7D32"
+                                android:layout_marginBottom="6dp" />
 
                             <TextView
                                 android:id="@+id/tvDonorCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="156"
-                                android:textSize="28sp"
+                                android:textSize="26sp"
                                 android:textStyle="bold"
-                                android:textColor="#4CAF50"
-                                android:layout_marginBottom="4dp" />
+                                android:textColor="#2E7D32"
+                                android:layout_marginBottom="2dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Donors"
                                 android:textSize="12sp"
-                                android:textColor="#546E7A" />
+                                android:textColor="#78909C" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -383,33 +443,48 @@
                 android:id="@+id/cardItemCondition"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="4dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="14dp"
                 app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Item Condition"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A237E"
-                        android:layout_marginBottom="8dp" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_check_circle"
+                        app:tint="#2E7D32"
+                        android:layout_marginEnd="10dp" />
 
-                    <TextView
-                        android:id="@+id/tvItemCondition"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="New"
-                        android:textSize="14sp"
-                        android:textColor="#546E7A" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Item Condition"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#1A237E"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvItemCondition"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="New"
+                            android:textSize="14sp"
+                            android:textColor="#546E7A" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -418,9 +493,9 @@
                 android:id="@+id/cardSpecificRequirements"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="4dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="14dp"
                 app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
@@ -429,14 +504,28 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Specific Requirements"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A237E"
-                        android:layout_marginBottom="8dp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="10dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_description"
+                            app:tint="#1565C0"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Specific Requirements"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#1A237E" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvSpecificRequirements"
@@ -445,7 +534,7 @@
                         android:text="Requirements go here..."
                         android:textSize="14sp"
                         android:textColor="#546E7A"
-                        android:lineSpacingExtra="4dp" />
+                        android:lineSpacingExtra="5dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -453,7 +542,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="4dp"
                 android:layout_marginBottom="80dp"
                 app:cardBackgroundColor="@android:color/white">
@@ -464,20 +553,46 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
+                    <!-- Section Header with icon -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Campaign Timeline"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A237E"
-                        android:layout_marginBottom="12dp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
 
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_calendar"
+                            app:tint="#1565C0"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Campaign Timeline"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#1A237E" />
+                    </LinearLayout>
+
+                    <!-- Created date -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
+                        android:gravity="center_vertical"
+                        android:background="@drawable/stat_card_bg"
+                        android:padding="14dp"
+                        android:layout_marginBottom="10dp">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_play"
+                            app:tint="#2E7D32"
+                            android:layout_marginEnd="10dp" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -492,15 +607,26 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="15 Jan 2024"
-                            android:textSize="13sp"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             android:textColor="#1A237E" />
                     </LinearLayout>
 
+                    <!-- End date -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/stat_card_bg"
+                        android:padding="14dp">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_access_time"
+                            app:tint="#E53935"
+                            android:layout_marginEnd="10dp" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -515,9 +641,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="30 Jan 2024"
-                            android:textSize="13sp"
+                            android:textSize="14sp"
                             android:textStyle="bold"
-                            android:textColor="#FF5252" />
+                            android:textColor="#E53935" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -525,49 +651,53 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Fixed Buttons -->
+    <!-- Fixed Bottom Action Bar -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomActionCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:cardElevation="8dp"
-        app:cardCornerRadius="0dp"
+        app:cardElevation="12dp"
+        app:cardCornerRadius="20dp"
         app:cardBackgroundColor="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnContactNgo"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="52dp"
                 android:layout_weight="1"
                 android:text="Contact NGO"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
-                app:cornerRadius="8dp"
+                android:textAllCaps="true"
+                app:cornerRadius="26dp"
                 app:strokeColor="#1565C0"
+                app:strokeWidth="2dp"
                 android:textColor="#1565C0"
                 android:layout_marginEnd="8dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDonate"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="52dp"
                 android:layout_weight="1"
                 android:text="Donate Now"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
-                app:cornerRadius="8dp"
-                app:backgroundTint="#4CAF50"
+                android:textAllCaps="true"
+                app:cornerRadius="26dp"
+                app:backgroundTint="#2E7D32"
                 android:layout_marginStart="8dp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
