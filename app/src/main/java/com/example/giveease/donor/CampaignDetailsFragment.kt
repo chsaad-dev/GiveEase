@@ -160,7 +160,7 @@ class CampaignDetailsFragment : Fragment() {
             // Urgency Badge
             val urgency = campaign.urgencyLevel?.takeIf { it.isNotEmpty() } ?: "Low"
             tvUrgencyBadge.text = urgency
-            tvUrgencyBadge.setBackgroundColor(getUrgencyColor(urgency))
+            tvUrgencyBadge.setBackgroundResource(getUrgencyBadgeDrawable(urgency))
 
             // Progress
             val progress = campaign.getProgress()
@@ -219,12 +219,12 @@ class CampaignDetailsFragment : Fragment() {
         }
     }
 
-    private fun getUrgencyColor(urgency: String): Int {
+    private fun getUrgencyBadgeDrawable(urgency: String): Int {
         return when (urgency) {
-            "Emergency" -> 0xFFFF5252.toInt()
-            "High" -> 0xFFFF9800.toInt()
-            "Medium" -> 0xFFFFC107.toInt()
-            else -> 0xFF4CAF50.toInt()
+            "Emergency" -> R.drawable.urgency_badge_bg_emergency
+            "High" -> R.drawable.urgency_badge_bg_high
+            "Medium" -> R.drawable.urgency_badge_bg_medium
+            else -> R.drawable.urgency_badge_bg_low
         }
     }
 

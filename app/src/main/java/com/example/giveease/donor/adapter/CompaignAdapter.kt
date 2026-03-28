@@ -37,9 +37,9 @@ class CampaignAdapter(
                 val daysLeft = campaign.getDaysLeft()
                 tvDaysLeft.text = if (daysLeft > 0) "$daysLeft days left" else "Expired"
 
-                // Urgency badge
+                // Urgency badge with rounded drawable
                 tvUrgency.text = campaign.urgencyLevel
-                tvUrgency.setBackgroundColor(getUrgencyColor(campaign.urgencyLevel))
+                tvUrgency.setBackgroundResource(getUrgencyBadgeDrawable(campaign.urgencyLevel))
 
                 // Load image
                 if (campaign.imageUrls.isNotEmpty()) {
@@ -57,12 +57,12 @@ class CampaignAdapter(
             }
         }
 
-        private fun getUrgencyColor(urgency: String): Int {
+        private fun getUrgencyBadgeDrawable(urgency: String): Int {
             return when (urgency) {
-                "Emergency" -> 0xFFFF5252.toInt()
-                "High" -> 0xFFFF9800.toInt()
-                "Medium" -> 0xFFFFC107.toInt()
-                else -> 0xFF4CAF50.toInt()
+                "Emergency" -> R.drawable.urgency_badge_bg_emergency
+                "High" -> R.drawable.urgency_badge_bg_high
+                "Medium" -> R.drawable.urgency_badge_bg_medium
+                else -> R.drawable.urgency_badge_bg_low
             }
         }
     }

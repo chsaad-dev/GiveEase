@@ -348,8 +348,9 @@
                 android:layout_marginBottom="20dp"
                 android:clickable="true"
                 android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="3dp"
+                app:cardElevation="6dp"
                 app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
@@ -357,97 +358,105 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/ivCampaignImage"
+                    <!-- Image with gradient overlay -->
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="240dp"
-                        android:src="@drawable/sample_compaign1"
-                        android:scaleType="centerCrop" />
+                        android:layout_height="220dp">
+
+                        <ImageView
+                            android:id="@+id/ivCampaignImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/sample_compaign1"
+                            android:scaleType="centerCrop" />
+
+                        <!-- Bottom gradient scrim -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:layout_gravity="bottom"
+                            android:background="@drawable/gradient_image_overlay" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="20dp">
+                        android:paddingHorizontal="18dp"
+                        android:paddingTop="14dp"
+                        android:paddingBottom="16dp">
 
                         <TextView
                             android:id="@+id/tvFeaturedNgo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Loading campaign..."
-                            android:textSize="18sp"
+                            android:textSize="17sp"
                             android:textStyle="bold"
-                            android:textColor="@android:color/black"
-                            android:layout_marginBottom="16dp" />
+                            android:textColor="#1A237E"
+                            android:layout_marginBottom="12dp" />
 
+                        <!-- Rounded Progress Bar -->
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:progress="0"
+                            android:progressDrawable="@drawable/rounded_progress_bar"
+                            android:layout_marginBottom="10dp" />
+
+                        <!-- Progress percentage -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:layout_marginBottom="16dp">
+                            android:layout_marginBottom="14dp">
 
-                            <ProgressBar
-                                android:id="@+id/progressBar"
-                                style="?android:attr/progressBarStyleHorizontal"
+                            <TextView
+                                android:id="@+id/tvCurrentAmount"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
-                                android:layout_height="8dp"
-                                android:progress="0"
-                                android:progressTint="@color/secondary"
-                                android:progressBackgroundTint="#E0E0E0" />
+                                android:layout_height="wrap_content"
+                                android:text="0 items"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="#1565C0" />
+
+                            <TextView
+                                android:id="@+id/tvTargetAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="of 0 items"
+                                android:textSize="12sp"
+                                android:textColor="#78909C"
+                                android:layout_marginEnd="10dp" />
 
                             <TextView
                                 android:id="@+id/tvProgress"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0%"
-                                android:textColor="@color/secondary"
-                                android:textStyle="bold"
-                                android:layout_marginStart="12dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/tvCurrentAmount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="0 items"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/secondary" />
-
-                                <TextView
-                                    android:id="@+id/tvTargetAmount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="of 0 items"
-                                    android:textSize="12sp"
-                                    android:textColor="#666666" />
-                            </LinearLayout>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnDonateFeatured"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="Donate Now"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
-                                app:cornerRadius="24dp"
-                                android:backgroundTint="@color/secondary"
-                                android:paddingHorizontal="24dp" />
+                                android:textColor="#2E7D32" />
                         </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDonateFeatured"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:text="Donate Now"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="24dp"
+                            android:backgroundTint="#1565C0"
+                            app:icon="@drawable/ic_heart1"
+                            app:iconSize="18dp"
+                            app:iconPadding="8dp"
+                            app:iconGravity="textStart"
+                            app:iconTint="@android:color/white" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
