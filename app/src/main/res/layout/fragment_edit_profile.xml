@@ -58,15 +58,22 @@
             android:gravity="center"
             android:layout_marginBottom="32dp">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imgProfile"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/sample_profile"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/CircleImageView"
+                app:cardCornerRadius="50dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/transparent"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/imgProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/sample_profile"
+                    android:scaleType="centerCrop" />
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/btnChangePhoto"

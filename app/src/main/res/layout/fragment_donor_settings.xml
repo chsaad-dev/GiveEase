@@ -80,14 +80,21 @@
                     android:padding="20dp"
                     android:gravity="center_vertical">
 
-                    <com.google.android.material.imageview.ShapeableImageView
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:id="@+id/imgProfile"
-                        android:src="@drawable/sample_profile"
-                        android:scaleType="centerCrop"
-                        app:shapeAppearanceOverlay="@style/CircleImageView"
-                        android:background="@drawable/circle_background_secondary" />
+                        app:cardCornerRadius="30dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@android:color/transparent">
+
+                        <ImageView
+                            android:id="@+id/imgProfile"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/sample_profile"
+                            android:scaleType="centerCrop"
+                            android:background="@drawable/circle_background_secondary" />
+                    </com.google.android.material.card.MaterialCardView>
 
                     <LinearLayout
                         android:layout_width="0dp"
