@@ -87,10 +87,12 @@
 
                             <ImageView
                                 android:id="@+id/ivAdminPhoto"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:layout_gravity="center"
+                                android:scaleType="centerCrop"
                                 android:src="@drawable/ic_profile"
+                                android:padding="30dp"
                                 app:tint="#1565C0" />
                         </com.google.android.material.card.MaterialCardView>
 
