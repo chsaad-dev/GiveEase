@@ -22,6 +22,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
 
@@ -35,6 +36,7 @@ class AdminProfileFragment : Fragment() {
     private var selectedImageUri: Uri? = null
     private var currentProfileImageUrl: String? = null
     private lateinit var loadingDialog: AlertDialog
+    private lateinit var viewModel: AdminProfileViewModel
 
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -63,9 +65,49 @@ class AdminProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(requireActivity())[AdminProfileViewModel::class.java]
+
         setupProgressDialog()
         setupClickListeners()
-        loadProfileData()
+        observeViewModel()
+        
+        viewModel.loadProfileData(auth.currentUser?.uid, auth.currentUser?.email)
+    }
+
+    private fun observeViewModel() {
+        viewModel.profileData.observe(viewLifecycleOwner) { data ->
+            binding.etAdminName.setText(data.name)
+            binding.etAdminEmail.setText(data.email)
+            binding.etAdminPhone.setText(data.phone)
+
+            binding.tvAdminNameDisplay.text = data.name.ifEmpty { "Admin User" }
+            binding.tvAdminEmailDisplay.text = data.email
+
+            currentProfileImageUrl = data.profileImageUrl
+            if (!data.profileImageUrl.isNullOrEmpty()) {
+                context?.let { ctx ->
+                    binding.ivAdminPhoto.apply {
+                        setPadding(0, 0, 0, 0)
+                        imageTintList = null
+                        scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+                    }
+                    Glide.with(ctx)
+                        .load(data.profileImageUrl)
+                        .placeholder(R.drawable.ic_profile)
+                        .error(R.drawable.ic_profile)
+                        .circleCrop()
+                        .into(binding.ivAdminPhoto)
+                }
+            } else {
+                binding.ivAdminPhoto.apply {
+                    setImageResource(R.drawable.ic_profile)
+                    val pad = (30 * resources.displayMetrics.density).toInt()
+                    setPadding(pad, pad, pad, pad)
+                    imageTintList = android.content.res.ColorStateList.valueOf(0xFF1565C0.toInt())
+                    scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+                }
+            }
+        }
     }
 
     private fun setupProgressDialog() {
@@ -95,51 +137,8 @@ class AdminProfileFragment : Fragment() {
 
     // ========== FEATURE 1: LOAD & SAVE PROFILE DATA ==========
 
-    private fun loadProfileData() {
-        val uid = auth.currentUser?.uid ?: return
-        if (!isAdded || _binding == null) return
+    // Data loading logic has been moved to AdminProfileViewModel to easily provide caching
 
-        firestore.collection("users").document(uid).get()
-            .addOnSuccessListener { document ->
-                if (!isAdded || _binding == null) return@addOnSuccessListener
-
-                if (document.exists()) {
-                    val name = document.getString("name") ?: ""
-                    val email = document.getString("email") ?: auth.currentUser?.email ?: ""
-                    val phone = document.getString("phone") ?: ""
-
-                    binding.etAdminName.setText(name)
-                    binding.etAdminEmail.setText(email)
-                    binding.etAdminPhone.setText(phone)
-
-                    // Display fields
-                    binding.tvAdminNameDisplay.text = name.ifEmpty { "Admin User" }
-                    binding.tvAdminEmailDisplay.text = email
-
-                    // Load profile image
-                    currentProfileImageUrl = document.getString("profileImageUrl")
-                    if (!currentProfileImageUrl.isNullOrEmpty()) {
-                        context?.let { ctx ->
-                            binding.ivAdminPhoto.apply {
-                                setPadding(0, 0, 0, 0)
-                                imageTintList = null
-                                scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
-                            }
-                            Glide.with(ctx)
-                                .load(currentProfileImageUrl)
-                                .placeholder(R.drawable.ic_profile)
-                                .error(R.drawable.ic_profile)
-                                .circleCrop()
-                                .into(binding.ivAdminPhoto)
-                        }
-                    }
-                }
-            }
-            .addOnFailureListener {
-                if (!isAdded || _binding == null) return@addOnFailureListener
-                binding.etAdminEmail.setText(auth.currentUser?.email ?: "")
-            }
-    }
 
     private fun saveProfile() {
         val uid = auth.currentUser?.uid ?: return
@@ -186,8 +185,14 @@ class AdminProfileFragment : Fragment() {
                 if (!isAdded || _binding == null) return@addOnSuccessListener
                 loadingDialog.dismiss()
 
-                // Update display fields
-                binding.tvAdminNameDisplay.text = userData["name"] as? String ?: "Admin"
+                // Update display fields locally in ViewModel
+                val updatedData = AdminProfileData(
+                    name = userData["name"] as? String ?: "",
+                    phone = userData["phone"] as? String ?: "",
+                    email = binding.etAdminEmail.text.toString(),
+                    profileImageUrl = userData["profileImageUrl"] as? String ?: currentProfileImageUrl
+                )
+                viewModel.updateLocalData(updatedData)
 
                 Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show()
             }
@@ -256,7 +261,6 @@ class AdminProfileFragment : Fragment() {
                                 } catch (_: Exception) {}
                             }
 
-                            currentProfileImageUrl = downloadUri.toString()
                             val userData = buildUserData(name, phone, downloadUri.toString())
                             updateUserData(uid, userData)
                         }
