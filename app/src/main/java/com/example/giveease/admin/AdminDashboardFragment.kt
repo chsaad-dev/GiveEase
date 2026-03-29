@@ -59,6 +59,18 @@ class AdminDashboardFragment : Fragment() {
         binding.btnManageUsers.setOnClickListener {
             navigateToFragment(ManageUsersFragment())
         }
+        
+        binding.btnDonationTracker.setOnClickListener {
+            navigateToFragment(AdminDonationTrackerFragment())
+        }
+        
+        binding.btnSystemLogs.setOnClickListener {
+            navigateToFragment(AdminLogsFragment())
+        }
+        
+        binding.btnSupportTickets.setOnClickListener {
+            navigateToFragment(AdminSupportTicketsFragment())
+        }
     }
 
     private fun navigateToFragment(fragment: Fragment) {
