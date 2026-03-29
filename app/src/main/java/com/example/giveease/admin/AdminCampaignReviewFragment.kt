@@ -190,11 +190,16 @@ class AdminCampaignReviewFragment : Fragment() {
             .addOnSuccessListener {
                 if (!isAdded || _binding == null) return@addOnSuccessListener
 
+                val actionText = if (newStatus == "Deactivated") "deactivated" else "reactivated"
                 Toast.makeText(
                     requireContext(),
-                    "Campaign ${if (newStatus == "Deactivated") "deactivated" else "reactivated"} successfully",
+                    "Campaign $actionText successfully",
                     Toast.LENGTH_SHORT
                 ).show()
+
+                val actionType = if (newStatus == "Deactivated") "deactivate_campaign" else "reactivate_campaign"
+                AdminLogger.logAction(actionType, "Update Campaign Status", "Admin $actionText campaign \"${campaign.title}\" by ${campaign.ngoName}")
+                
                 loadCampaigns()
             }
             .addOnFailureListener { e ->
