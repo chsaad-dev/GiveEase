@@ -207,6 +207,7 @@ class ManageUsersFragment : Fragment() {
             .addOnSuccessListener {
                 if (!isAdded || _binding == null) return@addOnSuccessListener
                 Toast.makeText(requireContext(), "${user.name} approved", Toast.LENGTH_SHORT).show()
+                AdminLogger.logAction("approve_user", "Approve User", "Admin approved ${user.name} (${user.role})")
                 loadUsers()
             }
             .addOnFailureListener { e ->
@@ -226,6 +227,7 @@ class ManageUsersFragment : Fragment() {
             .addOnSuccessListener {
                 if (!isAdded || _binding == null) return@addOnSuccessListener
                 Toast.makeText(requireContext(), "${user.name} rejected", Toast.LENGTH_SHORT).show()
+                AdminLogger.logAction("reject_user", "Reject User", "Admin rejected ${user.name} (${user.role})")
                 loadUsers()
             }
             .addOnFailureListener { e ->
@@ -249,6 +251,7 @@ class ManageUsersFragment : Fragment() {
                     .addOnSuccessListener {
                         if (!isAdded || _binding == null) return@addOnSuccessListener
                         Toast.makeText(requireContext(), "Verification revoked", Toast.LENGTH_SHORT).show()
+                        AdminLogger.logAction("revoke_user", "Revoke Verification", "Admin revoked verification for ${user.name} (${user.role})")
                         loadUsers()
                     }
                     .addOnFailureListener { e ->
