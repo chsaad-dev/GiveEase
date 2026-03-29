@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentContactSupportBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ContactSupportFragment : Fragment() {
 
@@ -123,7 +125,7 @@ class ContactSupportFragment : Fragment() {
         binding.btnSendMessage.isEnabled = false
         binding.btnSendMessage.text = "Sending..."
 
-        simulateSendMessage(issueType, subject, message)
+        saveTicketToFirestore(issueType, subject, message)
     }
 
     private fun validateInputs(issueType: String, subject: String, message: String): Boolean {
@@ -157,14 +159,39 @@ class ContactSupportFragment : Fragment() {
         return isValid
     }
 
-    private fun simulateSendMessage(issueType: String, subject: String, message: String) {
-        binding.root.postDelayed({
-            binding.btnSendMessage.isEnabled = true
-            binding.btnSendMessage.text = "Send Message"
-            showToast("Message sent successfully! We'll get back to you soon.")
-            clearForm()
-
-        }, 2000)
+    private fun saveTicketToFirestore(issueType: String, subject: String, message: String) {
+        val auth = FirebaseAuth.getInstance()
+        val firestore = FirebaseFirestore.getInstance()
+        val userId = auth.currentUser?.uid ?: "anonymous"
+        val userEmail = auth.currentUser?.email ?: "Unknown"
+        val userName = auth.currentUser?.displayName ?: "Unknown"
+        
+        val ticketData = hashMapOf(
+            "userId" to userId,
+            "userName" to userName,
+            "userEmail" to userEmail,
+            "issueType" to issueType,
+            "subject" to subject,
+            "message" to message,
+            "status" to "Open",
+            "timestamp" to System.currentTimeMillis()
+        )
+        
+        firestore.collection("support_tickets")
+            .add(ticketData)
+            .addOnSuccessListener {
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+                binding.btnSendMessage.isEnabled = true
+                binding.btnSendMessage.text = "Send Message"
+                showToast("Message sent successfully! We'll get back to you soon.")
+                clearForm()
+            }
+            .addOnFailureListener {
+                if (!isAdded || _binding == null) return@addOnFailureListener
+                binding.btnSendMessage.isEnabled = true
+                binding.btnSendMessage.text = "Send Message"
+                showToast("Failed to send message. Please try again.")
+            }
     }
 
     private fun clearForm() {
