@@ -148,6 +148,7 @@
                             android:gravity="center">
 
                             <ImageView
+                                android:id="@+id/ivDonorIcon"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_heart1"
@@ -155,6 +156,7 @@
                                 android:layout_marginBottom="2dp" />
 
                             <TextView
+                                android:id="@+id/tvDonorTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Donor"
@@ -163,6 +165,7 @@
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/tvDonorSubtitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Make donations"
@@ -194,6 +197,7 @@
                             android:gravity="center">
 
                             <ImageView
+                                android:id="@+id/ivNgoIcon"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_organization"
@@ -201,6 +205,7 @@
                                 android:layout_marginBottom="2dp" />
 
                             <TextView
+                                android:id="@+id/tvNgoTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="NGO"
@@ -209,6 +214,7 @@
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/tvNgoSubtitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Receive Donation"
@@ -293,6 +299,51 @@
                     style="@style/Widget.Material3.Button" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="#E0E0E0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OR"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                android:layout_marginHorizontal="16dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="#E0E0E0" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoogleSignup"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Continue with Google"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            app:icon="@drawable/ic_google"
+            app:iconGravity="start"
+            app:iconPadding="12dp"
+            app:cornerRadius="28dp"
+            android:layout_marginBottom="6dp"
+            app:strokeColor="#E0E0E0"
+            app:strokeWidth="1dp"
+            android:backgroundTint="@android:color/white"
+            style="@style/Widget.Material3.Button.OutlinedButton" />
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GiveEase</string>
+    <!-- This will be auto-replaced by google-services plugin once SHA-1 is added to Firebase -->
+    <string name="default_web_client_id">PLACEHOLDER</string>
 </resources>

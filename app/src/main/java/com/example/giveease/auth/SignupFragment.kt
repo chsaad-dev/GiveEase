@@ -4,13 +4,22 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentSignupBinding
+import com.example.giveease.donor.DonorMainFragment
+import com.example.giveease.ngo.NgoMainFragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SignupFragment : Fragment() {
@@ -19,7 +28,35 @@ class SignupFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var loadingDialog: AlertDialog
+    private lateinit var googleSignInClient: GoogleSignInClient
     private var selectedRole: String = "donor"
+
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            account?.idToken?.let { idToken ->
+                firebaseAuthWithGoogle(idToken)
+            } ?: run {
+                loadingDialog.dismiss()
+                showError("Failed to get ID token from Google.")
+            }
+        } catch (e: ApiException) {
+            loadingDialog.dismiss()
+            Log.e("SignupFragment", "Google sign in failed: ${e.statusCode}", e)
+            val errorMessage = when (e.statusCode) {
+                12500 -> "Google Sign-In failed. Please make sure Google Play Services is up to date."
+                12501 -> "Sign-In cancelled."
+                10 -> "Developer error: SHA-1 fingerprint not configured in Firebase. Please contact support."
+                else -> "Google Sign-In failed (code: ${e.statusCode}). Please try again."
+            }
+            if (e.statusCode != 12501) {
+                showError(errorMessage)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -28,12 +65,21 @@ class SignupFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
+        setupGoogleSignIn()
         setupProgressDialog()
         setupRoleSelection()
         setupClickListeners()
         setupFormValidation()
 
         return binding.root
+    }
+
+    private fun setupGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
     }
 
     private fun setupRoleSelection() {
@@ -51,26 +97,48 @@ class SignupFragment : Fragment() {
     private fun updateRoleSelection(role: String) {
         selectedRole = role
 
+        val white = ContextCompat.getColor(requireContext(), android.R.color.white)
+        val primary = ContextCompat.getColor(requireContext(), R.color.primary)
+        val gray = ContextCompat.getColor(requireContext(), android.R.color.darker_gray)
+        val darkText = android.graphics.Color.parseColor("#333333")
+        val subtitleText = android.graphics.Color.parseColor("#666666")
+
         if (role == "donor") {
-
+            // Donor = SELECTED (colored bg, white text)
             binding.cardDonor.apply {
-                strokeColor = ContextCompat.getColor(requireContext(), R.color.primary)
-                setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary))
+                strokeColor = primary
+                setCardBackgroundColor(primary)
             }
+            binding.ivDonorIcon.imageTintList = android.content.res.ColorStateList.valueOf(white)
+            binding.tvDonorTitle.setTextColor(white)
+            binding.tvDonorSubtitle.setTextColor(white)
+
+            // NGO = UNSELECTED (white bg, colored text)
             binding.cardNGO.apply {
-                strokeColor = ContextCompat.getColor(requireContext(), android.R.color.darker_gray)
-                setCardBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                strokeColor = gray
+                setCardBackgroundColor(white)
             }
+            binding.ivNgoIcon.imageTintList = android.content.res.ColorStateList.valueOf(primary)
+            binding.tvNgoTitle.setTextColor(primary)
+            binding.tvNgoSubtitle.setTextColor(subtitleText)
         } else {
-
+            // NGO = SELECTED (colored bg, white text)
             binding.cardNGO.apply {
-                strokeColor = ContextCompat.getColor(requireContext(), R.color.primary)
-                setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary))
+                strokeColor = primary
+                setCardBackgroundColor(primary)
             }
+            binding.ivNgoIcon.imageTintList = android.content.res.ColorStateList.valueOf(white)
+            binding.tvNgoTitle.setTextColor(white)
+            binding.tvNgoSubtitle.setTextColor(white)
+
+            // Donor = UNSELECTED (white bg, colored text)
             binding.cardDonor.apply {
-                strokeColor = ContextCompat.getColor(requireContext(), android.R.color.darker_gray)
-                setCardBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                strokeColor = gray
+                setCardBackgroundColor(white)
             }
+            binding.ivDonorIcon.imageTintList = android.content.res.ColorStateList.valueOf(primary)
+            binding.tvDonorTitle.setTextColor(primary)
+            binding.tvDonorSubtitle.setTextColor(subtitleText)
         }
     }
 
@@ -130,6 +198,14 @@ class SignupFragment : Fragment() {
         binding.tvPrivacyLink.setOnClickListener {
             Toast.makeText(requireContext(), "Privacy Policy", Toast.LENGTH_SHORT).show()
             // TODO: Navigate to privacy screen
+        }
+
+        binding.btnGoogleSignup.setOnClickListener {
+            loadingDialog.show()
+            googleSignInClient.signOut().addOnCompleteListener {
+                val signInIntent = googleSignInClient.signInIntent
+                googleSignInLauncher.launch(signInIntent)
+            }
         }
     }
 
@@ -282,6 +358,108 @@ class SignupFragment : Fragment() {
             .setMessage(message)
             .setPositiveButton("OK", null)
             .show()
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    if (user != null) {
+                        // Check if user already exists in Firestore
+                        firestore.collection("users").document(user.uid).get()
+                            .addOnSuccessListener { document ->
+                                loadingDialog.dismiss()
+                                if (document.exists()) {
+                                    // Existing user — log them in directly
+                                    val role = document.getString("role") ?: "donor"
+                                    loadMainFragment(role)
+                                    Toast.makeText(requireContext(), "Welcome back!", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    // New user — use the role selected on the signup screen
+                                    saveGoogleUserToFirestore(
+                                        user.uid,
+                                        user.displayName ?: "User",
+                                        user.email ?: "",
+                                        selectedRole
+                                    )
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                loadingDialog.dismiss()
+                                showError("Failed to check user data: ${e.message}")
+                            }
+                    } else {
+                        loadingDialog.dismiss()
+                        showError("Authentication succeeded but user is null.")
+                    }
+                } else {
+                    loadingDialog.dismiss()
+                    showError("Authentication failed: ${task.exception?.message}")
+                }
+            }
+    }
+
+    private fun saveGoogleUserToFirestore(uid: String, name: String, email: String, role: String) {
+        loadingDialog.show()
+        val userMap = hashMapOf<String, Any>(
+            "uid" to uid,
+            "name" to name,
+            "email" to email,
+            "role" to role,
+            "emailVerified" to true,
+            "verificationStatus" to "pending",
+            "identityDocumentUrl" to "",
+            "createdAt" to System.currentTimeMillis(),
+            "updatedAt" to System.currentTimeMillis()
+        )
+
+        if (role == "ngo") {
+            userMap["ngoName"] = ""
+            userMap["registrationNumber"] = ""
+            userMap["governmentDocumentUrl"] = ""
+        }
+
+        firestore.collection("users").document(uid).set(userMap)
+            .addOnSuccessListener {
+                loadingDialog.dismiss()
+                loadMainFragment(role)
+                Toast.makeText(requireContext(), "Welcome to GiveEase!", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                loadingDialog.dismiss()
+                showError("Failed to create profile: ${e.message}")
+            }
+    }
+
+    private fun loadMainFragment(role: String) {
+        if (role == "donor" || role == "ngo") {
+            loadingDialog.show()
+
+            com.example.giveease.utils.MaintenanceManager.checkMaintenanceStatus { isActive ->
+                loadingDialog.dismiss()
+
+                if (isActive) {
+                    val intent = android.content.Intent(requireContext(), com.example.giveease.MaintenanceActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                } else {
+                    val (fragment, tag) = when (role) {
+                        "donor" -> DonorMainFragment() to "DONOR_MAIN"
+                        "ngo" -> NgoMainFragment() to "NGO_MAIN"
+                        else -> DonorMainFragment() to "DONOR_MAIN"
+                    }
+
+                    val existingFragment = parentFragmentManager.findFragmentByTag(tag)
+                    if (existingFragment == null) {
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment, tag)
+                            .commit()
+                    }
+                }
+            }
+        }
     }
 
     private fun setupProgressDialog() {
