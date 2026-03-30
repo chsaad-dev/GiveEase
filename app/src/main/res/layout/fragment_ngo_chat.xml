@@ -4,18 +4,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@color/background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1565C0"
-        app:elevation="4dp">
+        android:background="@drawable/home_header_gradient"
+        app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="8dp">
+            android:paddingTop="20dp"
+            android:paddingBottom="24dp"
+            android:paddingHorizontal="16dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:contentInsetStart="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -25,18 +29,29 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="GiveEase NGO"
+                    android:text="Chats"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="28sp"
+                    android:layout_marginStart="8dp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Messages from donors"
+                    android:textColor="@android:color/white"
+                    android:alpha="0.8"
+                    android:textSize="14sp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="2dp" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="16dp"
-                    app:cardBackgroundColor="#1976D2"
-                    app:cardCornerRadius="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="8dp"
+                    app:cardBackgroundColor="#33FFFFFF"
+                    app:cardCornerRadius="12dp"
                     app:cardElevation="0dp">
 
                     <LinearLayout
@@ -44,7 +59,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="8dp">
+                        android:padding="12dp">
 
                         <ImageView
                             android:layout_width="20dp"
@@ -58,10 +73,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:background="@null"
-                            android:hint="Search donor conversations..."
+                            android:hint="Search conversations..."
                             android:inputType="text"
                             android:textColor="@android:color/white"
-                            android:textColorHint="#BBDEFB"
+                            android:textColorHint="#B3FFFFFF"
                             android:textSize="15sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -83,8 +98,10 @@
                 android:id="@+id/recyclerViewChats"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingTop="8dp"
                 android:clipToPadding="false" />
 
+            <!-- Empty State -->
             <LinearLayout
                 android:id="@+id/emptyState"
                 android:layout_width="match_parent"
@@ -97,17 +114,17 @@
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:alpha="0.3"
+                    android:alpha="0.2"
                     android:src="@drawable/ic_chat"
-                    app:tint="#1565C0" />
+                    app:tint="@color/primary" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="No donor conversations yet"
-                    android:textColor="#666666"
-                    android:textSize="18sp"
+                    android:text="No Conversations Yet"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -115,11 +132,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:text="Donors will reach out when they're\ninterested in your campaigns"
+                    android:text="Donors will reach out here when they are interested in contributing."
                     android:textColor="#999999"
+                    android:lineSpacingExtra="4dp"
                     android:textSize="14sp" />
             </LinearLayout>
 
+            <!-- Loading Indicator -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
