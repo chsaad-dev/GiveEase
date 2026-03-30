@@ -4,15 +4,22 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentLoginBinding
 import com.example.giveease.donor.DonorMainFragment
 import com.example.giveease.ngo.NgoMainFragment
 import com.example.giveease.admin.AdminMainFragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginFragment : Fragment() {
@@ -21,6 +28,34 @@ class LoginFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var loadingDialog: AlertDialog
+    private lateinit var googleSignInClient: GoogleSignInClient
+
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            account?.idToken?.let { idToken ->
+                firebaseAuthWithGoogle(idToken)
+            } ?: run {
+                loadingDialog.dismiss()
+                showError("Google Sign-In Error", "Failed to get ID token from Google.")
+            }
+        } catch (e: ApiException) {
+            loadingDialog.dismiss()
+            Log.e("LoginFragment", "Google sign in failed: ${e.statusCode}", e)
+            val errorMessage = when (e.statusCode) {
+                12500 -> "Google Sign-In failed. Please make sure Google Play Services is up to date."
+                12501 -> "Sign-In cancelled."
+                10 -> "Developer error: SHA-1 fingerprint not configured in Firebase. Please contact support."
+                else -> "Google Sign-In failed (code: ${e.statusCode}). Please try again."
+            }
+            if (e.statusCode != 12501) {
+                showError("Google Sign-In Error", errorMessage)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -29,11 +64,20 @@ class LoginFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
+        setupGoogleSignIn()
         setupProgressDialog()
         setupFormValidation()
         setupClickListeners()
 
         return binding.root
+    }
+
+    private fun setupGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
     }
 
     private fun setupFormValidation() {
@@ -97,8 +141,11 @@ class LoginFragment : Fragment() {
         }
 
         binding.btnGoogleLogin.setOnClickListener {
-            Toast.makeText(requireContext(), "Google Sign-In coming soon", Toast.LENGTH_SHORT).show()
-            // TODO: Implement Google Sign-In
+            loadingDialog.show()
+            googleSignInClient.signOut().addOnCompleteListener {
+                val signInIntent = googleSignInClient.signInIntent
+                googleSignInLauncher.launch(signInIntent)
+            }
         }
     }
 
@@ -354,6 +401,90 @@ class LoginFragment : Fragment() {
             }
             .setCancelable(false)
             .show()
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    if (user != null) {
+                        // Check if user already exists in Firestore
+                        firestore.collection("users").document(user.uid).get()
+                            .addOnSuccessListener { document ->
+                                loadingDialog.dismiss()
+                                if (document.exists()) {
+                                    // Existing user — log them in directly
+                                    val role = document.getString("role") ?: "donor"
+                                    updateEmailVerificationStatus(user.uid)
+                                    loadMainFragment(role)
+                                    Toast.makeText(requireContext(), "Welcome back!", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    // New user via Google on Login page — ask for role
+                                    showRoleSelectionDialog(user.uid, user.displayName ?: "User", user.email ?: "")
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                loadingDialog.dismiss()
+                                showError("Error", "Failed to check user data: ${e.message}")
+                            }
+                    } else {
+                        loadingDialog.dismiss()
+                        showError("Error", "Authentication succeeded but user is null.")
+                    }
+                } else {
+                    loadingDialog.dismiss()
+                    showError("Google Sign-In Error", "Authentication failed: ${task.exception?.message}")
+                }
+            }
+    }
+
+    private fun showRoleSelectionDialog(uid: String, name: String, email: String) {
+        val roles = arrayOf("Donor", "NGO")
+        AlertDialog.Builder(requireContext())
+            .setTitle("Welcome to GiveEase!")
+            .setMessage("Please select how you'd like to use GiveEase:")
+            .setPositiveButton("Join as Donor") { _, _ ->
+                saveGoogleUserToFirestore(uid, name, email, "donor")
+            }
+            .setNegativeButton("Join as NGO") { _, _ ->
+                saveGoogleUserToFirestore(uid, name, email, "ngo")
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun saveGoogleUserToFirestore(uid: String, name: String, email: String, role: String) {
+        loadingDialog.show()
+        val userMap = hashMapOf<String, Any>(
+            "uid" to uid,
+            "name" to name,
+            "email" to email,
+            "role" to role,
+            "emailVerified" to true,
+            "verificationStatus" to "pending",
+            "identityDocumentUrl" to "",
+            "createdAt" to System.currentTimeMillis(),
+            "updatedAt" to System.currentTimeMillis()
+        )
+
+        if (role == "ngo") {
+            userMap["ngoName"] = ""
+            userMap["registrationNumber"] = ""
+            userMap["governmentDocumentUrl"] = ""
+        }
+
+        firestore.collection("users").document(uid).set(userMap)
+            .addOnSuccessListener {
+                loadingDialog.dismiss()
+                loadMainFragment(role)
+                Toast.makeText(requireContext(), "Welcome to GiveEase!", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                loadingDialog.dismiss()
+                showError("Error", "Failed to create profile: ${e.message}")
+            }
     }
 
     private fun setupProgressDialog() {

@@ -62,6 +62,9 @@ dependencies {
     implementation("com.google.firebase:firebase-database-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
 
+    // Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
