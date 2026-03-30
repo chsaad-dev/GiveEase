@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scroll_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fillViewport="true">
 
-    <ScrollView
-        android:id="@+id/scroll_view"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#F8F9FC"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <!-- Gradient Header -->
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingBottom="24dp">
+            android:layout_height="220dp"
+            android:background="@drawable/home_header_gradient">
 
-            <!-- Top Header with Title and Notification Icon -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="15dp">
+                android:paddingHorizontal="20dp"
+                android:paddingTop="16dp"
+                android:layout_alignParentTop="true">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -38,133 +38,118 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="GiveEase"
-                        android:textSize="28sp"
+                        android:textSize="24sp"
                         android:textStyle="bold"
-                        android:textColor="#1565C0"
-                        android:fontFamily="sans-serif-medium" />
+                        android:textColor="@android:color/white" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="NGO Dashboard"
                         android:textSize="14sp"
-                        android:textColor="#1565C0"
+                        android:textColor="@android:color/white"
+                        android:alpha="0.8"
                         android:layout_marginTop="2dp" />
+
                 </LinearLayout>
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    app:cardCornerRadius="22dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@android:color/white">
-
-                    <ImageView
-                        android:id="@+id/ivNotifications"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_receive_notifications"
-                        android:contentDescription="Notifications"
-                        app:tint="#172CC7" />
-                </com.google.android.material.card.MaterialCardView>
+                <ImageView
+                    android:id="@+id/ivNotifications"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_receive_notifications"
+                    android:background="@drawable/circle_white_bg"
+                    android:padding="8dp"
+                    app:tint="@color/secondary" />
             </LinearLayout>
 
-            <!-- Header Section with Verification Badge -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- NGO Profile Header Area -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="#1565C0"
-                android:layout_marginBottom="20dp">
+                android:orientation="horizontal"
+                android:layout_centerInParent="true"
+                android:paddingHorizontal="20dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="20dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    app:cardCornerRadius="32dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@android:color/white"
+                    app:cardBackgroundColor="@color/background">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_ngo"
+                        app:tint="@color/primary" />
+                </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="20dp"
-                    android:gravity="center_vertical">
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
 
-                    <!-- NGO Logo -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        app:cardCornerRadius="30dp"
-                        app:cardElevation="1dp"
-                        app:cardBackgroundColor="#E3F2FD">
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_ngo"
-                            app:tint="#1565C0" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- NGO Info -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
+                        android:text="Welcome back!"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/white"
+                        android:alpha="0.9" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="2dp">
 
                         <TextView
+                            android:id="@+id/tvNgoName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Welcome back,"
-                            android:textSize="14sp"
-                            android:textColor="#BBDEFB"
-                            android:fontFamily="sans-serif" />
+                            android:text="Your NGO"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/white" />
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="2dp">
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardBackgroundColor="@android:color/white"
+                            android:layout_marginStart="8dp"
+                            app:cardElevation="0dp">
 
-                            <TextView
-                                android:id="@+id/tvNgoName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="NGO"
-                                android:textSize="22sp"
-                                android:textStyle="bold"
-                                android:textColor="@android:color/white"
-                                android:fontFamily="sans-serif-medium" />
-
-                            <!-- Verification Badge -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                app:cardCornerRadius="9dp"
-                                app:cardBackgroundColor="#1565C0"
-                                android:layout_marginStart="8dp"
-                                app:cardElevation="1dp">
-
-                                <ImageView
-                                    android:layout_width="10dp"
-                                    android:layout_height="10dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_verified"
-                                    app:tint="@color/background" />
-                            </com.google.android.material.card.MaterialCardView>
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Making a difference together"
-                            android:textSize="12sp"
-                            android:textColor="#BBDEFB"
-                            android:layout_marginTop="4dp" />
+                            <ImageView
+                                android:layout_width="8dp"
+                                android:layout_height="8dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_verified"
+                                app:tint="@color/primary" />
+                        </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+        </RelativeLayout>
 
-            <!-- Quick Stats Row with Active Campaigns and Total Donations -->
+        <!-- Overlapping Content -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:layout_marginTop="-36dp">
+
+            <!-- Quick Stats Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -176,109 +161,122 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="#E3F2FD"
+                    app:cardElevation="3dp"
+                    app:cardBackgroundColor="@android:color/white"
                     android:layout_marginEnd="8dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:padding="16dp"
                         android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_folder"
+                            app:tint="@color/secondary"
+                            android:layout_marginBottom="8dp" />
 
                         <TextView
                             android:id="@+id/tvActiveCampaigns"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="20sp"
+                            android:textSize="24sp"
                             android:textStyle="bold"
-                            android:textColor="#1565C0" />
+                            android:textColor="@color/secondary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Active Campaigns"
                             android:textSize="12sp"
-                            android:textColor="#1976D2"
-                            android:layout_marginTop="4dp" />
+                            android:textColor="#666666"
+                            android:layout_marginTop="2dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Total Donations This Month -->
+                <!-- Total Donations -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="#E8F5E9"
+                    app:cardElevation="3dp"
+                    app:cardBackgroundColor="@android:color/white"
                     android:layout_marginStart="8dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:padding="16dp"
                         android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_donation"
+                            app:tint="@android:color/holo_green_dark"
+                            android:layout_marginBottom="8dp" />
 
                         <TextView
                             android:id="@+id/tvTotalDonations"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0 Items"
-                            android:textSize="20sp"
+                            android:text="0"
+                            android:textSize="24sp"
                             android:textStyle="bold"
-                            android:textColor="#2E7D32" />
+                            android:textColor="@android:color/holo_green_dark" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Total Donations"
                             android:textSize="12sp"
-                            android:textColor="#4CAF50"
-                            android:layout_marginTop="4dp" />
+                            android:textColor="#666666"
+                            android:layout_marginTop="2dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
             <!-- Create New Campaign Button -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnCreateNewCampaign"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="#1565C0"
-                android:layout_marginBottom="20dp"
-                android:backgroundTint="#1565C0">
+                android:layout_marginBottom="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/primary">
 
                 <LinearLayout
-                    android:id="@+id/btnCreateNewCampaign"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="24dp"
+                    android:padding="20dp"
                     android:gravity="center_vertical"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true">
+                    android:background="?android:attr/selectableItemBackground">
 
                     <com.google.android.material.card.MaterialCardView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        app:cardCornerRadius="28dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        app:cardCornerRadius="24dp"
                         app:cardElevation="0dp"
-                        app:cardBackgroundColor="#E3F2FD">
+                        app:cardBackgroundColor="@android:color/white">
 
                         <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_add_campaign"
-                            app:tint="#1565C0" />
+                            app:tint="@color/primary" />
                     </com.google.android.material.card.MaterialCardView>
 
                     <LinearLayout
@@ -286,13 +284,13 @@
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginStart="20dp">
+                        android:layout_marginStart="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Create New Campaign"
-                            android:textSize="20sp"
+                            android:text="Create Campaign"
+                            android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/white" />
 
@@ -300,10 +298,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Start raising funds for your cause"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textColor="@android:color/white"
-                            android:alpha="0.9"
-                            android:layout_marginTop="4dp" />
+                            android:alpha="0.8"
+                            android:layout_marginTop="2dp" />
                     </LinearLayout>
 
                     <ImageView
@@ -314,13 +312,47 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Recent Campaigns Section -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Recent Campaigns Header -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Active Campaigns"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/tvViewAllCampaigns"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View All"
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="8dp" />
+            </LinearLayout>
+
+            <!-- Campaign Card Fragment Wrapper List / Included Layout (ID is used programmatically to toggle visibility) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardRecentCampaign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="@android:color/white">
+                app:cardBackgroundColor="@android:color/white"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -328,7 +360,6 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Section Header -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -336,163 +367,120 @@
                         android:gravity="center_vertical"
                         android:layout_marginBottom="16dp">
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="Recent Campaigns"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="#1A237E" />
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tvViewAllCampaigns"
+                            <TextView
+                                android:id="@+id/tvCampaignTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Campaign Title"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/black" />
+
+                            <TextView
+                                android:id="@+id/tvCampaignDescription"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Campaign description"
+                                android:textSize="14sp"
+                                android:textColor="#666666"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardCampaignStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="View All"
-                            android:textSize="14sp"
-                            android:textColor="#1565C0"
-                            android:textStyle="bold" />
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#E8F5E9">
+
+                            <TextView
+                                android:id="@+id/tvCampaignStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Active"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:textColor="#2E7D32"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="6dp" />
+                        </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
 
-                    <!-- Campaign Card -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardRecentCampaign"
+                    <!-- Progress Section -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="1dp"
-                        app:cardBackgroundColor="#F8F9FC"
-                        android:layout_marginBottom="12dp"
-                        android:visibility="gone">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/tvCampaignRaised"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="20dp">
+                            android:text="0 Items"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/secondary" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:layout_marginBottom="16dp">
+                        <TextView
+                            android:id="@+id/tvCampaignTarget"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" of 0 Items"
+                            android:textSize="14sp"
+                            android:textColor="#999999" />
 
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_weight="1"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical">
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="1dp" />
 
-                                    <TextView
-                                        android:id="@+id/tvCampaignTitle"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Campaign Title"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold"
-                                        android:textColor="#1A237E" />
+                        <TextView
+                            android:id="@+id/tvCampaignProgress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0% complete"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/holo_green_dark" />
+                    </LinearLayout>
 
-                                    <TextView
-                                        android:id="@+id/tvCampaignDescription"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Campaign description"
-                                        android:textSize="14sp"
-                                        android:textColor="#546E7A"
-                                        android:layout_marginTop="4dp" />
-                                </LinearLayout>
-
-                                <com.google.android.material.card.MaterialCardView
-                                    android:id="@+id/cardCampaignStatus"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    app:cardCornerRadius="12dp"
-                                    app:cardElevation="0dp"
-                                    app:cardBackgroundColor="#E8F5E9">
-
-                                    <TextView
-                                        android:id="@+id/tvCampaignStatus"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Active"
-                                        android:textSize="12sp"
-                                        android:textStyle="bold"
-                                        android:textColor="#2E7D32"
-                                        android:paddingHorizontal="12dp"
-                                        android:paddingVertical="6dp" />
-                                </com.google.android.material.card.MaterialCardView>
-                            </LinearLayout>
-
-                            <!-- Progress Section -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:layout_marginBottom="8dp">
-
-                                <TextView
-                                    android:id="@+id/tvCampaignRaised"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="0 Items"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold"
-                                    android:textColor="#2E7D32" />
-
-                                <TextView
-                                    android:id="@+id/tvCampaignTarget"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text=" of 0 Items"
-                                    android:textSize="14sp"
-                                    android:textColor="#78909C" />
-
-                                <View
-                                    android:layout_width="0dp"
-                                    android:layout_weight="1"
-                                    android:layout_height="1dp" />
-
-                                <TextView
-                                    android:id="@+id/tvCampaignProgress"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="0% complete"
-                                    android:textSize="12sp"
-                                    android:textColor="#78909C" />
-                            </LinearLayout>
-
-                            <!-- Progress Bar -->
-                            <ProgressBar
-                                android:id="@+id/progressCampaign"
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="8dp"
-                                android:progress="0"
-                                android:progressTint="#2E7D32"
-                                android:progressBackgroundTint="#E0E0E0" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- View All Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnViewAllCampaigns"
+                    <!-- Progress Bar -->
+                    <ProgressBar
+                        android:id="@+id/progressCampaign"
+                        style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:text="View All Campaigns"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="24dp"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        app:strokeColor="#1565C0"
-                        android:textColor="#1565C0"
-                        app:icon="@drawable/ic_arrow_right"
-                        app:iconTint="#1565C0"
-                        app:iconGravity="end" />
+                        android:layout_height="8dp"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/rounded_progress_bar" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- View All Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewAllCampaigns"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginBottom="24dp"
+                android:text="View All Campaigns"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="26dp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                app:strokeColor="@color/secondary"
+                android:textColor="@color/secondary"
+                app:icon="@drawable/ic_arrow_right"
+                app:iconTint="@color/secondary"
+                app:iconGravity="end" />
+
         </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+    </LinearLayout>
+</ScrollView>
