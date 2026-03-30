@@ -4,84 +4,76 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F8FAFF">
+    android:background="@color/background">
 
     <!-- Header -->
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="4dp"
-        app:cardBackgroundColor="@android:color/white">
+        android:background="@drawable/home_header_gradient"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingBottom="24dp"
+        android:paddingHorizontal="24dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:background="@drawable/h">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="8dp">
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#33FFFFFF"
+                android:clickable="true"
+                android:focusable="true">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/btnBack"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    app:cardCornerRadius="22dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="#FFFFFF"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:strokeColor="#E3F2FD"
-                    app:strokeWidth="1dp">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_back"
-                        app:tint="#1565C0" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Edit Profile"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="#FFFFFF"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_marginStart="16dp"
-                    android:gravity="center_vertical" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSave"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:text="Save"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:cornerRadius="18dp"
-                    app:backgroundTint="#FFFFFF"
-                    app:elevation="2dp" />
-            </LinearLayout>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_back"
+                    app:tint="@android:color/white" />
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Update your NGO information"
+                android:layout_weight="1"
+                android:text="Edit Profile"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="16dp"
+                android:gravity="center_vertical" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Save"
+                android:textColor="@color/primary"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF" />
+                app:cornerRadius="18dp"
+                app:backgroundTint="@android:color/white"
+                app:elevation="2dp" />
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Keep your NGO's information up to date"
+            android:textSize="14sp"
+            android:textColor="@android:color/white"
+            android:alpha="0.8"
+            android:layout_marginStart="56dp" />
+    </LinearLayout>
 
     <!-- Edit Form -->
     <androidx.core.widget.NestedScrollView
@@ -89,7 +81,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:fillViewport="true"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -100,9 +92,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
@@ -117,8 +109,10 @@
                         android:layout_width="120dp"
                         android:layout_height="120dp"
                         app:cardCornerRadius="60dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="#E3F2FD"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/primary"
+                        app:cardBackgroundColor="#F0F4F8"
                         android:clickable="true"
                         android:focusable="true">
 
@@ -130,17 +124,17 @@
 
                             <ImageView
                                 android:id="@+id/ivNgoLogo"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
                                 android:src="@drawable/ic_ngo"
-                                app:tint="#1565C0" />
+                                app:tint="@color/primary" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Change Logo"
                                 android:textSize="12sp"
-                                android:textColor="#1565C0"
+                                android:textColor="@color/primary"
                                 android:textStyle="bold"
                                 android:layout_marginTop="8dp" />
                         </LinearLayout>
@@ -152,16 +146,16 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -169,8 +163,14 @@
                         android:text="Basic Information"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#1A237E"
-                        android:layout_marginBottom="20dp" />
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="16dp" />
+                        
+                    <View
+                        android:layout_width="40dp"
+                        android:layout_height="3dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@color/primary" />
 
                     <!-- NGO Name -->
                     <LinearLayout
@@ -183,17 +183,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="NGO Name *"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="#1A237E"
+                            android:textColor="#333333"
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:cardBackgroundColor="#FAFBFF"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#F8F9FA"
                             app:strokeColor="#E0E0E0"
                             app:strokeWidth="1dp">
 
@@ -202,7 +202,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Enter NGO name"
-                                android:textSize="16sp"
+                                android:textSize="15sp"
+                                android:textColor="@android:color/black"
                                 android:background="@android:color/transparent"
                                 android:padding="16dp"
                                 android:maxLines="1" />
@@ -220,17 +221,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Tagline *"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="#1A237E"
+                            android:textColor="#333333"
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:cardBackgroundColor="#FAFBFF"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#F8F9FA"
                             app:strokeColor="#E0E0E0"
                             app:strokeWidth="1dp">
 
@@ -238,8 +239,9 @@
                                 android:id="@+id/etTagline"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Brief description of your NGO"
-                                android:textSize="14sp"
+                                android:hint="Brief slogan or tagline"
+                                android:textSize="15sp"
+                                android:textColor="@android:color/black"
                                 android:background="@android:color/transparent"
                                 android:padding="16dp"
                                 android:maxLines="2" />
@@ -257,17 +259,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Contact Email *"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="#1A237E"
+                            android:textColor="#333333"
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:cardBackgroundColor="#FAFBFF"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#F8F9FA"
                             app:strokeColor="#E0E0E0"
                             app:strokeWidth="1dp">
 
@@ -275,8 +277,9 @@
                                 android:id="@+id/etContactEmail"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="contact@yourngo.org"
-                                android:textSize="16sp"
+                                android:hint="contact@ngo.org"
+                                android:textSize="15sp"
+                                android:textColor="@android:color/black"
                                 android:inputType="textEmailAddress"
                                 android:background="@android:color/transparent"
                                 android:padding="16dp"
@@ -295,17 +298,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Phone Number"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="#1A237E"
+                            android:textColor="#333333"
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:cardBackgroundColor="#FAFBFF"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#F8F9FA"
                             app:strokeColor="#E0E0E0"
                             app:strokeWidth="1dp">
 
@@ -313,8 +316,9 @@
                                 android:id="@+id/etPhoneNumber"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="+92 XXX XXXXXXX"
-                                android:textSize="16sp"
+                                android:hint="+92 3XX XXXXXXX"
+                                android:textSize="15sp"
+                                android:textColor="@android:color/black"
                                 android:inputType="phone"
                                 android:background="@android:color/transparent"
                                 android:padding="16dp"
@@ -332,17 +336,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Website"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="#1A237E"
+                            android:textColor="#333333"
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:cardBackgroundColor="#FAFBFF"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#F8F9FA"
                             app:strokeColor="#E0E0E0"
                             app:strokeWidth="1dp">
 
@@ -350,8 +354,9 @@
                                 android:id="@+id/etWebsite"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="https://yourngo.org"
-                                android:textSize="16sp"
+                                android:hint="https://ngo.org"
+                                android:textSize="15sp"
+                                android:textColor="@android:color/black"
                                 android:inputType="textUri"
                                 android:background="@android:color/transparent"
                                 android:padding="16dp"
@@ -365,16 +370,16 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -382,8 +387,14 @@
                         android:text="Detailed Information"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#1A237E"
-                        android:layout_marginBottom="20dp" />
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="16dp" />
+                        
+                    <View
+                        android:layout_width="40dp"
+                        android:layout_height="3dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@color/primary" />
 
                     <!-- Mission Statement -->
                     <LinearLayout
@@ -396,17 +407,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Mission Statement *"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="#1A237E"
+                            android:textColor="#333333"
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:cardBackgroundColor="#FAFBFF"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#F8F9FA"
                             app:strokeColor="#E0E0E0"
                             app:strokeWidth="1dp">
 
@@ -414,8 +425,9 @@
                                 android:id="@+id/etMission"
                                 android:layout_width="match_parent"
                                 android:layout_height="120dp"
-                                android:hint="Describe your NGO's mission and purpose..."
+                                android:hint="Describe your NGO's purpose..."
                                 android:textSize="14sp"
+                                android:textColor="@android:color/black"
                                 android:gravity="top"
                                 android:background="@android:color/transparent"
                                 android:padding="16dp"
@@ -435,17 +447,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Vision"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="#1A237E"
+                            android:textColor="#333333"
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:cardBackgroundColor="#FAFBFF"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#F8F9FA"
                             app:strokeColor="#E0E0E0"
                             app:strokeWidth="1dp">
 
@@ -453,8 +465,9 @@
                                 android:id="@+id/etVision"
                                 android:layout_width="match_parent"
                                 android:layout_height="100dp"
-                                android:hint="What is your NGO's long-term vision?"
+                                android:hint="What is your long-term vision?"
                                 android:textSize="14sp"
+                                android:textColor="@android:color/black"
                                 android:gravity="top"
                                 android:background="@android:color/transparent"
                                 android:padding="16dp"
@@ -473,26 +486,27 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Core Values"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="#1A237E"
+                            android:textColor="#333333"
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:cardBackgroundColor="#FAFBFF"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#F8F9FA"
                             app:strokeColor="#E0E0E0"
                             app:strokeWidth="1dp">
 
                             <EditText
                                 android:id="@+id/etCoreValues"
                                 android:layout_width="match_parent"
-                                android:layout_height="100dp"
-                                android:hint="List your NGO's core values (one per line)..."
+                                android:layout_height="80dp"
+                                android:hint="List core values (one per line)..."
                                 android:textSize="14sp"
+                                android:textColor="@android:color/black"
                                 android:gravity="top"
                                 android:background="@android:color/transparent"
                                 android:padding="16dp"
@@ -507,8 +521,8 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="4dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
                 android:layout_marginBottom="32dp"
                 app:cardBackgroundColor="@android:color/white">
 
@@ -516,7 +530,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -524,31 +538,37 @@
                         android:text="Operational Details"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#1A237E"
-                        android:layout_marginBottom="20dp" />
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="16dp" />
+                        
+                    <View
+                        android:layout_width="40dp"
+                        android:layout_height="3dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@color/primary" />
 
                     <!-- Headquarters Address -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginBottom="16dp">
+                        android:layout_marginBottom="20dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Headquarters Address *"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="#1A237E"
+                            android:textColor="#333333"
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:cardBackgroundColor="#FAFBFF"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#F8F9FA"
                             app:strokeColor="#E0E0E0"
                             app:strokeWidth="1dp">
 
@@ -556,8 +576,9 @@
                                 android:id="@+id/etHeadquarters"
                                 android:layout_width="match_parent"
                                 android:layout_height="80dp"
-                                android:hint="Enter complete address of your headquarters..."
+                                android:hint="Enter complete address..."
                                 android:textSize="14sp"
+                                android:textColor="@android:color/black"
                                 android:gravity="top"
                                 android:background="@android:color/transparent"
                                 android:padding="16dp"
@@ -571,16 +592,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginBottom="16dp">
+                        android:layout_marginBottom="20dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Service Categories *"
-                            android:textSize="14sp"
+                            android:text="Service Categories"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="#1A237E"
-                            android:layout_marginBottom="8dp" />
+                            android:textColor="#333333"
+                            android:layout_marginBottom="12dp" />
 
                         <com.google.android.material.chip.ChipGroup
                             android:id="@+id/chipGroupServiceCategories"
@@ -595,8 +616,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Education"
                                 android:textSize="13sp"
-                                app:chipBackgroundColor="@color/chip_unselected"
-                                app:chipStrokeColor="#1565C0"
+                                app:chipBackgroundColor="#F8F9FA"
+                                app:chipStrokeColor="@color/primary"
                                 app:chipStrokeWidth="1dp"
                                 app:checkedIcon="@drawable/ic_check"
                                 android:checkable="true" />
@@ -607,8 +628,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Healthcare"
                                 android:textSize="13sp"
-                                app:chipBackgroundColor="@color/chip_unselected"
-                                app:chipStrokeColor="#1565C0"
+                                app:chipBackgroundColor="#F8F9FA"
+                                app:chipStrokeColor="@color/primary"
                                 app:chipStrokeWidth="1dp"
                                 app:checkedIcon="@drawable/ic_check"
                                 android:checkable="true" />
@@ -619,8 +640,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Disaster Relief"
                                 android:textSize="13sp"
-                                app:chipBackgroundColor="@color/chip_unselected"
-                                app:chipStrokeColor="#1565C0"
+                                app:chipBackgroundColor="#F8F9FA"
+                                app:chipStrokeColor="@color/primary"
                                 app:chipStrokeWidth="1dp"
                                 app:checkedIcon="@drawable/ic_check"
                                 android:checkable="true" />
@@ -631,8 +652,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Poverty Alleviation"
                                 android:textSize="13sp"
-                                app:chipBackgroundColor="@color/chip_unselected"
-                                app:chipStrokeColor="#1565C0"
+                                app:chipBackgroundColor="#F8F9FA"
+                                app:chipStrokeColor="@color/primary"
                                 app:chipStrokeWidth="1dp"
                                 app:checkedIcon="@drawable/ic_check"
                                 android:checkable="true" />
@@ -643,8 +664,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Women Empowerment"
                                 android:textSize="13sp"
-                                app:chipBackgroundColor="@color/chip_unselected"
-                                app:chipStrokeColor="#1565C0"
+                                app:chipBackgroundColor="#F8F9FA"
+                                app:chipStrokeColor="@color/primary"
                                 app:chipStrokeWidth="1dp"
                                 app:checkedIcon="@drawable/ic_check"
                                 android:checkable="true" />
@@ -655,8 +676,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Environment"
                                 android:textSize="13sp"
-                                app:chipBackgroundColor="@color/chip_unselected"
-                                app:chipStrokeColor="#1565C0"
+                                app:chipBackgroundColor="#F8F9FA"
+                                app:chipStrokeColor="@color/primary"
                                 app:chipStrokeWidth="1dp"
                                 app:checkedIcon="@drawable/ic_check"
                                 android:checkable="true" />
@@ -673,31 +694,32 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Geographical Coverage"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:textColor="#1A237E"
+                            android:textColor="#333333"
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:cardBackgroundColor="#FAFBFF"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="#F8F9FA"
                             app:strokeColor="#E0E0E0"
                             app:strokeWidth="1dp">
 
                             <EditText
                                 android:id="@+id/etCoverage"
                                 android:layout_width="match_parent"
-                                android:layout_height="80dp"
-                                android:hint="List cities, regions, or countries where you operate..."
+                                android:layout_height="60dp"
+                                android:hint="Regions or countries..."
                                 android:textSize="14sp"
+                                android:textColor="@android:color/black"
                                 android:gravity="top"
                                 android:background="@android:color/transparent"
                                 android:padding="16dp"
                                 android:inputType="textMultiLine"
-                                android:maxLines="3" />
+                                android:maxLines="2" />
                         </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
                 </LinearLayout>
