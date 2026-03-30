@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA">
+    android:background="@color/background">
 
     <!-- App Bar with Collapsing Toolbar -->
     <com.google.android.material.appbar.AppBarLayout
@@ -17,7 +17,7 @@
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="300dp"
             app:contentScrim="@color/primary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
@@ -57,9 +57,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Trigger Foundation"
+                    android:text="Your NGO Foundation"
                     android:textColor="@android:color/white"
-                    android:textSize="24sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-medium" />
 
@@ -71,10 +71,8 @@
                     android:background="@drawable/bg_verified_badge"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingStart="12dp"
-                    android:paddingTop="4dp"
-                    android:paddingEnd="12dp"
-                    android:paddingBottom="4dp">
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="4dp">
 
                     <ImageView
                         android:layout_width="16dp"
@@ -87,11 +85,11 @@
                         android:id="@+id/tvVerificationStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:text="Verified"
+                        android:layout_marginStart="6dp"
+                        android:text="Verified NGO"
                         android:textColor="@android:color/white"
                         android:textSize="12sp"
-                        android:fontFamily="sans-serif-medium" />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <!-- Tagline -->
@@ -99,11 +97,10 @@
                     android:id="@+id/tvTagline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginHorizontal="32dp"
                     android:layout_marginTop="12dp"
-                    android:layout_marginEnd="32dp"
                     android:gravity="center"
-                    android:text="Hy this is trigger ngo"
+                    android:text="Empowering communities for a brighter tomorrow."
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
                     android:alpha="0.9" />
@@ -157,16 +154,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="40dp">
 
             <!-- Stats Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:cardElevation="3dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -186,11 +185,10 @@
                             android:id="@+id/tvTotalCampaigns"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="5"
+                            android:text="0"
                             android:textColor="@color/primary"
-                            android:textSize="28sp"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-medium" />
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -205,9 +203,8 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="#E0E0E0" />
+                        android:layout_marginHorizontal="8dp"
+                        android:background="#1A000000" />
 
                     <!-- Items Raised Stat -->
                     <LinearLayout
@@ -221,11 +218,10 @@
                             android:id="@+id/tvTotalRaised"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="7"
-                            android:textColor="@color/primary"
-                            android:textSize="28sp"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-medium" />
+                            android:text="0"
+                            android:textColor="@color/secondary"
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -240,9 +236,8 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="#E0E0E0" />
+                        android:layout_marginHorizontal="8dp"
+                        android:background="#1A000000" />
 
                     <!-- Success Rate Stat -->
                     <LinearLayout
@@ -256,17 +251,16 @@
                             android:id="@+id/tvSuccessRate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="50%"
-                            android:textColor="@color/primary"
-                            android:textSize="28sp"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-medium" />
+                            android:text="0%"
+                            android:textColor="@android:color/holo_green_dark"
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Success Rate"
+                            android:text="Success"
                             android:textColor="#666666"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -279,10 +273,10 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -294,10 +288,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Basic Information"
-                        android:textColor="#1A1A1A"
+                        android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif-medium" />
+                        android:textStyle="bold" />
 
                     <View
                         android:layout_width="40dp"
@@ -306,125 +299,121 @@
                         android:layout_marginBottom="16dp"
                         android:background="@color/primary" />
 
-                    <!-- Registration Number -->
+                    <!-- Stats rows extracted to not clutter but kept semantic -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="12dp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="120dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="Registration No:"
                             android:textColor="#666666"
                             android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvRegistrationNumber"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="T075-114-190"
-                            android:textColor="#1A1A1A"
+                            android:text="Updating..."
+                            android:textColor="@android:color/black"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <!-- Organization Type -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="12dp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="120dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="Org. Type:"
                             android:textColor="#666666"
                             android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvOrgType"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="Non-Profit Trust"
-                            android:textColor="#1A1A1A"
+                            android:text="Updating..."
+                            android:textColor="@android:color/black"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <!-- Founded -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="12dp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="120dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="Founded:"
                             android:textColor="#666666"
                             android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvFounded"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="2018"
-                            android:textColor="#1A1A1A"
+                            android:text="Updating..."
+                            android:textColor="@android:color/black"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <!-- Team Size -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="12dp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="120dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="Team Size:"
                             android:textColor="#666666"
                             android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvTeamSize"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="45 members"
-                            android:textColor="#1A1A1A"
+                            android:text="Updating..."
+                            android:textColor="@android:color/black"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <!-- Contact -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="120dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="Contact:"
                             android:textColor="#666666"
                             android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvContact"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="kgiant791@gmail.com"
+                            android:text="Updating..."
                             android:textColor="@color/primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -438,10 +427,10 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -453,10 +442,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Our Mission"
-                        android:textColor="#1A1A1A"
+                        android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif-medium" />
+                        android:textStyle="bold" />
 
                     <View
                         android:layout_width="40dp"
@@ -469,20 +457,19 @@
                         android:id="@+id/tvMission"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:lineSpacingExtra="4dp"
-                        android:text="To empower communities through sustainable development..."
-                        android:textColor="#666666"
+                        android:layout_marginBottom="24dp"
+                        android:lineSpacingExtra="6dp"
+                        android:text="Updating mission..."
+                        android:textColor="#555555"
                         android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Our Vision"
-                        android:textColor="#1A1A1A"
+                        android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif-medium" />
+                        android:textStyle="bold" />
 
                     <View
                         android:layout_width="40dp"
@@ -495,9 +482,9 @@
                         android:id="@+id/tvVision"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:lineSpacingExtra="4dp"
-                        android:text="A world where every individual has access to opportunities..."
-                        android:textColor="#666666"
+                        android:lineSpacingExtra="6dp"
+                        android:text="Updating vision..."
+                        android:textColor="#555555"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -508,10 +495,10 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -522,11 +509,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Service Categories"
-                        android:textColor="#1A1A1A"
+                        android:text="Focus Areas"
+                        android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif-medium" />
+                        android:textStyle="bold" />
 
                     <View
                         android:layout_width="40dp"
@@ -550,10 +536,10 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -565,10 +551,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Location &amp; Coverage"
-                        android:textColor="#1A1A1A"
+                        android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif-medium" />
+                        android:textStyle="bold" />
 
                     <View
                         android:layout_width="40dp"
@@ -586,8 +571,8 @@
                         android:gravity="center_vertical">
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:src="@drawable/ic_location"
                             app:tint="@color/primary" />
 
@@ -595,7 +580,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginStart="16dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -609,10 +594,10 @@
                                 android:id="@+id/tvHeadquarters"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="Karachi, Pakistan"
-                                android:textColor="#1A1A1A"
-                                android:textSize="14sp"
+                                android:layout_marginTop="2dp"
+                                android:text="Updating..."
+                                android:textColor="@android:color/black"
+                                android:textSize="15sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -626,8 +611,8 @@
                         android:gravity="center_vertical">
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:src="@drawable/ic_map"
                             app:tint="@color/primary" />
 
@@ -635,7 +620,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginStart="16dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -649,10 +634,10 @@
                                 android:id="@+id/tvCoverage"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="Nationwide"
-                                android:textColor="#1A1A1A"
-                                android:textSize="14sp"
+                                android:layout_marginTop="2dp"
+                                android:text="Updating..."
+                                android:textColor="@android:color/black"
+                                android:textSize="15sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -663,18 +648,39 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Settings Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSettings"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="16dp"
-                android:text="Settings"
-                android:textSize="16sp"
-                app:icon="@drawable/ic_settings"
-                app:iconGravity="textStart"
-                app:iconPadding="12dp"
-                app:cornerRadius="12dp"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:id="@+id/btnSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:background="?attr/selectableItemBackground">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_settings"
+                        app:tint="#666666" />
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="Account Settings"
+                        android:textSize="16sp"
+                        android:textColor="#333333"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
