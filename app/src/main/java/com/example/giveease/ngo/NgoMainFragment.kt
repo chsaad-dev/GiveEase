@@ -81,6 +81,11 @@ class NgoMainFragment : Fragment() {
                 else -> homeFragment
             }
 
+            // Pop any child fragments pushed on top (e.g. Create Campaign, My Campaigns)
+            while (childFragmentManager.backStackEntryCount > 0) {
+                childFragmentManager.popBackStackImmediate()
+            }
+
             if (activeFragment != targetFragment) {
                 childFragmentManager.beginTransaction()
                     .hide(activeFragment)
@@ -141,19 +146,48 @@ class NgoMainFragment : Fragment() {
     }
 
     fun handleBackPress(): Boolean {
-        val currentFragment = childFragmentManager.findFragmentById(R.id.fragmentContainer)
-
+        // Pop child fragments first (e.g. Create Campaign, My Campaigns pushed on a tab)
         if (childFragmentManager.backStackEntryCount > 0) {
             childFragmentManager.popBackStack()
+            // Re-sync activeFragment to match whichever tab is currently selected
+            activeFragment = when (binding.bottomNavigationView.selectedItemId) {
+                R.id.nav_home -> homeFragment
+                R.id.nav_chat -> chatFragment
+                R.id.nav_campaign -> campaignFragment
+                R.id.nav_history -> historyFragment
+                R.id.nav_profile -> profileFragment
+                else -> homeFragment
+            }
             return true
         }
 
+        // If not on Home tab, switch to Home
         if (binding.bottomNavigationView.selectedItemId != R.id.nav_home) {
             binding.bottomNavigationView.selectedItemId = R.id.nav_home
             return true
         }
 
         return false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Re-sync bottom nav when returning from Settings/EditProfile
+        // (which are pushed on supportFragmentManager above NgoMainFragment)
+        if (_binding != null) {
+            val expectedNavId = when (activeFragment) {
+                homeFragment -> R.id.nav_home
+                chatFragment -> R.id.nav_chat
+                campaignFragment -> R.id.nav_campaign
+                historyFragment -> R.id.nav_history
+                profileFragment -> R.id.nav_profile
+                else -> R.id.nav_home
+            }
+            if (binding.bottomNavigationView.selectedItemId != expectedNavId) {
+                // Silently sync without triggering listener
+                binding.bottomNavigationView.selectedItemId = expectedNavId
+            }
+        }
     }
 
     override fun onDestroyView() {

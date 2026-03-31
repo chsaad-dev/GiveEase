@@ -10,6 +10,7 @@ import com.example.giveease.databinding.FragmentNgoHomeBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.bumptech.glide.Glide
 
 class NgoHomeFragment : Fragment() {
 
@@ -48,6 +49,15 @@ class NgoHomeFragment : Fragment() {
                 if (document.exists()) {
                     val ngoName = document.getString("name") ?: "NGO"
                     binding.tvNgoName.text = ngoName
+                    
+                    val imageUrl = document.getString("profileImageUrl")
+                    if (!imageUrl.isNullOrEmpty()) {
+                        binding.ivNgoLogo.imageTintList = null // Remove primary tint so image shows in full color
+                        Glide.with(this@NgoHomeFragment)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.ic_ngo)
+                            .into(binding.ivNgoLogo)
+                    }
                 }
             }
             .addOnFailureListener {
@@ -182,6 +192,13 @@ class NgoHomeFragment : Fragment() {
         }
 
         // View All text link
+        binding.btnVerifyReceipts.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, MonetaryVerificationFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
         binding.tvViewAllCampaigns.setOnClickListener {
             navigateToFragment(MyCampaignsFragment())
         }
