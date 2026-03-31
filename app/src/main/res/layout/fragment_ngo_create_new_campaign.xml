@@ -169,36 +169,52 @@
                             app:strokeWidth="2dp"
                             android:layout_marginEnd="16dp">
 
-                            <LinearLayout
+                            <FrameLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:gravity="center"
-                                android:padding="16dp">
+                                android:layout_height="match_parent">
 
+                                <!-- Image Preview (shown after selection) -->
                                 <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:src="@drawable/sample_ngo"
-                                    app:tint="#1565C0" />
+                                    android:id="@+id/ivImagePreview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="centerCrop"
+                                    android:visibility="gone" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Add Photos"
-                                    android:textSize="12sp"
-                                    android:textColor="#1565C0"
-                                    android:textStyle="bold"
-                                    android:layout_marginTop="8dp" />
+                                <!-- Default upload UI -->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:gravity="center"
+                                    android:padding="16dp">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="0/5"
-                                    android:textSize="10sp"
-                                    android:textColor="#546E7A"
-                                    android:layout_marginTop="4dp" />
-                            </LinearLayout>
+                                    <ImageView
+                                        android:layout_width="32dp"
+                                        android:layout_height="32dp"
+                                        android:src="@drawable/sample_ngo"
+                                        app:tint="#1565C0" />
+
+                                    <TextView
+                                        android:id="@+id/tvAddPhotoLabel"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Add Photos"
+                                        android:textSize="12sp"
+                                        android:textColor="#1565C0"
+                                        android:textStyle="bold"
+                                        android:layout_marginTop="8dp" />
+
+                                    <TextView
+                                        android:id="@+id/tvImageCount"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0/5"
+                                        android:textSize="10sp"
+                                        android:textColor="#546E7A"
+                                        android:layout_marginTop="4dp" />
+                                </LinearLayout>
+                            </FrameLayout>
                         </com.google.android.material.card.MaterialCardView>
 
                         <LinearLayout
@@ -609,6 +625,7 @@
 
             <!-- Item Details Section -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardItemDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="20dp"

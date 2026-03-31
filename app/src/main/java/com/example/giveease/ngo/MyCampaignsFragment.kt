@@ -53,11 +53,14 @@ class MyCampaignsFragment : Fragment() {
             onStatusChangeClick = { campaign ->
                 toggleCampaignStatus(campaign)
             },
+            onCompleteClick = { campaign ->
+                markCampaignAsCompleted(campaign)
+            },
             onDeleteClick = { campaign ->
                 showDeleteConfirmation(campaign)
             },
             onCampaignClick = { campaign ->
-                Toast.makeText(requireContext(), "Campaign details coming soon", Toast.LENGTH_SHORT).show()
+                navigateToEditCampaign(campaign)
             }
         )
 
@@ -102,7 +105,7 @@ class MyCampaignsFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.btnCreateNewCampaign.setOnClickListener {
@@ -200,6 +203,14 @@ class MyCampaignsFragment : Fragment() {
         val newStatus = if (campaign.status == "Active") "Paused" else "Active"
         val statusText = if (newStatus == "Active") "activated" else "paused"
 
+        // Optimistic local update for instant feedback
+        val index = campaignsList.indexOfFirst { it.id == campaign.id }
+        if (index >= 0) {
+            campaignsList[index] = campaignsList[index].copy(status = newStatus)
+            updateStats()
+            filterCampaigns()
+        }
+
         firestore.collection("campaigns").document(campaign.id)
             .update("status", newStatus)
             .addOnSuccessListener {
@@ -210,6 +221,41 @@ class MyCampaignsFragment : Fragment() {
                 if (!isAdded) return@addOnFailureListener
                 Toast.makeText(requireContext(), "Failed to update status: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun markCampaignAsCompleted(campaign: CampaignData) {
+        if (!isAdded) return
+
+        if (campaign.status == "Completed") {
+            return
+        }
+
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Complete Campaign")
+            .setMessage("Are you sure you want to mark \"${campaign.title}\" as Completed? This action cannot be undone.")
+            .setPositiveButton("Complete") { dialog, _ ->
+                // Optimistic local update for instant feedback
+                val index = campaignsList.indexOfFirst { it.id == campaign.id }
+                if (index >= 0) {
+                    campaignsList[index] = campaignsList[index].copy(status = "Completed")
+                    updateStats()
+                    filterCampaigns()
+                }
+
+                firestore.collection("campaigns").document(campaign.id)
+                    .update("status", "Completed")
+                    .addOnSuccessListener {
+                        if (isAdded) Toast.makeText(requireContext(), "Campaign marked as Completed", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        if (isAdded) Toast.makeText(requireContext(), "Failed to update status: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun showDeleteConfirmation(campaign: CampaignData) {

@@ -12,6 +12,7 @@ import com.example.giveease.databinding.ItemCampaignManagementBinding
 class CampaignManagementAdapter(
     private val onEditClick: (CampaignData) -> Unit,
     private val onStatusChangeClick: (CampaignData) -> Unit,
+    private val onCompleteClick: (CampaignData) -> Unit,
     private val onDeleteClick: (CampaignData) -> Unit,
     private val onCampaignClick: (CampaignData) -> Unit
 ) : RecyclerView.Adapter<CampaignManagementAdapter.CampaignViewHolder>() {
@@ -113,15 +114,18 @@ class CampaignManagementAdapter(
                     "Completed" -> {
                         btnEdit.visibility = View.GONE
                         btnStatusChange.visibility = View.GONE
+                        btnComplete.visibility = View.GONE
                     }
                     "Active" -> {
                         btnEdit.visibility = View.VISIBLE
+                        btnComplete.visibility = View.VISIBLE
                         btnStatusChange.visibility = View.VISIBLE
                         btnStatusChange.text = "Pause"
                         btnStatusChange.setIconResource(R.drawable.ic_pause)
                     }
                     "Paused" -> {
                         btnEdit.visibility = View.VISIBLE
+                        btnComplete.visibility = View.VISIBLE
                         btnStatusChange.visibility = View.VISIBLE
                         btnStatusChange.text = "Activate"
                         btnStatusChange.setIconResource(R.drawable.ic_play)
@@ -132,6 +136,7 @@ class CampaignManagementAdapter(
                 root.setOnClickListener { onCampaignClick(campaign) }
                 btnEdit.setOnClickListener { onEditClick(campaign) }
                 btnStatusChange.setOnClickListener { onStatusChangeClick(campaign) }
+                btnComplete.setOnClickListener { onCompleteClick(campaign) }
                 btnDelete.setOnClickListener { onDeleteClick(campaign) }
             }
         }
