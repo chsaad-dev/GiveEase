@@ -11,6 +11,7 @@ import com.example.giveease.databinding.FragmentNgoProfileBinding
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.bumptech.glide.Glide
 import java.util.*
 
 class NgoProfileFragment : Fragment() {
@@ -32,7 +33,7 @@ class NgoProfileFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.btnEditProfile.setOnClickListener {
@@ -58,12 +59,20 @@ class NgoProfileFragment : Fragment() {
                 if (!isAdded) return@addOnSuccessListener
 
                 if (document.exists()) {
+                    val imageUrl = document.getString("profileImageUrl")
+                    if (!imageUrl.isNullOrEmpty()) {
+                        Glide.with(this@NgoProfileFragment)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.ic_ngo_placeholder)
+                            .into(binding.ivProfilePicture)
+                    }
+
                     binding.tvNgoName.text = document.getString("ngoName") ?: "NGO Name"
                     binding.tvTagline.text = document.getString("tagline") ?: "Your tagline here"
 
                     val verificationStatus = document.getString("verificationStatus") ?: "pending"
                     binding.tvVerificationStatus.text = when (verificationStatus) {
-                        "approved" -> "Verified"
+                        "verified", "approved" -> "Verified"
                         "pending" -> "Pending"
                         "rejected" -> "Not Verified"
                         else -> "Pending"
