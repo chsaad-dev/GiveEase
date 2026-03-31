@@ -190,47 +190,6 @@
                             android:checked="true" />
                     </LinearLayout>
 
-                    <!-- Language Settings -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="24dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Language"
-                                android:textSize="15sp"
-                                android:textStyle="bold"
-                                android:textColor="#333333"
-                                android:layout_marginBottom="4dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="English (US)"
-                                android:textSize="13sp"
-                                android:textColor="#666666" />
-                        </LinearLayout>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnChangeLanguage"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Change"
-                            android:textColor="#1565C0"
-                            app:strokeColor="#1565C0" />
-                    </LinearLayout>
-
                     <!-- Change Password -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnChangePassword"
@@ -242,67 +201,6 @@
                         app:backgroundTint="#EDF2F7"
                         app:icon="@drawable/ic_lock"
                         app:iconTint="#1565C0" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Campaign Settings -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@android:color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Campaign Settings"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black"
-                        android:layout_marginBottom="16dp" />
-                        
-                    <View
-                        android:layout_width="40dp"
-                        android:layout_height="3dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="#1565C0" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchAutoClose"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Auto-close when target reached"
-                        android:textColor="#444444"
-                        android:textSize="14sp"
-                        android:checked="true"
-                        android:layout_marginBottom="12dp" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchLowStockAlerts"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Low stock alerts"
-                        android:textColor="#444444"
-                        android:textSize="14sp"
-                        android:checked="true"
-                        android:layout_marginBottom="12dp" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchCampaignAnalytics"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Share campaign analytics"
-                        android:textColor="#444444"
-                        android:textSize="14sp"
-                        android:checked="true" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -336,46 +234,6 @@
                         android:layout_marginBottom="20dp"
                         android:background="#1565C0" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="24dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Withdrawal Frequency"
-                                android:textSize="15sp"
-                                android:textStyle="bold"
-                                android:textColor="#333333"
-                                android:layout_marginBottom="4dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Weekly"
-                                android:textSize="13sp"
-                                android:textColor="#666666" />
-                        </LinearLayout>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnWithdrawalSettings"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Manage"
-                            android:textColor="#1565C0"
-                            app:strokeColor="#1565C0" />
-                    </LinearLayout>
-
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnBankAccounts"
                         style="@style/Widget.Material3.Button.TonalButton"
@@ -389,68 +247,21 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Privacy & Security -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Logout -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                android:layout_height="56dp"
                 android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@android:color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Privacy &amp; Security"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black"
-                        android:layout_marginBottom="16dp" />
-                        
-                    <View
-                        android:layout_width="40dp"
-                        android:layout_height="3dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="#1565C0" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchTwoFactor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Two-Factor Authentication"
-                        android:textColor="#444444"
-                        android:textSize="14sp"
-                        android:checked="true"
-                        android:layout_marginBottom="12dp" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchDataSharing"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Data Sharing for Analytics"
-                        android:textColor="#444444"
-                        android:textSize="14sp"
-                        android:checked="false"
-                        android:layout_marginBottom="24dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnPrivacyPolicy"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Privacy Policy"
-                        android:textColor="#1565C0"
-                        app:backgroundTint="#EDF2F7"
-                        app:icon="@drawable/ic_shield"
-                        app:iconTint="#1565C0" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:text="Logout"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#D32F2F"
+                app:backgroundTint="#FFEBEE"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_logout"
+                app:iconTint="#D32F2F"
+                app:iconGravity="textStart" />
 
             <!-- Danger Zone -->
             <com.google.android.material.card.MaterialCardView
@@ -482,17 +293,6 @@
                         android:layout_marginBottom="20dp"
                         android:background="#D32F2F" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnExportData"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Export All Data"
-                        android:textColor="#1565C0"
-                        app:strokeColor="#1565C0"
-                        app:icon="@drawable/ic_download"
-                        app:iconTint="#1565C0"
-                        android:layout_marginBottom="12dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnDeleteAccount"
