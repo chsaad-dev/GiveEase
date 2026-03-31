@@ -12,6 +12,7 @@ import com.example.giveease.MainActivity
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentNgoSettingsBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class NgoSettingsFragment : Fragment() {
 
@@ -29,35 +30,26 @@ class NgoSettingsFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-
-        binding.btnChangeLanguage.setOnClickListener {
-            Toast.makeText(requireContext(), "Language settings - Coming Soon", Toast.LENGTH_SHORT).show()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.btnChangePassword.setOnClickListener {
             showChangePasswordDialog()
         }
 
-        binding.btnWithdrawalSettings.setOnClickListener {
-            Toast.makeText(requireContext(), "Withdrawal settings - Coming Soon", Toast.LENGTH_SHORT).show()
-        }
-
         binding.btnBankAccounts.setOnClickListener {
-            Toast.makeText(requireContext(), "Bank account management - Coming Soon", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.btnPrivacyPolicy.setOnClickListener {
-            Toast.makeText(requireContext(), "Privacy Policy", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.btnExportData.setOnClickListener {
-            showExportDataDialog()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, NgoBankAccountsFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.btnDeleteAccount.setOnClickListener {
             showDeleteAccountDialog()
+        }
+
+        binding.btnLogout.setOnClickListener {
+            showLogoutConfirmation()
         }
     }
 
@@ -86,17 +78,6 @@ class NgoSettingsFragment : Fragment() {
             .addOnFailureListener {
                 Toast.makeText(requireContext(), "Failed to send reset email", Toast.LENGTH_SHORT).show()
             }
-    }
-
-    private fun showExportDataDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Export Data")
-            .setMessage("Export all your NGO data including campaigns, donations, and profile information?")
-            .setPositiveButton("Export") { _, _ ->
-                Toast.makeText(requireContext(), "Data export started - You'll receive an email", Toast.LENGTH_LONG).show()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
     }
 
     private fun showDeleteAccountDialog() {
@@ -130,14 +111,40 @@ class NgoSettingsFragment : Fragment() {
     }
 
     private fun deleteAccount() {
-        auth.currentUser?.delete()
-            ?.addOnSuccessListener {
-                Toast.makeText(requireContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show()
+        val user = auth.currentUser ?: return
+        val uid = user.uid
+
+        FirebaseFirestore.getInstance().collection("users").document(uid).delete()
+            .addOnSuccessListener {
+                user.delete()
+                    .addOnSuccessListener {
+                        if (isAdded) {
+                            Toast.makeText(requireContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show()
+                            navigateToLogin()
+                        }
+                    }
+                    .addOnFailureListener {
+                        if (isAdded) {
+                            Toast.makeText(requireContext(), "Failed to delete account. Try logging in again first.", Toast.LENGTH_LONG).show()
+                        }
+                    }
+            }
+            .addOnFailureListener {
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Failed to delete database record.", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun showLogoutConfirmation() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Logout") { _, _ ->
                 navigateToLogin()
             }
-            ?.addOnFailureListener {
-                Toast.makeText(requireContext(), "Failed to delete account. Try logging in again first.", Toast.LENGTH_LONG).show()
-            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun navigateToLogin() {
