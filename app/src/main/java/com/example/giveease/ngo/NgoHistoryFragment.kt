@@ -60,7 +60,7 @@ class NgoHistoryFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 
@@ -89,7 +89,6 @@ class NgoHistoryFragment : Fragment() {
         // Set up real-time listener for donations
         donationsListener = firestore.collection("donations")
             .whereEqualTo("ngoId", ngoId)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshots, error ->
                 if (!isAdded || _binding == null) {
                     donationsListener?.remove()
@@ -121,6 +120,8 @@ class NgoHistoryFragment : Fragment() {
                     )
                     allDonations.add(donation)
                 }
+                
+                allDonations.sortByDescending { it.timestamp }
 
                 updateStats()
                 applyFilter()
