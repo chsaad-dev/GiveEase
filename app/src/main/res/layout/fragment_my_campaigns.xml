@@ -7,19 +7,12 @@
     android:background="#F8FAFF">
 
     <!-- Header -->
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="4dp"
-        app:cardBackgroundColor="@android:color/white">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:background="@drawable/h">
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="@drawable/home_header_gradient">
 
             <!-- Navigation -->
             <LinearLayout
@@ -141,8 +134,7 @@
                         android:alpha="0.9" />
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
     <!-- Filter Chips -->
     <HorizontalScrollView

@@ -9,8 +9,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentNgoEditProfileBinding
+import android.net.Uri
+import androidx.activity.result.contract.ActivityResultContracts
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 
 class NgoEditProfileFragment : Fragment() {
 
@@ -18,6 +22,18 @@ class NgoEditProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    private val storage = FirebaseStorage.getInstance()
+    private var imageUri: Uri? = null
+
+    private val imagePickerLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            imageUri = uri
+            binding.ivNgoLogo.setImageURI(uri)
+            binding.llLogoPlaceholder.visibility = View.GONE
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -38,7 +54,7 @@ class NgoEditProfileFragment : Fragment() {
         }
 
         binding.btnChangeLogo.setOnClickListener {
-            Toast.makeText(requireContext(), "Logo upload - Coming Soon", Toast.LENGTH_SHORT).show()
+            imagePickerLauncher.launch("image/*")
         }
     }
 
@@ -48,6 +64,12 @@ class NgoEditProfileFragment : Fragment() {
         firestore.collection("users").document(uid).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
+                    val imageUrl = document.getString("profileImageUrl")
+                    if (!imageUrl.isNullOrEmpty()) {
+                        Glide.with(requireContext()).load(imageUrl).into(binding.ivNgoLogo)
+                        binding.llLogoPlaceholder.visibility = View.GONE
+                    }
+
                     binding.etNgoName.setText(document.getString("ngoName") ?: "")
                     binding.etTagline.setText(document.getString("tagline") ?: "")
                     binding.etContactEmail.setText(document.getString("email") ?: "")
@@ -145,17 +167,46 @@ class NgoEditProfileFragment : Fragment() {
             "updatedAt" to System.currentTimeMillis()
         )
 
+        if (imageUri != null) {
+            uploadImageAndSave(uid, updates)
+        } else {
+            saveToFirestore(uid, updates)
+        }
+    }
+
+    private fun uploadImageAndSave(uid: String, updates: HashMap<String, Any>) {
+        val ref = storage.reference.child("profile_images/${uid}.jpg")
+        ref.putFile(imageUri!!)
+            .addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener { uri ->
+                    updates["profileImageUrl"] = uri.toString()
+                    saveToFirestore(uid, updates)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("NgoEditProfile", "Error uploading logo", e)
+                Toast.makeText(requireContext(), "Failed to upload logo", Toast.LENGTH_SHORT).show()
+                binding.btnSave.isEnabled = true
+                binding.btnSave.text = "Save"
+            }
+    }
+
+    private fun saveToFirestore(uid: String, updates: HashMap<String, Any>) {
         firestore.collection("users").document(uid)
             .update(updates)
             .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Profile updated successfully!", Toast.LENGTH_SHORT).show()
-                requireActivity().supportFragmentManager.popBackStack()
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Profile updated successfully!", Toast.LENGTH_SHORT).show()
+                    requireActivity().supportFragmentManager.popBackStack()
+                }
             }
             .addOnFailureListener { e ->
-                Log.e("NgoEditProfile", "Error updating profile", e)
-                Toast.makeText(requireContext(), "Failed to update profile", Toast.LENGTH_SHORT).show()
-                binding.btnSave.isEnabled = true
-                binding.btnSave.text = "Save"
+                if (isAdded) {
+                    Log.e("NgoEditProfile", "Error updating profile", e)
+                    Toast.makeText(requireContext(), "Failed to update profile", Toast.LENGTH_SHORT).show()
+                    binding.btnSave.isEnabled = true
+                    binding.btnSave.text = "Save"
+                }
             }
     }
 

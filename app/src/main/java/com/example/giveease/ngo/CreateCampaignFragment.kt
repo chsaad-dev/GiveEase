@@ -43,7 +43,7 @@ class CreateCampaignFragment : Fragment() {
         if (uris.isNotEmpty()) {
             selectedImages.clear()
             selectedImages.addAll(uris.take(5))
-            updateImageCount()
+            updateImagePreview()
         }
     }
 
@@ -88,6 +88,7 @@ class CreateCampaignFragment : Fragment() {
             "Clothing",
             "Shelter",
             "Blood Donation",
+            "Monetary Funds",
             "Other"
         )
         binding.spinnerCategory.adapter = ArrayAdapter(
@@ -105,6 +106,21 @@ class CreateCampaignFragment : Fragment() {
             units
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        // Auto-select PKR and hide item details when Monetary Funds is chosen
+        binding.spinnerCategory.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (categories[position] == "Monetary Funds") {
+                    val pkrIndex = units.indexOf("PKR")
+                    if (pkrIndex >= 0) binding.spinnerUnit.setSelection(pkrIndex)
+                    // Hide item condition section for monetary
+                    binding.cardItemDetails.visibility = View.GONE
+                } else {
+                    binding.cardItemDetails.visibility = View.VISIBLE
+                }
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         }
     }
 
@@ -161,8 +177,22 @@ class CreateCampaignFragment : Fragment() {
         }
     }
 
-    private fun updateImageCount() {
-        Toast.makeText(requireContext(), "${selectedImages.size} image(s) selected", Toast.LENGTH_SHORT).show()
+    private fun updateImagePreview() {
+        if (!isAdded || _binding == null) return
+
+        // Show preview of first image in the upload button card
+        try {
+            val firstUri = selectedImages.firstOrNull()
+            if (firstUri != null) {
+                binding.ivImagePreview.visibility = View.VISIBLE
+                binding.ivImagePreview.setImageURI(firstUri)
+                binding.tvImageCount.text = "${selectedImages.size}/5"
+                binding.tvAddPhotoLabel.text = "Change"
+            }
+        } catch (e: Exception) {
+            // Fallback if views don't exist yet
+            Toast.makeText(requireContext(), "${selectedImages.size} image(s) selected", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun createCampaign() {
