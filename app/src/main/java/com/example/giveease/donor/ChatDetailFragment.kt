@@ -172,7 +172,15 @@ class ChatDetailFragment : Fragment() {
                 }
 
                 val messages = snapshot?.documents?.mapNotNull { doc ->
-                    doc.toObject(Message::class.java)?.copy(id = doc.id)
+                    val msg = doc.toObject(Message::class.java)?.copy(id = doc.id)
+                    msg?.let {
+                        it.status = when {
+                            it.isRead -> MessageStatus.READ
+                            it.isDelivered -> MessageStatus.DELIVERED
+                            else -> MessageStatus.SENT
+                        }
+                    }
+                    msg
                 } ?: emptyList()
 
                 messageAdapter.submitList(messages) {
@@ -289,12 +297,30 @@ class ChatDetailFragment : Fragment() {
     }
 
     private fun markMessagesAsRead() {
+        val currentUserId = UserManager.getUserId(requireContext())
+        
         firestore.collection("chats")
             .document(chatRoomId)
             .update(
                 if (isDonor) "donorUnread" else "ngoUnread",
                 0
             )
+
+        firestore.collection("chats")
+            .document(chatRoomId)
+            .collection("messages")
+            .whereEqualTo("receiverId", currentUserId)
+            .whereEqualTo("isRead", false)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    firestore.runBatch { batch ->
+                        for (doc in querySnapshot.documents) {
+                            batch.update(doc.reference, "isRead", true, "isDelivered", true)
+                        }
+                    }
+                }
+            }
     }
 
     private fun handleTyping(isTyping: Boolean) {

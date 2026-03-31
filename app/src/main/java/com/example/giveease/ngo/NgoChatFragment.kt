@@ -87,24 +87,15 @@ class NgoChatFragment : Fragment() {
 
                 if (error != null) {
                     android.util.Log.e("NgoChatFragment", "Listen failed.", error)
-                    try {
-                        android.widget.Toast.makeText(requireContext(), "Error: ${error.message}", android.widget.Toast.LENGTH_LONG).show()
-                    } catch (e: Exception) {}
                     return@addSnapshotListener
                 }
 
                 allChats.clear()
-                val size = snapshot?.documents?.size ?: 0
-                try {
-                    android.widget.Toast.makeText(requireContext(), "User: $userId | Chats loaded: $size", android.widget.Toast.LENGTH_LONG).show()
-                } catch (e: Exception) {}
 
                 snapshot?.documents?.forEach { doc ->
                     val chat = doc.toObject(ChatRoom::class.java)
                     if (chat == null) {
-                        try {
-                            android.widget.Toast.makeText(requireContext(), "Warning: ChatRoom parsed as NULL!", android.widget.Toast.LENGTH_SHORT).show()
-                        } catch (e: Exception) {}
+                            android.util.Log.w("NgoChatFragment", "Warning: ChatRoom parsed as NULL!")
                     } else {
                         allChats.add(chat.copy(id = doc.id))
                     }
