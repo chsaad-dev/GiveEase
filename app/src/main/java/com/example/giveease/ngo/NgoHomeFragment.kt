@@ -199,6 +199,13 @@ class NgoHomeFragment : Fragment() {
                 .commit()
         }
 
+        binding.btnManageItems.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, NgoPhysicalDonationsFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
         binding.tvViewAllCampaigns.setOnClickListener {
             navigateToFragment(MyCampaignsFragment())
         }
