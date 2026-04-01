@@ -257,6 +257,182 @@
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
+    <!-- Physical Items Section (Hidden by default) -->
+    <LinearLayout
+        android:id="@+id/llPhysicalSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="24dp">
+        
+        <!-- Condition -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item Condition *"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#1A237E"
+            android:layout_marginBottom="8dp" />
+            
+        <RadioGroup
+            android:id="@+id/rgCondition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+            <RadioButton
+                android:id="@+id/rbNew"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="New"
+                android:textColor="#546E7A" />
+            <RadioButton
+                android:id="@+id/rbUsed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gently Used"
+                android:textColor="#546E7A" />
+            <RadioButton
+                android:id="@+id/rbRepair"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Needs Repair"
+                android:textColor="#546E7A" />
+        </RadioGroup>
+
+        <!-- Item Proof Photo -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload Item Photo *"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#D32F2F"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnUploadItemPhoto"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Capture or Select Photo"
+            app:icon="@android:drawable/ic_menu_camera"
+            app:backgroundTint="#EDF2F7"
+            android:textColor="#1565C0"
+            app:iconTint="#1565C0"
+            android:layout_marginBottom="12dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardItemPreview"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="#E0E0E0"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/ivItemPreview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+            
+            <ImageView
+                android:id="@+id/btnRemoveItemPhoto"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="8dp"
+                android:background="@drawable/circle_white_bg"
+                android:padding="6dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="#D32F2F" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Handover Method -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Handover Logistics *"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#1A237E"
+            android:layout_marginBottom="8dp" />
+            
+        <RadioGroup
+            android:id="@+id/rgHandover"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+            <RadioButton
+                android:id="@+id/rbDropoff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="I will drop it off at the NGO"
+                android:textColor="#546E7A" />
+                
+            <TextView
+                android:id="@+id/tvNgoDropoffAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NGO Address: Loading..."
+                android:textSize="13sp"
+                android:textColor="#1565C0"
+                android:background="#FAFBFF"
+                android:padding="8dp"
+                android:layout_marginStart="32dp"
+                android:visibility="gone"
+                android:layout_marginBottom="8dp"/>
+                
+            <RadioButton
+                android:id="@+id/rbPickup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Request an NGO Rider to pickup"
+                android:textColor="#546E7A" />
+                
+            <!-- Pickup Info Fields -->
+            <LinearLayout
+                android:id="@+id/llPickupInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="32dp"
+                android:visibility="gone"
+                android:layout_marginTop="8dp">
+                
+                <EditText
+                    android:id="@+id/etPickupPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:hint="Your Phone Number"
+                    android:inputType="phone"
+                    android:padding="8dp"
+                    android:background="@drawable/et_bg"
+                    android:layout_marginBottom="8dp"/>
+                    
+                <EditText
+                    android:id="@+id/etPickupAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minLines="2"
+                    android:hint="Complete Pickup Address"
+                    android:inputType="textMultiLine"
+                    android:padding="8dp"
+                    android:background="@drawable/et_bg"
+                    android:gravity="top"/>
+            </LinearLayout>
+        </RadioGroup>
+    </LinearLayout>
+
     <!-- Action Buttons -->
     <LinearLayout
         android:layout_width="match_parent"

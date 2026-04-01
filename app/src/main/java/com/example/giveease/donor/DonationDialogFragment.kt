@@ -26,6 +26,8 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
     private val storage = FirebaseStorage.getInstance()
     private var donorName: String = ""
     private var receiptImageUri: Uri? = null
+    private var itemPhotoUri: Uri? = null
+    private var ngoHeadquarterAddress: String = ""
 
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -35,6 +37,17 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
             binding.ivReceiptPreview.setImageURI(uri)
             binding.cardReceiptPreview.visibility = View.VISIBLE
             binding.btnUploadReceipt.visibility = View.GONE
+        }
+    }
+
+    private val itemPhotoLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            itemPhotoUri = uri
+            binding.ivItemPreview.setImageURI(uri)
+            binding.cardItemPreview.visibility = View.VISIBLE
+            binding.btnUploadItemPhoto.visibility = View.GONE
         }
     }
 
@@ -81,11 +94,23 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
 
             if (campaign.category == "Monetary Funds") {
                 llMonetarySection.visibility = View.VISIBLE
+                llPhysicalSection.visibility = View.GONE
                 fetchNgoBankDetails()
             } else {
                 llMonetarySection.visibility = View.GONE
+                llPhysicalSection.visibility = View.VISIBLE
+                fetchNgoAddress()
             }
         }
+    }
+
+    private fun fetchNgoAddress() {
+        firestore.collection("users").document(campaign.ngoId).get()
+            .addOnSuccessListener { document ->
+                if (!isAdded || _binding == null) return@addOnSuccessListener
+                ngoHeadquarterAddress = document.getString("headQuarterAddress") ?: "Address not provided by NGO."
+                binding.tvNgoDropoffAddress.text = "NGO Address:\n$ngoHeadquarterAddress"
+            }
     }
 
     private fun fetchNgoBankDetails() {
@@ -153,6 +178,26 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
                 cardReceiptPreview.visibility = View.GONE
                 btnUploadReceipt.visibility = View.VISIBLE
             }
+
+            btnUploadItemPhoto.setOnClickListener {
+                itemPhotoLauncher.launch("image/*")
+            }
+
+            btnRemoveItemPhoto.setOnClickListener {
+                itemPhotoUri = null
+                cardItemPreview.visibility = View.GONE
+                btnUploadItemPhoto.visibility = View.VISIBLE
+            }
+
+            rgHandover.setOnCheckedChangeListener { _, checkedId ->
+                if (checkedId == com.example.giveease.R.id.rbDropoff) {
+                    tvNgoDropoffAddress.visibility = View.VISIBLE
+                    llPickupInfo.visibility = View.GONE
+                } else if (checkedId == com.example.giveease.R.id.rbPickup) {
+                    tvNgoDropoffAddress.visibility = View.GONE
+                    llPickupInfo.visibility = View.VISIBLE
+                }
+            }
         }
     }
 
@@ -179,6 +224,28 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
         if (campaign.category == "Monetary Funds" && receiptImageUri == null) {
             Toast.makeText(requireContext(), "Please upload a bank transfer receipt", Toast.LENGTH_SHORT).show()
             return
+        }
+
+        if (campaign.category != "Monetary Funds") {
+            if (binding.rgCondition.checkedRadioButtonId == -1) {
+                Toast.makeText(requireContext(), "Please select item condition", Toast.LENGTH_SHORT).show()
+                return
+            }
+            if (itemPhotoUri == null) {
+                Toast.makeText(requireContext(), "Please upload a photo of the item", Toast.LENGTH_SHORT).show()
+                return
+            }
+            if (binding.rgHandover.checkedRadioButtonId == -1) {
+                Toast.makeText(requireContext(), "Please select a handover method", Toast.LENGTH_SHORT).show()
+                return
+            }
+            if (binding.rgHandover.checkedRadioButtonId == com.example.giveease.R.id.rbPickup) {
+                if (binding.etPickupPhone.text.toString().trim().isEmpty() || 
+                    binding.etPickupAddress.text.toString().trim().isEmpty()) {
+                    Toast.makeText(requireContext(), "Please provide complete pickup details", Toast.LENGTH_SHORT).show()
+                    return
+                }
+            }
         }
 
         checkVerificationAndDonate(quantity)
@@ -221,8 +288,21 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
                     showLoading(false)
                     Toast.makeText(requireContext(), "Failed to upload receipt: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
+        } else if (!isMonetary && itemPhotoUri != null) {
+            // Upload item proof first
+            val photoRef = storage.reference.child("item_proofs/${UUID.randomUUID()}.jpg")
+            photoRef.putFile(itemPhotoUri!!)
+                .addOnSuccessListener {
+                    photoRef.downloadUrl.addOnSuccessListener { url ->
+                        saveDonationRecord(quantity, "Pending Verification", "In-App", url.toString())
+                    }
+                }
+                .addOnFailureListener { e ->
+                    showLoading(false)
+                    Toast.makeText(requireContext(), "Failed to upload photo: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
         } else {
-            // Non-monetary donation
+            // Fallback (should not happen due to validation)
             saveDonationRecord(quantity, "Completed", "In-App", null)
         }
     }
@@ -244,7 +324,29 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
         )
 
         if (receiptUrl != null) {
-            donationData["receiptUrl"] = receiptUrl
+            if (campaign.category == "Monetary Funds") {
+                donationData["receiptUrl"] = receiptUrl
+            } else {
+                donationData["itemPhotoUrl"] = receiptUrl
+            }
+        }
+
+        if (campaign.category != "Monetary Funds") {
+            val condition = when (binding.rgCondition.checkedRadioButtonId) {
+                com.example.giveease.R.id.rbNew -> "New"
+                com.example.giveease.R.id.rbUsed -> "Gently Used"
+                com.example.giveease.R.id.rbRepair -> "Needs Repair"
+                else -> "Unknown"
+            }
+            val handoverMethod = if (binding.rgHandover.checkedRadioButtonId == com.example.giveease.R.id.rbPickup) "Pickup" else "Drop-off"
+            
+            donationData["condition"] = condition
+            donationData["handoverMethod"] = handoverMethod
+            
+            if (handoverMethod == "Pickup") {
+                donationData["pickupPhone"] = binding.etPickupPhone.text.toString().trim()
+                donationData["pickupAddress"] = binding.etPickupAddress.text.toString().trim()
+            }
         }
 
         firestore.collection("donations")
@@ -253,7 +355,7 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
                 if (status == "Completed") {
                     updateCampaignProgress(quantity, donationRef.id)
                 } else {
-                    // For pending monetary donations, don't update campaign progress yet
+                    // For pending donations, don't update campaign progress yet
                     showLoading(false)
                     showSuccessAndDismiss(quantity, donationRef.id, isPending = true)
                 }
@@ -295,7 +397,11 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
 
         if (isAdded && context != null) {
             val successMessage = if (isPending) {
-                "Thank you! Your donation is pending NGO verification of the receipt."
+                if (campaign.category == "Monetary Funds") {
+                    "Thank you! Your donation is pending NGO verification of the receipt."
+                } else {
+                    "Thank you! Your item is submitted for NGO verification."
+                }
             } else {
                 "Thank you! Your donation of $quantity ${campaign.unit} has been recorded."
             }
