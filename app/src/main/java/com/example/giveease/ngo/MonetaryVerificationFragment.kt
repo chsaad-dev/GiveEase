@@ -1,13 +1,16 @@
 package com.example.giveease.ngo
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.giveease.databinding.FragmentMonetaryVerificationBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -41,8 +44,7 @@ class MonetaryVerificationFragment : Fragment() {
                 rejectDonation(donation)
             },
             onViewReceiptClick = { url ->
-                // Basic implementation - wait for full screen image view in the future
-                Toast.makeText(requireContext(), "Opening Receipt...", Toast.LENGTH_SHORT).show()
+                showReceiptDialog(url)
             }
         )
 
@@ -110,10 +112,12 @@ class MonetaryVerificationFragment : Fragment() {
 
                     val campaignRef = firestore.collection("campaigns").document(campaignId)
                     batch.update(campaignRef, "currentQuantity", FieldValue.increment(quantity))
+                    batch.update(campaignRef, "donorCount", FieldValue.increment(1L))
                 }.addOnSuccessListener {
-                    if (isAdded) Toast.makeText(requireContext(), "Donation verified and campaign updated!", Toast.LENGTH_SHORT).show()
-                }.addOnFailureListener {
-                    if (isAdded) Toast.makeText(requireContext(), "Verification failed", Toast.LENGTH_SHORT).show()
+                    if (isAdded) Toast.makeText(requireContext(), "Donation verified and campaign updated!", Toast.LENGTH_SHORT).show()    
+                    loadPendingVerifications() // Refresh the list
+                }.addOnFailureListener { e ->
+                    if (isAdded) Toast.makeText(requireContext(), "Verification failed: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
             .setNegativeButton("Cancel", null)
@@ -138,6 +142,30 @@ class MonetaryVerificationFragment : Fragment() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun showReceiptDialog(url: String) {
+        val imageView = ImageView(requireContext()).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            scaleType = ImageView.ScaleType.FIT_CENTER
+        }
+
+        Glide.with(this)
+            .load(url)
+            .into(imageView)
+
+        val dialog = Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog.setContentView(imageView)
+        
+        // Click to dismiss
+        imageView.setOnClickListener {
+            dialog.dismiss()
+        }
+        
+        dialog.show()
     }
 
     override fun onDestroyView() {
