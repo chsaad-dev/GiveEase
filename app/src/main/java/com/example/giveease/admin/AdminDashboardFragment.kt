@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.giveease.ui.NotificationsFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giveease.R
@@ -48,8 +49,8 @@ class AdminDashboardFragment : Fragment() {
         viewModel.totalDonors.observe(viewLifecycleOwner) { binding.tvTotalDonors.text = it }
         viewModel.pendingApprovals.observe(viewLifecycleOwner) { binding.tvPendingApprovals.text = it }
         
-        viewModel.pendingApprovalsCount.observe(viewLifecycleOwner) { count ->
-            binding.tvNotificationBadge.text = count.toString()
+        viewModel.unreadNotifications.observe(viewLifecycleOwner) { count ->
+            binding.tvNotificationBadge.text = if (count > 99) "99+" else count.toString()
             binding.tvNotificationBadge.visibility = if (count > 0) View.VISIBLE else View.GONE
         }
         
@@ -72,7 +73,10 @@ class AdminDashboardFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.btnNotifications.setOnClickListener {
-            Toast.makeText(requireContext(), "Notifications", Toast.LENGTH_SHORT).show()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, NotificationsFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.btnApproveNgos.setOnClickListener {
