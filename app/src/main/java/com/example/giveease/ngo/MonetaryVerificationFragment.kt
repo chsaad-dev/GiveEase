@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.giveease.databinding.FragmentMonetaryVerificationBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.giveease.utils.NotificationHelper
 import com.google.firebase.firestore.FieldValue
 
 class MonetaryVerificationFragment : Fragment() {
@@ -115,6 +116,17 @@ class MonetaryVerificationFragment : Fragment() {
                     batch.update(campaignRef, "donorCount", FieldValue.increment(1L))
                 }.addOnSuccessListener {
                     if (isAdded) Toast.makeText(requireContext(), "Donation verified and campaign updated!", Toast.LENGTH_SHORT).show()    
+                    
+                    val donorId = donation["donorId"] as? String ?: ""
+                    val campaignTitle = donation["campaignTitle"] as? String ?: "a campaign"
+                    NotificationHelper.sendNotification(
+                        userId = donorId,
+                        title = "Payment Verified ✅",
+                        message = "Your monetary transfer for '$campaignTitle' has been successfully verified! Thank you.",
+                        type = "donation",
+                        referenceId = campaignId
+                    )
+                    
                     loadPendingVerifications() // Refresh the list
                 }.addOnFailureListener { e ->
                     if (isAdded) Toast.makeText(requireContext(), "Verification failed: ${e.message}", Toast.LENGTH_LONG).show()
@@ -126,6 +138,7 @@ class MonetaryVerificationFragment : Fragment() {
 
     private fun rejectDonation(donation: Map<String, Any>) {
         val docId = donation["docId"] as? String ?: return
+        val campaignId = donation["campaignId"] as? String
 
         AlertDialog.Builder(requireContext())
             .setTitle("Reject Donation")
@@ -135,6 +148,16 @@ class MonetaryVerificationFragment : Fragment() {
                     .update("status", "Rejected")
                     .addOnSuccessListener {
                         if (isAdded) Toast.makeText(requireContext(), "Donation rejected", Toast.LENGTH_SHORT).show()
+
+                        val donorId = donation["donorId"] as? String ?: ""
+                        val campaignTitle = donation["campaignTitle"] as? String ?: "a campaign"
+                        NotificationHelper.sendNotification(
+                            userId = donorId,
+                            title = "Payment Rejected",
+                            message = "Your bank receipt for '$campaignTitle' could not be verified.",
+                            type = "donation",
+                            referenceId = campaignId
+                        )
                     }
                     .addOnFailureListener {
                         if (isAdded) Toast.makeText(requireContext(), "Rejection failed", Toast.LENGTH_SHORT).show()

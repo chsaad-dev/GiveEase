@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentVerificationApprovalsBinding
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.giveease.utils.NotificationHelper
 
 class VerificationApprovalsFragment : Fragment() {
 
@@ -126,6 +127,13 @@ class VerificationApprovalsFragment : Fragment() {
             .addOnSuccessListener {
                 if (!isAdded || _binding == null) return@addOnSuccessListener
 
+                NotificationHelper.sendNotification(
+                    userId = request.userId,
+                    title = "Verification Approved 🎉",
+                    message = "Congratulations ${request.name}, your account has been verified! You can now create campaigns.",
+                    type = "verification"
+                )
+
                 Toast.makeText(requireContext(), "${request.name} approved successfully", Toast.LENGTH_SHORT).show()
                 loadPendingVerifications()
             }
@@ -171,6 +179,13 @@ class VerificationApprovalsFragment : Fragment() {
             .update(updates)
             .addOnSuccessListener {
                 if (!isAdded || _binding == null) return@addOnSuccessListener
+
+                NotificationHelper.sendNotification(
+                    userId = request.userId,
+                    title = "Verification Rejected",
+                    message = "Your verification request was rejected. Reason: $reason",
+                    type = "verification"
+                )
 
                 Toast.makeText(requireContext(), "${request.name} rejected", Toast.LENGTH_SHORT).show()
                 loadPendingVerifications()

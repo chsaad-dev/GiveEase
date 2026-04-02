@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.bumptech.glide.Glide
+import android.widget.TextView
+import com.example.giveease.ui.NotificationsFragment
 
 class NgoHomeFragment : Fragment() {
 
@@ -36,6 +38,7 @@ class NgoHomeFragment : Fragment() {
         loadCampaignStats()
         loadRecentCampaign()
         setupClickListeners()
+        listenForUnreadNotifications()
     }
 
     private fun loadNgoData() {
@@ -63,6 +66,25 @@ class NgoHomeFragment : Fragment() {
             .addOnFailureListener {
                 if (!isAdded || _binding == null) return@addOnFailureListener
                 binding.tvNgoName.text = "NGO Dashboard"
+            }
+    }
+
+    private fun listenForUnreadNotifications() {
+        val userId = auth.currentUser?.uid ?: return
+        firestore.collection("users").document(userId).collection("notifications")
+            .whereEqualTo("isRead", false)
+            .addSnapshotListener { snapshots, error ->
+                if (!isAdded || _binding == null) return@addSnapshotListener
+                if (error != null) return@addSnapshotListener
+
+                val count = snapshots?.size() ?: 0
+                val badge = binding.root.findViewById<TextView>(R.id.tvNotificationBadge)
+                if (count > 0) {
+                    badge?.visibility = View.VISIBLE
+                    badge?.text = if (count > 99) "99+" else count.toString()
+                } else {
+                    badge?.visibility = View.GONE
+                }
             }
     }
 
@@ -208,6 +230,13 @@ class NgoHomeFragment : Fragment() {
 
         binding.tvViewAllCampaigns.setOnClickListener {
             navigateToFragment(MyCampaignsFragment())
+        }
+
+        binding.ivNotifications.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, NotificationsFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 
