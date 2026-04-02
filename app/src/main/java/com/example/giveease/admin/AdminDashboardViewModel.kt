@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class AdminDashboardViewModel : ViewModel() {
     private val firestore = FirebaseFirestore.getInstance()
@@ -28,6 +29,11 @@ class AdminDashboardViewModel : ViewModel() {
     private val _recentActivities = MutableLiveData<List<AdminActivity>>()
     val recentActivities: LiveData<List<AdminActivity>> = _recentActivities
 
+    private val _unreadNotifications = MutableLiveData<Int>()
+    val unreadNotifications: LiveData<Int> = _unreadNotifications
+
+    private var notificationListener: ListenerRegistration? = null
+
     private val _adminName = MutableLiveData<String>()
     val adminName: LiveData<String> = _adminName
 
@@ -45,6 +51,7 @@ class AdminDashboardViewModel : ViewModel() {
         loadPendingApprovals()
         loadActiveCampaigns()
         loadRecentActivity()
+        listenForUnreadNotifications()
         
         isDataLoaded = true
     }
@@ -108,6 +115,19 @@ class AdminDashboardViewModel : ViewModel() {
             }
             .addOnFailureListener {
                 _activeCampaigns.value = "0"
+            }
+    }
+
+    private fun listenForUnreadNotifications() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        
+        notificationListener?.remove()
+        notificationListener = firestore.collection("users")
+            .document(uid).collection("notifications")
+            .whereEqualTo("isRead", false)
+            .addSnapshotListener { snapshots, error ->
+                if (error != null) return@addSnapshotListener
+                _unreadNotifications.value = snapshots?.size() ?: 0
             }
     }
 
@@ -208,5 +228,10 @@ class AdminDashboardViewModel : ViewModel() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         isDataLoaded = false
         loadData(uid)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        notificationListener?.remove()
     }
 }
