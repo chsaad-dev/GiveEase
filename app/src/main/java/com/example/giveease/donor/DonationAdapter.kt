@@ -40,19 +40,21 @@ class DonationAdapter(
                 tvCategory.text = donation.category
                 tvDonationDate.text = formatDate(donation.createdAt)
 
-                when (donation.status.lowercase()) {
-                    "completed" -> {
+                val currentStatus = donation.status.lowercase()
+                when {
+                    currentStatus == "completed" -> {
                         tvStatus.text = "Completed"
                         tvStatus.setBackgroundResource(R.drawable.status_completed_bg)
                         statusIndicator.setBackgroundColor(ContextCompat.getColor(itemView.context, android.R.color.holo_green_dark))
                     }
-                    "pending" -> {
-                        tvStatus.text = "Pending"
+                    currentStatus.contains("pending") -> {
+                        // Dynamically use the precise status string (e.g. "Pending Verification") but proper caps
+                        tvStatus.text = donation.status 
                         tvStatus.setBackgroundResource(R.drawable.status_pending_bg)
                         statusIndicator.setBackgroundColor(ContextCompat.getColor(itemView.context, android.R.color.holo_orange_dark))
                     }
-                    "failed" -> {
-                        tvStatus.text = "Failed"
+                    currentStatus == "failed" || currentStatus == "rejected" -> {
+                        tvStatus.text = donation.status // Shows Failed or Rejected
                         tvStatus.setBackgroundResource(R.drawable.status_failed_bg)
                         statusIndicator.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.error))
                     }

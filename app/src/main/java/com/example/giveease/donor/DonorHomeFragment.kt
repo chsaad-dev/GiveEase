@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import android.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.example.giveease.verification.IdentityVerificationFragment
+import com.example.giveease.ui.NotificationsFragment
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -35,6 +36,7 @@ class DonorHomeFragment : Fragment() {
         loadDonationStats()
         loadFeaturedCampaign()
         loadRecentActivity()
+        listenForUnreadNotifications()
 
         return binding.root
     }
@@ -56,6 +58,25 @@ class DonorHomeFragment : Fragment() {
             .addOnFailureListener {
                 if (!isAdded || _binding == null) return@addOnFailureListener
                 binding.tvUserName.text = auth.currentUser?.displayName ?: "User"
+            }
+    }
+
+    private fun listenForUnreadNotifications() {
+        val userId = auth.currentUser?.uid ?: return
+        firestore.collection("users").document(userId).collection("notifications")
+            .whereEqualTo("isRead", false)
+            .addSnapshotListener { snapshots, error ->
+                if (!isAdded || _binding == null) return@addSnapshotListener
+                if (error != null) return@addSnapshotListener
+
+                val count = snapshots?.size() ?: 0
+                val badge = binding.root.findViewById<TextView>(R.id.tvNotificationBadge)
+                if (count > 0) {
+                    badge?.visibility = View.VISIBLE
+                    badge?.text = if (count > 99) "99+" else count.toString()
+                } else {
+                    badge?.visibility = View.GONE
+                }
             }
     }
 
@@ -303,9 +324,11 @@ class DonorHomeFragment : Fragment() {
     }
 
     private fun navigateToNotifications() {
-        context?.let {
-            Toast.makeText(it, "Notifications coming soon", Toast.LENGTH_SHORT).show()
-        }
+        if (!isAdded) return
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_donor, NotificationsFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun navigateToCampaignDetail(campaignId: String) {
