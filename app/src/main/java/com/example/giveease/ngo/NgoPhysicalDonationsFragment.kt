@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.example.giveease.utils.NotificationHelper
 
 class NgoPhysicalDonationsFragment : Fragment() {
 
@@ -136,6 +137,17 @@ class NgoPhysicalDonationsFragment : Fragment() {
                     .update("status", Mode.LOGISTICS.statusTarget)
                     .addOnSuccessListener {
                         if (isAdded) Toast.makeText(requireContext(), "Moved to Logistics Queue!", Toast.LENGTH_SHORT).show()
+                        
+                        val donorId = donation["donorId"] as? String ?: ""
+                        val campaignTitle = donation["campaignTitle"] as? String ?: "a campaign"
+                        NotificationHelper.sendNotification(
+                            userId = donorId,
+                            title = "Physical Items Approved ✅",
+                            message = "Your items for '$campaignTitle' have been approved! Please proceed with the handover.",
+                            type = "logistics",
+                            referenceId = donation["campaignId"] as? String
+                        )
+                        
                         loadData()
                     }
                     .addOnFailureListener { e ->
@@ -157,6 +169,17 @@ class NgoPhysicalDonationsFragment : Fragment() {
                     .update("status", "Rejected")
                     .addOnSuccessListener {
                         if (isAdded) Toast.makeText(requireContext(), "Donation rejected", Toast.LENGTH_SHORT).show()
+                        
+                        val donorId = donation["donorId"] as? String ?: ""
+                        val campaignTitle = donation["campaignTitle"] as? String ?: "a campaign"
+                        NotificationHelper.sendNotification(
+                            userId = donorId,
+                            title = "Physical Items Rejected",
+                            message = "Your offered items for '$campaignTitle' were not accepted by the NGO.",
+                            type = "logistics",
+                            referenceId = donation["campaignId"] as? String
+                        )
+                        
                         loadData()
                     }
                     .addOnFailureListener { e ->
@@ -185,6 +208,17 @@ class NgoPhysicalDonationsFragment : Fragment() {
                     batch.update(campaignRef, "donorCount", FieldValue.increment(1L))
                 }.addOnSuccessListener {
                     if (isAdded) Toast.makeText(requireContext(), "Items received! Campaign updated.", Toast.LENGTH_SHORT).show()
+                    
+                    val donorId = donation["donorId"] as? String ?: ""
+                    val campaignTitle = donation["campaignTitle"] as? String ?: "a campaign"
+                    NotificationHelper.sendNotification(
+                        userId = donorId,
+                        title = "Items Received! 📦",
+                        message = "The NGO has safely received your items for '$campaignTitle'. Thank you for your generosity!",
+                        type = "logistics",
+                        referenceId = campaignId
+                    )
+                    
                     loadData()
                 }.addOnFailureListener { e ->
                     if (isAdded) Toast.makeText(requireContext(), "Update failed: ${e.message}", Toast.LENGTH_LONG).show()
