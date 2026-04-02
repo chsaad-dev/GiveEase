@@ -110,7 +110,7 @@ class DonationHistoryFragment : Fragment() {
     private fun applyFilter() {
         val filtered = when (currentFilter) {
             "completed" -> allDonations.filter { it.status.lowercase() == "completed" }
-            "pending" -> allDonations.filter { it.status.lowercase() == "pending" }
+            "pending" -> allDonations.filter { it.status.lowercase().contains("pending") }
             else -> allDonations
         }
 

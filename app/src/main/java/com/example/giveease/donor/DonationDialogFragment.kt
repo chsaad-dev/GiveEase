@@ -13,6 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.giveease.utils.NotificationHelper
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
@@ -355,6 +356,15 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
                 if (status == "Completed") {
                     updateCampaignProgress(quantity, donationRef.id)
                 } else {
+                    // Send notification to NGO
+                    NotificationHelper.sendNotification(
+                        userId = campaign.ngoId,
+                        title = "New Donation Received! 🎉",
+                        message = "$donorName wants to donate $quantity ${campaign.unit} to '${campaign.title}'. Please verify.",
+                        type = "donation",
+                        referenceId = campaign.id
+                    )
+
                     // For pending donations, don't update campaign progress yet
                     showLoading(false)
                     showSuccessAndDismiss(quantity, donationRef.id, isPending = true)
