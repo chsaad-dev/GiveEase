@@ -135,7 +135,7 @@
                             android:id="@+id/tvNgoName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Your NGO"
+                            android:text="NGO"
                             android:textSize="24sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/white" />
