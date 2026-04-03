@@ -14,6 +14,7 @@ data class AdminCampaign(
     val id: String = "",
     val title: String = "",
     val ngoName: String = "",
+    val ngoId: String = "",
     val status: String = "Active",
     val category: String = "",
     val urgencyLevel: String = "",
