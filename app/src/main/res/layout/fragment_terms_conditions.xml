@@ -75,7 +75,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Last updated: 01 October 2025"
+                    android:text="Last updated: 03 April 2026"
                     android:textSize="14sp"
                     android:textColor="@android:color/holo_green_dark"
                     android:textStyle="bold"
@@ -133,6 +133,39 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="Verification &amp; Security"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/secondary"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="To ensure community safety, all NGOs and Donors must undergo mandatory identity verification by submitting legitimate government-issued documents. Accounts failing verification or found submitting fraudulent documents will be permanently banned."
+                        android:textSize="14sp"
+                        android:textColor="#333333"
+                        android:lineSpacingExtra="4dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="Platform Usage Rules"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -142,7 +175,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="• Provide accurate and truthful information\n• Use the platform only for legitimate charitable purposes\n• Respect other users and maintain appropriate conduct\n• Do not misuse or exploit platform features\n• Report suspicious or fraudulent activities\n• Maintain confidentiality of your account credentials"
+                        android:text="• Provide accurate and truthful information\n• Do not use in-app messaging to spam, harass, or solicit off-platform transactions\n• Respect other users and maintain appropriate conduct\n• Report suspicious or fraudulent activities\n• Maintain confidentiality of your account credentials"
                         android:textSize="14sp"
                         android:textColor="#333333"
                         android:lineSpacingExtra="4dp" />
@@ -175,7 +208,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="• All donations are voluntary and non-refundable\n• Donors are responsible for verifying NGO authenticity\n• GiveEase facilitates connections but doesn't guarantee outcomes\n• Tax receipts are provided by receiving NGOs, not GiveEase\n• Minimum donation amounts may apply\n• Payment processing fees may be deducted from donations"
+                        android:text="• All donations are voluntary and non-refundable\n• GiveEase tracks financial goals but supports direct, physical drops (food, clothing) offline\n• Users coordinating physical drop-offs must prioritize personal safety and adhere to local guidelines\n• Tax receipts are provided by receiving verified NGOs, not GiveEase\n• Payment processing fees may be deducted from monetary donations"
                         android:textSize="14sp"
                         android:textColor="#333333"
                         android:lineSpacingExtra="4dp" />
@@ -208,7 +241,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="GiveEase serves as an intermediary platform connecting donors with NGOs. We do not guarantee the authenticity, legitimacy, or outcomes of any charitable organizations or campaigns listed on our platform. Users engage with NGOs at their own discretion and risk."
+                        android:text="While GiveEase enforces rigorous identity verification through government-approved documents, we serve only as an intermediary platform connecting donors with NGOs. We cannot fully encompass or guarantee every real-world action taken by users. Users engage in online and physical donations at their own discretion and risk."
                         android:textSize="14sp"
                         android:textColor="#333333"
                         android:lineSpacingExtra="4dp" />

@@ -75,7 +75,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Last updated: 01 October 2025"
+                    android:text="Last updated: 03 April 2026"
                     android:textSize="14sp"
                     android:textColor="@android:color/holo_green_dark"
                     android:textStyle="bold"
@@ -130,88 +130,88 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Information We Collect"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/secondary"
-                        android:layout_marginBottom="12dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Information We Collect"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/secondary"
+                            android:layout_marginBottom="12dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="• Personal Information: Name, email address, phone number\n• Donation History: Records of your charitable contributions\n• Profile Data: Preferences, settings, and account information\n• Usage Data: How you interact with our app features\n• Device Information: Device type, operating system, app version"
-                        android:textSize="14sp"
-                        android:textColor="#333333"
-                        android:lineSpacingExtra="4dp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Personal Information: Name, email address, phone number\n• Identity Verification: Government-issued IDs or NGO registration documents\n• Donation History: Records of your charitable contributions\n• Profile Data: Preferences, settings, and account information\n• Usage Data: How you interact with our app features\n• Device Information: Device type, operating system, app version"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@android:color/white">
-
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@android:color/white">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="How We Use Your Information"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/secondary"
-                        android:layout_marginBottom="12dp" />
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="• Facilitate donations and connect donors with NGOs\n• Process and track your charitable contributions\n• Send notifications about donation updates\n• Improve our platform and user experience\n• Provide customer support and assistance\n• Comply with legal requirements and regulations"
-                        android:textSize="14sp"
-                        android:textColor="#333333"
-                        android:lineSpacingExtra="4dp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@android:color/white">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="How We Use Your Information"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/secondary"
+                            android:layout_marginBottom="12dp" />
 
-                <LinearLayout
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Verify user identity to ensure a secure giving ecosystem\n• Facilitate donations and connect donors with NGOs\n• Process and track your physical and monetary contributions\n• Send notifications about donation updates\n• Improve our platform and user experience\n• Comply with legal requirements and regulations"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@android:color/white">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Data Security"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/secondary"
-                        android:layout_marginBottom="12dp" />
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="We implement Industry-Standard Security measures to Protect Your Personal Information:\n\n• Encrypted data transmission using SSL/TLS\n• Secure cloud storage with Firebase\n• Regular security audits and updates\n• Limited access to personal data by staff\n• Two-factor authentication options"
-                        android:textSize="14sp"
-                        android:textColor="#333333"
-                        android:lineSpacingExtra="4dp" />
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Data Security"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/secondary"
+                            android:layout_marginBottom="12dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="We implement Industry-Standard Security measures to Protect Your Personal Information:\n\n• Identity Verification documents are exclusively processed and reviewed by authorized administrators\n• Encrypted data transmission using SSL/TLS\n• Secure cloud storage with Firebase\n• Regular security audits and updates\n• Limited access to personal data by staff\n• Two-factor authentication options"
+                            android:textSize="14sp"
+                            android:textColor="#333333"
+                            android:lineSpacingExtra="4dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
