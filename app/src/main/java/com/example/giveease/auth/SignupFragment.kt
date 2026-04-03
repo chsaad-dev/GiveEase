@@ -191,13 +191,17 @@ class SignupFragment : Fragment() {
         }
 
         binding.tvTermsLink.setOnClickListener {
-            Toast.makeText(requireContext(), "Terms & Conditions", Toast.LENGTH_SHORT).show()
-            // TODO: Navigate to terms screen
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, com.example.giveease.donor.TermsConditionsFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.tvPrivacyLink.setOnClickListener {
-            Toast.makeText(requireContext(), "Privacy Policy", Toast.LENGTH_SHORT).show()
-            // TODO: Navigate to privacy screen
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, com.example.giveease.donor.PrivacyPolicyFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.btnGoogleSignup.setOnClickListener {
