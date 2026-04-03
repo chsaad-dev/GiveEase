@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giveease.databinding.FragmentAdminCampaignReviewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.giveease.utils.NotificationHelper
 
 class AdminCampaignReviewFragment : Fragment() {
 
@@ -82,6 +83,7 @@ class AdminCampaignReviewFragment : Fragment() {
                         id = doc.id,
                         title = doc.getString("title") ?: "",
                         ngoName = doc.getString("ngoName") ?: "",
+                        ngoId = doc.getString("ngoId") ?: "",
                         status = doc.getString("status") ?: "Active",
                         category = doc.getString("category") ?: "",
                         urgencyLevel = doc.getString("urgencyLevel") ?: "",
@@ -200,6 +202,22 @@ class AdminCampaignReviewFragment : Fragment() {
                 val actionType = if (newStatus == "Deactivated") "deactivate_campaign" else "reactivate_campaign"
                 AdminLogger.logAction(actionType, "Update Campaign Status", "Admin $actionText campaign \"${campaign.title}\" by ${campaign.ngoName}")
                 
+                if (campaign.ngoId.isNotEmpty()) {
+                    val notifTitle = if (newStatus == "Deactivated") "Campaign Deactivated ⚠️" else "Campaign Reactivated ✅"
+                    val notifMessage = if (newStatus == "Deactivated") {
+                        "Your campaign '${campaign.title}' has been hidden from public view by an admin. Please contact support."
+                    } else {
+                        "Good news! Your campaign '${campaign.title}' has been reactivated and is visible to donors again."
+                    }
+                    NotificationHelper.sendNotification(
+                        userId = campaign.ngoId,
+                        title = notifTitle,
+                        message = notifMessage,
+                        type = "campaign",
+                        referenceId = campaign.id
+                    )
+                }
+
                 loadCampaigns()
             }
             .addOnFailureListener { e ->

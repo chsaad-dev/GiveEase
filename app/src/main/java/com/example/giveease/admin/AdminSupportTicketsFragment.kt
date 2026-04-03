@@ -13,6 +13,7 @@ import com.example.giveease.databinding.FragmentAdminSupportTicketsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.example.giveease.utils.NotificationHelper
 
 class AdminSupportTicketsFragment : Fragment() {
 
@@ -173,6 +174,15 @@ class AdminSupportTicketsFragment : Fragment() {
                 if (!isAdded || _binding == null) return@addOnSuccessListener
                 Toast.makeText(requireContext(), "Ticket marked as resolved", Toast.LENGTH_SHORT).show()
                 AdminLogger.logAction("resolve_ticket", "Ticket Resolved", "Admin resolved ticket from ${ticket.userEmail}")
+                
+                NotificationHelper.sendNotification(
+                    userId = ticket.userId,
+                    title = "Support Ticket Resolved ✅",
+                    message = "Your support ticket '${ticket.subject}' has been marked as resolved by our team.",
+                    type = "support",
+                    referenceId = ticket.id
+                )
+                
                 loadTickets()
             }
             .addOnFailureListener {
@@ -186,6 +196,15 @@ class AdminSupportTicketsFragment : Fragment() {
             .addOnSuccessListener {
                 if (!isAdded || _binding == null) return@addOnSuccessListener
                 Toast.makeText(requireContext(), "Ticket opened", Toast.LENGTH_SHORT).show()
+                
+                NotificationHelper.sendNotification(
+                    userId = ticket.userId,
+                    title = "Support Ticket Reopened 🔄",
+                    message = "Your support ticket '${ticket.subject}' has been reopened by an admin.",
+                    type = "support",
+                    referenceId = ticket.id
+                )
+                
                 loadTickets()
             }
             .addOnFailureListener {
