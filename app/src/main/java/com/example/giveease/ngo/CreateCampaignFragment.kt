@@ -18,6 +18,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import android.app.AlertDialog
+import com.example.giveease.utils.NotificationHelper
 import com.example.giveease.verification.IdentityVerificationFragment
 import java.text.SimpleDateFormat
 import java.util.*
@@ -416,8 +417,17 @@ class CreateCampaignFragment : Fragment() {
 
         firestore.collection("campaigns")
             .add(campaignMap)
-            .addOnSuccessListener {
+            .addOnSuccessListener { documentReference ->
                 showLoading(false)
+                
+                NotificationHelper.sendNotification(
+                    userId = campaignData.ngoId,
+                    title = "Campaign Published 🚀",
+                    message = "Your campaign '${campaignData.title}' is now live and visible to donors!",
+                    type = "campaign",
+                    referenceId = documentReference.id
+                )
+                
                 showToast("Campaign created successfully!")
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }

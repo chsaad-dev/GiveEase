@@ -127,6 +127,23 @@ class MonetaryVerificationFragment : Fragment() {
                         referenceId = campaignId
                     )
                     
+                    // Goal check!
+                    firestore.collection("campaigns").document(campaignId).get()
+                        .addOnSuccessListener { doc ->
+                            val current = doc.getLong("currentQuantity") ?: 0L
+                            val target = doc.getLong("targetQuantity") ?: 0L
+                            val ngoId = doc.getString("ngoId") ?: ""
+                            if (current >= target && target > 0) {
+                                NotificationHelper.sendNotification(
+                                    userId = ngoId,
+                                    title = "Goal Reached! 🌟",
+                                    message = "Congratulations! Your campaign '$campaignTitle' has reached 100% of its target goal.",
+                                    type = "campaign",
+                                    referenceId = campaignId
+                                )
+                            }
+                        }
+                    
                     loadPendingVerifications() // Refresh the list
                 }.addOnFailureListener { e ->
                     if (isAdded) Toast.makeText(requireContext(), "Verification failed: ${e.message}", Toast.LENGTH_LONG).show()

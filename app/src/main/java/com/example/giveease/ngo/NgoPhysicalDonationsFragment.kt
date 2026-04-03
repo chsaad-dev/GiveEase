@@ -219,6 +219,23 @@ class NgoPhysicalDonationsFragment : Fragment() {
                         referenceId = campaignId
                     )
                     
+                    // Goal check!
+                    firestore.collection("campaigns").document(campaignId).get()
+                        .addOnSuccessListener { doc ->
+                            val current = doc.getLong("currentQuantity") ?: 0L
+                            val target = doc.getLong("targetQuantity") ?: 0L
+                            val ngoId = doc.getString("ngoId") ?: ""
+                            if (current >= target && target > 0) {
+                                NotificationHelper.sendNotification(
+                                    userId = ngoId,
+                                    title = "Goal Reached! 🌟",
+                                    message = "Congratulations! Your physical campaign '$campaignTitle' has reached 100% of its target goal.",
+                                    type = "campaign",
+                                    referenceId = campaignId
+                                )
+                            }
+                        }
+                    
                     loadData()
                 }.addOnFailureListener { e ->
                     if (isAdded) Toast.makeText(requireContext(), "Update failed: ${e.message}", Toast.LENGTH_LONG).show()

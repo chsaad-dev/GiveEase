@@ -54,14 +54,17 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabIndicator"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="14dp"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="8dp"
+                    android:background="@android:color/transparent"
                     app:tabBackground="@drawable/tab_selector"
                     app:tabGravity="center"
                     app:tabIndicatorHeight="0dp"
-                    app:tabPaddingStart="4dp"
-                    app:tabPaddingEnd="4dp" />
+                    app:tabMaxWidth="14dp"
+                    app:tabMinWidth="14dp"
+                    app:tabPaddingStart="0dp"
+                    app:tabPaddingEnd="0dp" />
             </FrameLayout>
 
             <!-- Header Buttons -->

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giveease.databinding.FragmentManageUsersBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.giveease.utils.NotificationHelper
 
 class ManageUsersFragment : Fragment() {
 
@@ -208,6 +209,14 @@ class ManageUsersFragment : Fragment() {
                 if (!isAdded || _binding == null) return@addOnSuccessListener
                 Toast.makeText(requireContext(), "${user.name} approved", Toast.LENGTH_SHORT).show()
                 AdminLogger.logAction("approve_user", "Approve User", "Admin approved ${user.name} (${user.role})")
+                
+                NotificationHelper.sendNotification(
+                    userId = user.userId,
+                    title = "Account Approved 🎉",
+                    message = "Congratulations ${user.name}! Your account has been reviewed and officially verified by an admin.",
+                    type = "verification"
+                )
+                
                 loadUsers()
             }
             .addOnFailureListener { e ->
@@ -228,6 +237,14 @@ class ManageUsersFragment : Fragment() {
                 if (!isAdded || _binding == null) return@addOnSuccessListener
                 Toast.makeText(requireContext(), "${user.name} rejected", Toast.LENGTH_SHORT).show()
                 AdminLogger.logAction("reject_user", "Reject User", "Admin rejected ${user.name} (${user.role})")
+                
+                NotificationHelper.sendNotification(
+                    userId = user.userId,
+                    title = "Account Rejected ❌",
+                    message = "Your verification request has been rejected by an admin. Please contact support for more details.",
+                    type = "verification"
+                )
+                
                 loadUsers()
             }
             .addOnFailureListener { e ->
@@ -252,6 +269,14 @@ class ManageUsersFragment : Fragment() {
                         if (!isAdded || _binding == null) return@addOnSuccessListener
                         Toast.makeText(requireContext(), "Verification revoked", Toast.LENGTH_SHORT).show()
                         AdminLogger.logAction("revoke_user", "Revoke Verification", "Admin revoked verification for ${user.name} (${user.role})")
+                        
+                        NotificationHelper.sendNotification(
+                            userId = user.userId,
+                            title = "Verification Revoked ⚠️",
+                            message = "Your account verification has been revoked by an admin. You will need to submit a new request.",
+                            type = "verification"
+                        )
+                        
                         loadUsers()
                     }
                     .addOnFailureListener { e ->
