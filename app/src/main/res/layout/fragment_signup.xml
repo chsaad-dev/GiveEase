@@ -236,11 +236,11 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
 
-                        <CheckBox
+                        <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/cbAgree"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:buttonTint="@color/secondary" />
+                            app:buttonTint="@color/secondary" />
 
                         <TextView
                             android:layout_width="wrap_content"
