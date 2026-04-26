@@ -57,4 +57,19 @@
     <color name="card_background">#FFFFFF</color>
     <color name="background_light">#F5F7FA</color>
 
+    <!-- Impact Dashboard Colors -->
+    <color name="impact_gold">#FFB300</color>
+    <color name="impact_gold_light">#FFF8E1</color>
+    <color name="impact_bronze">#8D6E63</color>
+    <color name="impact_silver">#90A4AE</color>
+    <color name="impact_platinum">#7C4DFF</color>
+    <color name="blood_red">#E53935</color>
+    <color name="blood_red_light">#FFEBEE</color>
+    <color name="items_teal">#00897B</color>
+    <color name="items_teal_light">#E0F2F1</color>
+    <color name="badges_amber_light">#FFF8E1</color>
+    <color name="ngo_blue_light">#E3F2FD</color>
+    <color name="progress_track">#E8E8E8</color>
+    <color name="score_bg">#F0F7FF</color>
+
 </resources>

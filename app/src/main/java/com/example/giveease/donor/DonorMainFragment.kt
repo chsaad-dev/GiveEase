@@ -75,6 +75,12 @@ class DonorMainFragment : Fragment() {
         }
 
         bottomNav.setOnItemSelectedListener { item ->
+            // Pop any overlaid fragments (ImpactDashboard, DonationHistory, etc.)
+            // so the original tab fragments are restored before switching
+            if (childFragmentManager.backStackEntryCount > 0) {
+                childFragmentManager.popBackStackImmediate(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            }
+
             val targetFragment = when (item.itemId) {
                 R.id.nav_home -> homeFragment
                 R.id.nav_feed -> feedFragment
