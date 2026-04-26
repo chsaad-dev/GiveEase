@@ -22,6 +22,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
+import com.bumptech.glide.Glide
 
 class CampaignDetailsFragment : Fragment() {
 
@@ -157,6 +158,22 @@ class CampaignDetailsFragment : Fragment() {
             tvCategory.text = campaign.category.ifEmpty { "General" }
             tvDescription.text = campaign.description.ifEmpty { "No description available" }
 
+            // Fetch and load NGO profile picture
+            firestore.collection("users").document(campaign.ngoId).get()
+                .addOnSuccessListener { document ->
+                    if (_binding != null) {
+                        val profileImageUrl = document.getString("profileImageUrl")
+                        if (!profileImageUrl.isNullOrEmpty()) {
+                            binding.ivNgoProfile.imageTintList = null
+                            Glide.with(this@CampaignDetailsFragment)
+                                .load(profileImageUrl)
+                                .placeholder(R.drawable.ic_organization)
+                                .circleCrop()
+                                .into(binding.ivNgoProfile)
+                        }
+                    }
+                }
+
             // Urgency Badge
             val urgency = campaign.urgencyLevel?.takeIf { it.isNotEmpty() } ?: "Low"
             tvUrgencyBadge.text = urgency
@@ -213,6 +230,13 @@ class CampaignDetailsFragment : Fragment() {
 
             btnDonate.setOnClickListener {
                 handleDonate()
+            }
+            
+            layoutNgoProfile.setOnClickListener {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container_donor, NgoPublicProfileFragment.newInstance(campaign.ngoId))
+                    .addToBackStack(null)
+                    .commit()
             }
             
             setupChatButton(campaign)
