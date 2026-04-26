@@ -281,30 +281,57 @@ class CampaignDetailsFragment : Fragment() {
                 .addOnSuccessListener { document ->
                     binding.progressBar.visibility = View.GONE
                     val donorName = document.getString("name")?.takeIf { it.isNotEmpty() } ?: UserManager.getUserName(requireContext())
-                    val donorImage = ""
+                    val donorImage = document.getString("profileImageUrl") ?: ""
                     
                     val ngoName = campaign.ngoName.ifEmpty { "NGO" }
-                    val ngoImage = ""
 
                     // Force cache the name so ChatDetailFragment can use it locally
                     UserManager.saveUser(requireContext(), currentUserId, "donor", donorName)
 
-                    ChatHelper.openChatFromCampaign(
-                        campaignId = campaign.id,
-                        campaignName = campaign.title,
-                        ngoId = campaign.ngoId,
-                        ngoName = ngoName,
-                        ngoImage = ngoImage,
-                        currentDonorId = currentUserId,
-                        currentDonorName = donorName,
-                        currentDonorImage = donorImage,
-                        onChatRoomCreated = { chatRoomId ->
-                            openChatDetail(chatRoomId, campaign.ngoId, ngoName, ngoImage, campaign.title)
-                        },
-                        onError = {
-                            Toast.makeText(requireContext(), "Failed to start chat", Toast.LENGTH_SHORT).show()
+                    // Fetch NGO profile image before creating chat
+                    firestore.collection("users").document(campaign.ngoId).get()
+                        .addOnSuccessListener { ngoDoc ->
+                            if (_binding == null) return@addOnSuccessListener
+                            val ngoImage = ngoDoc.getString("profileImageUrl") ?: ""
+
+                            ChatHelper.openChatFromCampaign(
+                                campaignId = campaign.id,
+                                campaignName = campaign.title,
+                                campaignImage = campaign.imageUrls.firstOrNull() ?: "",
+                                ngoId = campaign.ngoId,
+                                ngoName = ngoName,
+                                ngoImage = ngoImage,
+                                currentDonorId = currentUserId,
+                                currentDonorName = donorName,
+                                currentDonorImage = donorImage,
+                                onChatRoomCreated = { chatRoomId ->
+                                    openChatDetail(chatRoomId, campaign.ngoId, ngoName, ngoImage, campaign.title, campaign.id, campaign.imageUrls.firstOrNull() ?: "")
+                                },
+                                onError = {
+                                    Toast.makeText(requireContext(), "Failed to start chat", Toast.LENGTH_SHORT).show()
+                                }
+                            )
                         }
-                    )
+                        .addOnFailureListener {
+                            // Fallback: open chat without NGO image
+                            ChatHelper.openChatFromCampaign(
+                                campaignId = campaign.id,
+                                campaignName = campaign.title,
+                                campaignImage = campaign.imageUrls.firstOrNull() ?: "",
+                                ngoId = campaign.ngoId,
+                                ngoName = ngoName,
+                                ngoImage = "",
+                                currentDonorId = currentUserId,
+                                currentDonorName = donorName,
+                                currentDonorImage = donorImage,
+                                onChatRoomCreated = { chatRoomId ->
+                                    openChatDetail(chatRoomId, campaign.ngoId, ngoName, "", campaign.title, campaign.id, campaign.imageUrls.firstOrNull() ?: "")
+                                },
+                                onError = {
+                                    Toast.makeText(requireContext(), "Failed to start chat", Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                        }
                 }
                 .addOnFailureListener {
                     binding.progressBar.visibility = View.GONE
@@ -318,7 +345,9 @@ class CampaignDetailsFragment : Fragment() {
         ngoId: String,
         ngoName: String,
         ngoImage: String,
-        campaignName: String
+        campaignName: String,
+        campaignId: String,
+        campaignImage: String
     ) {
         val fragment = ChatDetailFragment().apply {
             arguments = Bundle().apply {
@@ -327,6 +356,8 @@ class CampaignDetailsFragment : Fragment() {
                 putString("otherUserName", ngoName)
                 putString("otherUserImage", ngoImage)
                 putString("campaignName", campaignName)
+                putString("campaignId", campaignId)
+                putString("campaignImage", campaignImage)
                 putBoolean("isDonor", true)
             }
         }

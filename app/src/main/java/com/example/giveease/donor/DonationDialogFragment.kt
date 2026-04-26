@@ -109,7 +109,7 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
         firestore.collection("users").document(campaign.ngoId).get()
             .addOnSuccessListener { document ->
                 if (!isAdded || _binding == null) return@addOnSuccessListener
-                ngoHeadquarterAddress = document.getString("headQuarterAddress") ?: "Address not provided by NGO."
+                ngoHeadquarterAddress = document.getString("headquarters") ?: "Address not provided by NGO."
                 binding.tvNgoDropoffAddress.text = "NGO Address:\n$ngoHeadquarterAddress"
             }
     }

@@ -102,18 +102,31 @@ class DonorChatFragment : Fragment() {
     }
 
     private fun filterChats(query: String) {
-        val filtered = if (query.isEmpty()) {
-            allChats
+        if (query.isEmpty()) {
+            chatAdapter.submitList(allChats.toList())
+            binding.emptyState.visibility = if (allChats.isEmpty()) View.VISIBLE else View.GONE
+            binding.recyclerViewChats.visibility = if (allChats.isEmpty()) View.GONE else View.VISIBLE
         } else {
-            allChats.filter {
+            val filtered = allChats.filter {
                 it.ngoName.contains(query, ignoreCase = true) ||
                         it.campaignName.contains(query, ignoreCase = true) ||
                         it.lastMessage.contains(query, ignoreCase = true)
             }
-        }
 
-        chatAdapter.submitList(filtered)
-        binding.emptyState.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
+            chatAdapter.submitList(filtered.toList())
+            
+            if (filtered.isEmpty()) {
+                binding.emptyState.visibility = View.VISIBLE
+                binding.recyclerViewChats.visibility = View.GONE
+                // Update the empty state text for search
+                val emptyText = binding.emptyState.findViewById<android.widget.TextView>(
+                    binding.emptyState.getChildAt(1)?.id ?: 0
+                )
+            } else {
+                binding.emptyState.visibility = View.GONE
+                binding.recyclerViewChats.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun updateUI() {
@@ -129,12 +142,14 @@ class DonorChatFragment : Fragment() {
                 putString("otherUserName", chatRoom.ngoName)
                 putString("otherUserImage", chatRoom.ngoImage)
                 putString("campaignName", chatRoom.campaignName)
+                putString("campaignId", chatRoom.campaignId)
+                putString("campaignImage", chatRoom.campaignImage)
                 putBoolean("isDonor", true)
             }
         }
 
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_donor, fragment)
             .addToBackStack(null)
             .commit()
     }

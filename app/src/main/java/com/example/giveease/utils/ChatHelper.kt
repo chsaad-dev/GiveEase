@@ -9,6 +9,7 @@ object ChatHelper {
     fun openChatFromCampaign(
         campaignId: String,
         campaignName: String,
+        campaignImage: String,
         ngoId: String,
         ngoName: String,
         ngoImage: String,
@@ -19,7 +20,7 @@ object ChatHelper {
         onError: () -> Unit
     ) {
         val firestore = FirebaseFirestore.getInstance()
-        val suggestedChatId = "chat_${currentDonorId}_${ngoId}"
+        val suggestedChatId = "chat_${campaignId}_${currentDonorId}"
 
         firestore.collection("chats")
             .document(suggestedChatId)
@@ -38,6 +39,7 @@ object ChatHelper {
                         ngoImage = ngoImage,
                         campaignId = campaignId,
                         campaignName = campaignName,
+                        campaignImage = campaignImage,
                         lastMessage = "",
                         lastMessageSenderId = "",
                         lastMessageTime = Timestamp.now(),
