@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giveease.R
 import com.example.giveease.adapter.ChatAdapter
 import com.example.giveease.databinding.FragmentNgoChatBinding
-import com.example.giveease.donor.ChatDetailFragment
 import com.example.giveease.model.ChatRoom
 import com.example.giveease.utils.UserManager
 import com.google.firebase.firestore.FirebaseFirestore
@@ -127,19 +126,21 @@ class NgoChatFragment : Fragment() {
     }
 
     private fun openChatDetail(chatRoom: ChatRoom) {
-        val fragment = ChatDetailFragment().apply {
+        val fragment = com.example.giveease.donor.ChatDetailFragment().apply {
             arguments = Bundle().apply {
                 putString("chatRoomId", chatRoom.id)
                 putString("otherUserId", chatRoom.donorId)
                 putString("otherUserName", chatRoom.donorName)
                 putString("otherUserImage", chatRoom.donorImage)
                 putString("campaignName", chatRoom.campaignName)
+                putString("campaignId", chatRoom.campaignId)
+                putString("campaignImage", chatRoom.campaignImage)
                 putBoolean("isDonor", false)
             }
         }
 
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
             .addToBackStack(null)
             .commit()
     }

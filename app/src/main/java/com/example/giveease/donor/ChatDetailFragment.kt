@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.WindowManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import com.example.giveease.ngo.CampaignData
 import java.util.*
 
 class ChatDetailFragment : Fragment() {
@@ -48,6 +50,8 @@ class ChatDetailFragment : Fragment() {
     private lateinit var otherUserName: String
     private var otherUserImage: String = ""
     private var campaignName: String = ""
+    private var campaignId: String = ""
+    private var campaignImage: String = ""
     private var isDonor: Boolean = true
 
     private var selectedImageUri: Uri? = null
@@ -69,6 +73,8 @@ class ChatDetailFragment : Fragment() {
             otherUserName = it.getString("otherUserName") ?: ""
             otherUserImage = it.getString("otherUserImage") ?: ""
             campaignName = it.getString("campaignName") ?: ""
+            campaignId = it.getString("campaignId") ?: ""
+            campaignImage = it.getString("campaignImage") ?: ""
             isDonor = it.getBoolean("isDonor", true)
         }
     }
@@ -93,13 +99,6 @@ class ChatDetailFragment : Fragment() {
         setupRecyclerView()
         setupListeners()
 
-        // Handle navigation bar overlap
-        ViewCompat.setOnApplyWindowInsetsListener(binding.messageInputLayout) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom + 8) // +8 for visual comfort
-            insets
-        }
-
         loadMessages()
         updateOnlineStatus(true)
         listenForTypingStatus()
@@ -116,9 +115,37 @@ class ChatDetailFragment : Fragment() {
                 .into(binding.imgProfile)
         }
 
-        binding.btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+        // Setup Campaign Header
+        if (campaignName.isNotEmpty()) {
+            binding.layoutCampaignHeader.visibility = View.VISIBLE
+            binding.tvCampaignName.text = campaignName
+            if (campaignImage.isNotEmpty()) {
+                Glide.with(this)
+                    .load(campaignImage)
+                    .into(binding.imgCampaign)
+            }
+            binding.layoutCampaignHeader.setOnClickListener {
+                navigateToCampaign()
+            }
         }
+
+        binding.btnBack.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun navigateToCampaign() {
+        if (campaignId.isEmpty()) return
+        
+        val fragment = CampaignDetailsFragment()
+        fragment.arguments = Bundle().apply {
+            putString("campaignId", campaignId)
+        }
+
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupRecyclerView() {
@@ -420,11 +447,16 @@ class ChatDetailFragment : Fragment() {
         super.onPause()
         updateOnlineStatus(false)
         updateTypingStatus(false)
+        // Revert to adjustPan when leaving this fragment
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
     }
 
     override fun onResume() {
         super.onResume()
         updateOnlineStatus(true)
+        // Use adjustResize so keyboard doesn't push toolbar off screen
+        @Suppress("DEPRECATION")
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
     override fun onDestroyView() {

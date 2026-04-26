@@ -15,6 +15,7 @@ data class ChatRoom(
     @get:PropertyName("ngoImage") @set:PropertyName("ngoImage") var ngoImage: String = "",
     @get:PropertyName("campaignId") @set:PropertyName("campaignId") var campaignId: String = "",
     @get:PropertyName("campaignName") @set:PropertyName("campaignName") var campaignName: String = "",
+    @get:PropertyName("campaignImage") @set:PropertyName("campaignImage") var campaignImage: String = "",
     @get:PropertyName("lastMessage") @set:PropertyName("lastMessage") var lastMessage: String = "",
     @get:PropertyName("lastMessageSenderId") @set:PropertyName("lastMessageSenderId") var lastMessageSenderId: String = "",
     @get:PropertyName("lastMessageTime") @set:PropertyName("lastMessageTime") var lastMessageTime: Timestamp? = null,
