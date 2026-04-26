@@ -6,7 +6,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.WindowManager
+import android.graphics.Rect
+import android.view.ViewTreeObserver
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -44,6 +45,7 @@ class ChatDetailFragment : Fragment() {
     private var statusListener: ListenerRegistration? = null
     private var typingHandler: Handler? = null
     private var typingRunnable: Runnable? = null
+    private var keyboardLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
 
     private lateinit var chatRoomId: String
     private lateinit var otherUserId: String
@@ -98,11 +100,35 @@ class ChatDetailFragment : Fragment() {
         setupUI()
         setupRecyclerView()
         setupListeners()
+        setupKeyboardHandler()
 
         loadMessages()
         updateOnlineStatus(true)
         listenForTypingStatus()
         listenForOnlineStatus()
+    }
+
+    private fun setupKeyboardHandler() {
+        keyboardLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            val r = Rect()
+            binding.root.getWindowVisibleDisplayFrame(r)
+            val screenHeight = binding.root.rootView.height
+            val keypadHeight = screenHeight - r.bottom
+
+            if (keypadHeight > screenHeight * 0.15) {
+                // Keyboard is visible — add bottom padding so input stays above keyboard
+                binding.root.setPadding(0, 0, 0, keypadHeight)
+                // Scroll to bottom of messages
+                val msgCount = messageAdapter.itemCount
+                if (msgCount > 0) {
+                    binding.recyclerViewMessages.scrollToPosition(msgCount - 1)
+                }
+            } else {
+                // Keyboard hidden — remove padding
+                binding.root.setPadding(0, 0, 0, 0)
+            }
+        }
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener(keyboardLayoutListener)
     }
 
     private fun setupUI() {
@@ -447,20 +473,18 @@ class ChatDetailFragment : Fragment() {
         super.onPause()
         updateOnlineStatus(false)
         updateTypingStatus(false)
-        // Revert to adjustPan when leaving this fragment
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
     }
 
     override fun onResume() {
         super.onResume()
         updateOnlineStatus(true)
-        // Use adjustResize so keyboard doesn't push toolbar off screen
-        @Suppress("DEPRECATION")
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        keyboardLayoutListener?.let {
+            binding.root.viewTreeObserver.removeOnGlobalLayoutListener(it)
+        }
         messageListener?.remove()
         statusListener?.remove()
         typingRunnable?.let { typingHandler?.removeCallbacks(it) }
