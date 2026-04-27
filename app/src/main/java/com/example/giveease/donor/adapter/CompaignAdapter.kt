@@ -2,6 +2,8 @@ package com.example.giveease.donor.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.giveease.R
@@ -11,9 +13,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class CampaignAdapter(
-    private val campaigns: List<CampaignData>,
     private val onCampaignClick: (CampaignData) -> Unit
-) : RecyclerView.Adapter<CampaignAdapter.CampaignViewHolder>() {
+) : ListAdapter<CampaignData, CampaignAdapter.CampaignViewHolder>(CampaignDiffCallback()) {
 
     inner class CampaignViewHolder(private val binding: ItemCampaignBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -43,7 +44,7 @@ class CampaignAdapter(
 
                 // Load image
                 if (campaign.imageUrls.isNotEmpty()) {
-                    Glide.with(itemView.context)
+                    Glide.with(root.context)
                         .load(campaign.imageUrls.first())
                         .placeholder(R.drawable.sample_compaign1)
                         .into(imgCampaign)
@@ -75,8 +76,16 @@ class CampaignAdapter(
     }
 
     override fun onBindViewHolder(holder: CampaignViewHolder, position: Int) {
-        holder.bind(campaigns[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount() = campaigns.size
+    class CampaignDiffCallback : DiffUtil.ItemCallback<CampaignData>() {
+        override fun areItemsTheSame(oldItem: CampaignData, newItem: CampaignData): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: CampaignData, newItem: CampaignData): Boolean {
+            return oldItem == newItem
+        }
+    }
 }

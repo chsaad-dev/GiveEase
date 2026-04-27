@@ -133,6 +133,10 @@ class NgoHomeFragment : Fragment() {
         val userId = auth.currentUser?.uid ?: return
         if (!isAdded || _binding == null) return
 
+        binding.shimmerRecentCampaign.visibility = View.VISIBLE
+        binding.shimmerRecentCampaign.startShimmer()
+        binding.cardRecentCampaign.visibility = View.GONE
+
         firestore.collection("campaigns")
             .whereEqualTo("ngoId", userId)
             .orderBy("createdAt", Query.Direction.DESCENDING)
@@ -140,6 +144,9 @@ class NgoHomeFragment : Fragment() {
             .get()
             .addOnSuccessListener { documents ->
                 if (!isAdded || _binding == null) return@addOnSuccessListener
+                
+                binding.shimmerRecentCampaign.stopShimmer()
+                binding.shimmerRecentCampaign.visibility = View.GONE
 
                 if (!documents.isEmpty) {
                     val campaign = documents.documents[0]
@@ -188,6 +195,8 @@ class NgoHomeFragment : Fragment() {
             }
             .addOnFailureListener {
                 if (!isAdded || _binding == null) return@addOnFailureListener
+                binding.shimmerRecentCampaign.stopShimmer()
+                binding.shimmerRecentCampaign.visibility = View.GONE
                 binding.cardRecentCampaign.visibility = View.GONE
             }
     }

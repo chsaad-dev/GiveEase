@@ -38,7 +38,7 @@ class DonorFeedFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        campaignAdapter = CampaignAdapter(campaignList) { campaign ->
+        campaignAdapter = CampaignAdapter { campaign ->
             onCampaignClick(campaign)
         }
 
@@ -101,13 +101,19 @@ class DonorFeedFragment : Fragment() {
 
                 campaignList.clear()
                 campaignList.addAll(allCampaigns)
-                campaignAdapter.notifyDataSetChanged()
+                campaignAdapter.submitList(campaignList.toList())
+
+                binding.shimmerLayout.stopShimmer()
+                binding.shimmerLayout.visibility = View.GONE
+                binding.recyclerViewCampaigns.visibility = View.VISIBLE
 
                 if (campaignList.isEmpty()) {
                     Toast.makeText(requireContext(), "No campaigns available", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener { e ->
+                binding.shimmerLayout.stopShimmer()
+                binding.shimmerLayout.visibility = View.GONE
                 Toast.makeText(requireContext(), "Error loading campaigns: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
@@ -121,7 +127,7 @@ class DonorFeedFragment : Fragment() {
             campaignList.addAll(allCampaigns.filter { it.category == category })
         }
 
-        campaignAdapter.notifyDataSetChanged()
+        campaignAdapter.submitList(campaignList.toList())
     }
 
     private fun onCampaignClick(campaign: CampaignData) {

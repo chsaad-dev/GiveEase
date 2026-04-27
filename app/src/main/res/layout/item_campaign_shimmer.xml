@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="6dp"
+    app:cardBackgroundColor="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Shimmer Image Area -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:background="#E0E0E0" />
+
+        <!-- Content Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="16dp">
+
+            <!-- Title Placeholder -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginEnd="40dp"
+                android:background="#E0E0E0"
+                android:layout_marginBottom="6dp" />
+
+            <!-- Description Placeholder -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:layout_marginEnd="80dp"
+                android:background="#E0E0E0"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Category Chip Placeholder -->
+            <View
+                android:layout_width="80dp"
+                android:layout_height="36dp"
+                android:background="#E0E0E0"
+                android:layout_marginBottom="14dp" />
+
+            <!-- Progress Bar Placeholder -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#E0E0E0"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Progress Info Placeholder -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:layout_marginEnd="100dp"
+                android:background="#E0E0E0"
+                android:layout_marginBottom="14dp" />
+
+            <!-- Bottom Row Placeholder -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="16dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="80dp"
+                    android:background="#E0E0E0" />
+
+                <View
+                    android:layout_width="120dp"
+                    android:layout_height="42dp"
+                    android:background="#E0E0E0" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

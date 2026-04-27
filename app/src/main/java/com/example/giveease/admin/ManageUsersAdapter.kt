@@ -3,6 +3,8 @@ package com.example.giveease.admin
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.giveease.R
 import com.example.giveease.databinding.ItemManageUserBinding
@@ -19,14 +21,7 @@ data class AdminUser(
 
 class ManageUsersAdapter(
     private val onActionClick: (AdminUser) -> Unit
-) : RecyclerView.Adapter<ManageUsersAdapter.ViewHolder>() {
-
-    private var items = listOf<AdminUser>()
-
-    fun submitList(list: List<AdminUser>) {
-        items = list
-        notifyDataSetChanged()
-    }
+) : ListAdapter<AdminUser, ManageUsersAdapter.ViewHolder>(AdminUserDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemManageUserBinding.inflate(
@@ -36,10 +31,8 @@ class ManageUsersAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = items.size
 
     inner class ViewHolder(private val binding: ItemManageUserBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -83,6 +76,16 @@ class ManageUsersAdapter(
                 btnAction.setOnClickListener { onActionClick(user) }
                 root.setOnClickListener { onActionClick(user) }
             }
+        }
+    }
+
+    class AdminUserDiffCallback : DiffUtil.ItemCallback<AdminUser>() {
+        override fun areItemsTheSame(oldItem: AdminUser, newItem: AdminUser): Boolean {
+            return oldItem.userId == newItem.userId
+        }
+
+        override fun areContentsTheSame(oldItem: AdminUser, newItem: AdminUser): Boolean {
+            return oldItem == newItem
         }
     }
 }
