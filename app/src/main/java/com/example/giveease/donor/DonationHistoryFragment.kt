@@ -35,7 +35,7 @@ class DonationHistoryFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        donationAdapter = DonationAdapter(donationsList) { donation ->
+        donationAdapter = DonationAdapter { donation ->
             showDonationDetails(donation)
         }
 
@@ -122,6 +122,11 @@ class DonationHistoryFragment : Fragment() {
 
         android.util.Log.d("DonationHistory", "Loading donations for userId: $userId")
 
+        binding.shimmerLayout.visibility = View.VISIBLE
+        binding.shimmerLayout.startShimmer()
+        binding.recyclerViewDonations.visibility = View.GONE
+        binding.layoutEmptyState.visibility = View.GONE
+
         firestore.collection("donations")
             .whereEqualTo("donorId", userId)
             .get()
@@ -158,6 +163,8 @@ class DonationHistoryFragment : Fragment() {
             .addOnFailureListener { exception ->
                 android.util.Log.e("DonationHistory", "Query failed: ${exception.message}")
                 Toast.makeText(requireContext(), "Error: ${exception.message}", Toast.LENGTH_LONG).show()
+                binding.shimmerLayout.stopShimmer()
+                binding.shimmerLayout.visibility = View.GONE
                 binding.layoutEmptyState.visibility = View.VISIBLE
                 binding.recyclerViewDonations.visibility = View.GONE
             }
@@ -166,7 +173,10 @@ class DonationHistoryFragment : Fragment() {
     private fun updateUI(donations: List<Donation>) {
         donationsList.clear()
         donationsList.addAll(donations)
-        donationAdapter.notifyDataSetChanged()
+        donationAdapter.submitList(donationsList.toList())
+
+        binding.shimmerLayout.stopShimmer()
+        binding.shimmerLayout.visibility = View.GONE
 
         if (donations.isEmpty()) {
             binding.recyclerViewDonations.visibility = View.GONE

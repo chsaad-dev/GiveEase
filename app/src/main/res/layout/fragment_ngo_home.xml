@@ -489,6 +489,16 @@
             </LinearLayout>
 
             <!-- Campaign Card Fragment Wrapper List / Included Layout (ID is used programmatically to toggle visibility) -->
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerRecentCampaign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:shimmer_auto_start="true">
+
+                <include layout="@layout/item_campaign_shimmer" />
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardRecentCampaign"
                 android:layout_width="match_parent"
