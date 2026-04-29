@@ -90,7 +90,6 @@ class NgoProfileFragment : Fragment() {
                         binding.tvFounded.text = "N/A"
                     }
 
-                    binding.tvTeamSize.text = "45 members"
                     binding.tvContact.text = document.getString("email") ?: "N/A"
                     binding.tvMission.text = document.getString("mission") ?: "No mission statement provided"
                     binding.tvVision.text = document.getString("vision") ?: "No vision statement provided"
