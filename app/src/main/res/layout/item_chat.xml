@@ -105,7 +105,8 @@
         android:src="@drawable/ic_check_double"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/tvLastMessage"
-        app:layout_constraintStart_toStartOf="@id/tvName"
+        app:layout_constraintTop_toTopOf="@id/tvLastMessage"
+        app:layout_constraintEnd_toEndOf="parent"
         app:tint="#4CAF50" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
