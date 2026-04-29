@@ -189,8 +189,10 @@ class NgoHomeFragment : Fragment() {
                     binding.progressCampaign.progress = progress
 
                     binding.cardRecentCampaign.visibility = View.VISIBLE
+                    binding.layoutEmptyState.root.visibility = View.GONE
                 } else {
                     binding.cardRecentCampaign.visibility = View.GONE
+                    binding.layoutEmptyState.root.visibility = View.VISIBLE
                 }
             }
             .addOnFailureListener {
@@ -198,6 +200,7 @@ class NgoHomeFragment : Fragment() {
                 binding.shimmerRecentCampaign.stopShimmer()
                 binding.shimmerRecentCampaign.visibility = View.GONE
                 binding.cardRecentCampaign.visibility = View.GONE
+                binding.layoutEmptyState.root.visibility = View.VISIBLE
             }
     }
 

@@ -619,6 +619,13 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <include
+                android:id="@+id/layoutEmptyState"
+                layout="@layout/layout_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
             <!-- View All Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnViewAllCampaigns"

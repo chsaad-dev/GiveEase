@@ -3,7 +3,10 @@ package com.example.giveease.ngo
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.Glide
 import com.example.giveease.ngo.CampaignData
 import com.example.giveease.R
@@ -15,16 +18,7 @@ class CampaignManagementAdapter(
     private val onCompleteClick: (CampaignData) -> Unit,
     private val onDeleteClick: (CampaignData) -> Unit,
     private val onCampaignClick: (CampaignData) -> Unit
-) : RecyclerView.Adapter<CampaignManagementAdapter.CampaignViewHolder>() {
-
-    private var campaigns = listOf<CampaignData>()
-
-    fun submitList(newList: List<CampaignData>) {
-        campaigns = newList
-        notifyDataSetChanged()
-    }
-
-    override fun getItemCount(): Int = campaigns.size
+) : ListAdapter<CampaignData, CampaignManagementAdapter.CampaignViewHolder>(CampaignDataDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CampaignViewHolder {
         val binding = ItemCampaignManagementBinding.inflate(
@@ -36,7 +30,7 @@ class CampaignManagementAdapter(
     }
 
     override fun onBindViewHolder(holder: CampaignViewHolder, position: Int) {
-        holder.bind(campaigns[position])
+        holder.bind(getItem(position))
     }
 
     inner class CampaignViewHolder(
@@ -101,6 +95,7 @@ class CampaignManagementAdapter(
                 if (campaign.imageUrls.isNotEmpty()) {
                     Glide.with(root.context)
                         .load(campaign.imageUrls[0])
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .placeholder(R.drawable.sample_ngo)
                         .error(R.drawable.sample_ngo)
                         .centerCrop()
@@ -139,6 +134,16 @@ class CampaignManagementAdapter(
                 btnComplete.setOnClickListener { onCompleteClick(campaign) }
                 btnDelete.setOnClickListener { onDeleteClick(campaign) }
             }
+        }
+    }
+
+    class CampaignDataDiffCallback : DiffUtil.ItemCallback<CampaignData>() {
+        override fun areItemsTheSame(oldItem: CampaignData, newItem: CampaignData): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: CampaignData, newItem: CampaignData): Boolean {
+            return oldItem == newItem
         }
     }
 }

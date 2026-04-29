@@ -72,7 +72,8 @@
                         android:id="@+id/etName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -89,7 +90,8 @@
                         android:id="@+id/etEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -108,7 +110,8 @@
                         android:id="@+id/etPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        android:imeOptions="actionDone" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -134,6 +137,7 @@
                         android:layout_marginEnd="8dp"
                         android:clickable="true"
                         android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
                         app:strokeWidth="2dp"
@@ -183,6 +187,7 @@
                         android:layout_marginStart="8dp"
                         android:clickable="true"
                         android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
                         app:strokeWidth="2dp"

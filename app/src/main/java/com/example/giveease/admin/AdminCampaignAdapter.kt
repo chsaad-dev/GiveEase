@@ -3,8 +3,11 @@ package com.example.giveease.admin
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.giveease.R
 import com.example.giveease.databinding.ItemAdminCampaignBinding
 import java.text.SimpleDateFormat
@@ -26,14 +29,7 @@ data class AdminCampaign(
 
 class AdminCampaignAdapter(
     private val onActionClick: (AdminCampaign) -> Unit
-) : RecyclerView.Adapter<AdminCampaignAdapter.ViewHolder>() {
-
-    private var items = listOf<AdminCampaign>()
-
-    fun submitList(list: List<AdminCampaign>) {
-        items = list
-        notifyDataSetChanged()
-    }
+) : ListAdapter<AdminCampaign, AdminCampaignAdapter.ViewHolder>(AdminCampaignDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemAdminCampaignBinding.inflate(
@@ -43,10 +39,8 @@ class AdminCampaignAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = items.size
 
     inner class ViewHolder(private val binding: ItemAdminCampaignBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -77,8 +71,9 @@ class AdminCampaignAdapter(
 
                 // Image
                 if (campaign.imageUrl.isNotEmpty()) {
-                    Glide.with(itemView.context)
+                    Glide.with(root.context)
                         .load(campaign.imageUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .centerCrop()
                         .placeholder(R.drawable.sample_compaign1)
                         .into(ivCampaignImage)
@@ -90,6 +85,16 @@ class AdminCampaignAdapter(
                 btnAction.setOnClickListener { onActionClick(campaign) }
                 root.setOnClickListener { onActionClick(campaign) }
             }
+        }
+    }
+
+    class AdminCampaignDiffCallback : DiffUtil.ItemCallback<AdminCampaign>() {
+        override fun areItemsTheSame(oldItem: AdminCampaign, newItem: AdminCampaign): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: AdminCampaign, newItem: AdminCampaign): Boolean {
+            return oldItem == newItem
         }
     }
 }
