@@ -109,7 +109,7 @@ class DonorHomeFragment : Fragment() {
 
         firestore.collection("campaigns")
             .whereEqualTo("status", "Active")
-            .limit(1)
+            .limit(10)
             .get()
             .addOnSuccessListener { documents ->
                 if (!isAdded || _binding == null || context == null) {
@@ -118,48 +118,66 @@ class DonorHomeFragment : Fragment() {
                 }
 
                 if (!documents.isEmpty) {
-                    val campaign = documents.documents[0]
-                    featuredCampaignId = campaign.id
-
-                    android.util.Log.d("DonorHome", "Featured campaign loaded - ID: $featuredCampaignId")
-                    android.util.Log.d("DonorHome", "Campaign data: ${campaign.data}")
-
-                    val imageUrls = campaign.get("imageUrls") as? List<String>
-                    val ivCampaignImage = binding.cardFeaturedCampaign.findViewById<ImageView>(R.id.ivCampaignImage)
-
-                    if (!imageUrls.isNullOrEmpty() && ivCampaignImage != null) {
-                        android.util.Log.d("DonorHome", "Loading image: ${imageUrls[0]}")
-
-                        context?.let { ctx ->
-                            Glide.with(ctx)
-                                .load(imageUrls[0])
-                                .centerCrop()
-                                .placeholder(R.drawable.sample_compaign1)
-                                .error(R.drawable.sample_compaign1)
-                                .into(ivCampaignImage)
-                        }
-                    } else {
-                        android.util.Log.d("DonorHome", "No images found or ImageView is null")
+                    val currentTime = System.currentTimeMillis()
+                    
+                    // Find the first campaign that is truly active (not expired, not completed if autoClose)
+                    val validCampaign = documents.documents.firstOrNull { doc ->
+                        val endDate = doc.getLong("endDate") ?: 0L
+                        val currentQuantity = doc.getLong("currentQuantity")?.toInt() ?: 0
+                        val targetQuantity = doc.getLong("targetQuantity")?.toInt() ?: 0
+                        val autoClose = doc.getBoolean("autoClose") ?: false
+                        
+                        val isExpired = endDate > 0 && endDate < currentTime
+                        val isCompleted = autoClose && targetQuantity > 0 && currentQuantity >= targetQuantity
+                        
+                        !isExpired && !isCompleted
                     }
 
-                    binding.tvFeaturedNgo.text = campaign.getString("title") ?: "Campaign"
+                    if (validCampaign != null) {
+                        featuredCampaignId = validCampaign.id
 
-                    val currentQty = campaign.getLong("currentQuantity") ?: 0L
-                    val targetQty = campaign.getLong("targetQuantity") ?: 1L
-                    val progress = ((currentQty.toFloat() / targetQty.toFloat()) * 100).toInt()
+                        android.util.Log.d("DonorHome", "Featured campaign loaded - ID: $featuredCampaignId")
 
-                    val progressBar = binding.cardFeaturedCampaign.findViewById<ProgressBar>(R.id.progressBar)
-                    val tvProgress = binding.cardFeaturedCampaign.findViewById<TextView>(R.id.tvProgress)
-                    val tvCurrentAmount = binding.cardFeaturedCampaign.findViewById<TextView>(R.id.tvCurrentAmount)
-                    val tvTargetAmount = binding.cardFeaturedCampaign.findViewById<TextView>(R.id.tvTargetAmount)
+                        val imageUrls = validCampaign.get("imageUrls") as? List<String>
+                        val ivCampaignImage = binding.cardFeaturedCampaign.findViewById<ImageView>(R.id.ivCampaignImage)
 
-                    progressBar?.progress = progress
-                    tvProgress?.text = "$progress%"
-                    tvCurrentAmount?.text = "$currentQty items"
-                    tvTargetAmount?.text = "of $targetQty items"
+                        if (!imageUrls.isNullOrEmpty() && ivCampaignImage != null) {
+                            android.util.Log.d("DonorHome", "Loading image: ${imageUrls[0]}")
 
-                    binding.cardFeaturedCampaign.visibility = View.VISIBLE
-                    android.util.Log.d("DonorHome", "Featured campaign UI updated successfully")
+                            context?.let { ctx ->
+                                Glide.with(ctx)
+                                    .load(imageUrls[0])
+                                    .centerCrop()
+                                    .placeholder(R.drawable.sample_compaign1)
+                                    .error(R.drawable.sample_compaign1)
+                                    .into(ivCampaignImage)
+                            }
+                        } else {
+                            android.util.Log.d("DonorHome", "No images found or ImageView is null")
+                        }
+
+                        binding.tvFeaturedNgo.text = validCampaign.getString("title") ?: "Campaign"
+
+                        val currentQty = validCampaign.getLong("currentQuantity") ?: 0L
+                        val targetQty = validCampaign.getLong("targetQuantity") ?: 1L
+                        val progress = ((currentQty.toFloat() / targetQty.toFloat()) * 100).toInt()
+
+                        val progressBar = binding.cardFeaturedCampaign.findViewById<ProgressBar>(R.id.progressBar)
+                        val tvProgress = binding.cardFeaturedCampaign.findViewById<TextView>(R.id.tvProgress)
+                        val tvCurrentAmount = binding.cardFeaturedCampaign.findViewById<TextView>(R.id.tvCurrentAmount)
+                        val tvTargetAmount = binding.cardFeaturedCampaign.findViewById<TextView>(R.id.tvTargetAmount)
+
+                        progressBar?.progress = progress
+                        tvProgress?.text = "$progress%"
+                        tvCurrentAmount?.text = "$currentQty items"
+                        tvTargetAmount?.text = "of $targetQty items"
+
+                        binding.cardFeaturedCampaign.visibility = View.VISIBLE
+                        android.util.Log.d("DonorHome", "Featured campaign UI updated successfully")
+                    } else {
+                        android.util.Log.d("DonorHome", "No active campaigns found after filtering")
+                        binding.cardFeaturedCampaign.visibility = View.GONE
+                    }
                 } else {
                     android.util.Log.d("DonorHome", "No active campaigns found")
                     binding.cardFeaturedCampaign.visibility = View.GONE

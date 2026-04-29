@@ -32,8 +32,24 @@ class DonorFeedViewModel : ViewModel() {
             .whereEqualTo("status", "Active")
             .get()
             .addOnSuccessListener { documents ->
+                val currentTime = System.currentTimeMillis()
                 allCampaigns = documents.mapNotNull { doc ->
                     try {
+                        val endDate = doc.getLong("endDate") ?: 0L
+                        val currentQuantity = doc.getLong("currentQuantity")?.toInt() ?: 0
+                        val targetQuantity = doc.getLong("targetQuantity")?.toInt() ?: 0
+                        val autoClose = doc.getBoolean("autoClose") ?: false
+                        
+                        // Filter out expired campaigns
+                        if (endDate > 0 && endDate < currentTime) {
+                            return@mapNotNull null
+                        }
+                        
+                        // Filter out auto-closed completed campaigns
+                        if (autoClose && targetQuantity > 0 && currentQuantity >= targetQuantity) {
+                            return@mapNotNull null
+                        }
+                        
                         CampaignData(
                             id = doc.id,
                             ngoId = doc.getString("ngoId") ?: "",
@@ -41,14 +57,14 @@ class DonorFeedViewModel : ViewModel() {
                             category = doc.getString("category") ?: "",
                             title = doc.getString("title") ?: "",
                             description = doc.getString("description") ?: "",
-                            targetQuantity = doc.getLong("targetQuantity")?.toInt() ?: 0,
-                            currentQuantity = doc.getLong("currentQuantity")?.toInt() ?: 0,
+                            targetQuantity = targetQuantity,
+                            currentQuantity = currentQuantity,
                             unit = doc.getString("unit") ?: "",
-                            endDate = doc.getLong("endDate") ?: 0,
+                            endDate = endDate,
                             urgencyLevel = doc.getString("urgencyLevel") ?: "",
                             itemCondition = doc.getString("itemCondition") ?: "",
                             specificRequirements = doc.getString("specificRequirements") ?: "",
-                            autoClose = doc.getBoolean("autoClose") ?: false,
+                            autoClose = autoClose,
                             imageUrls = (doc.get("imageUrls") as? List<*>)?.mapNotNull { it as? String } ?: emptyList(),
                             createdAt = doc.getLong("createdAt") ?: 0,
                             status = doc.getString("status") ?: "Active",

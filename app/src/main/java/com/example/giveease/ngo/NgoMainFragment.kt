@@ -35,6 +35,16 @@ class NgoMainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        childFragmentManager.addOnBackStackChangedListener {
+            val currentFragment = childFragmentManager.findFragmentById(R.id.fragmentContainer)
+            if (currentFragment is com.example.giveease.donor.ChatDetailFragment || 
+                currentFragment is com.example.giveease.donor.CampaignDetailsFragment) {
+                binding.bottomNavigationView.visibility = View.GONE
+            } else {
+                binding.bottomNavigationView.visibility = View.VISIBLE
+            }
+        }
+        
         if (savedInstanceState == null) {
             homeFragment = NgoHomeFragment()
             chatFragment = NgoChatFragment()
