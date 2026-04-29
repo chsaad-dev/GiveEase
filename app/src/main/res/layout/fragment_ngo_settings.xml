@@ -106,43 +106,6 @@
                         android:layout_marginBottom="20dp"
                         android:background="#1565C0" />
 
-                    <!-- Profile Visibility -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="24dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Profile Visibility"
-                                android:textSize="15sp"
-                                android:textStyle="bold"
-                                android:textColor="#333333"
-                                android:layout_marginBottom="4dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Control who can see your NGO profile"
-                                android:textSize="13sp"
-                                android:textColor="#666666" />
-                        </LinearLayout>
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchProfileVisibility"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true" />
-                    </LinearLayout>
 
                     <!-- Notification Settings -->
                     <LinearLayout
@@ -247,22 +210,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Logout -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="24dp"
-                android:text="Logout"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#D32F2F"
-                app:backgroundTint="#FFEBEE"
-                app:cornerRadius="16dp"
-                app:icon="@drawable/ic_logout"
-                app:iconTint="#D32F2F"
-                app:iconGravity="textStart" />
-
             <!-- Danger Zone -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -306,6 +253,23 @@
                         app:iconTint="#D32F2F" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Logout -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="24dp"
+                android:text="Logout"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#D32F2F"
+                app:backgroundTint="#FFEBEE"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_logout"
+                app:iconTint="#D32F2F"
+                app:iconGravity="textStart" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>
