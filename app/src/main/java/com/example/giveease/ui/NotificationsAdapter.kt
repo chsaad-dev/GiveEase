@@ -77,6 +77,10 @@ class NotificationsAdapter(
                 if (isSelectionMode) {
                     toggleSelection(notification.id)
                 } else {
+                    if (!notification.isRead) {
+                        notification.isRead = true
+                        notifyItemChanged(position)
+                    }
                     onNotificationClick(notification, position)
                 }
             }

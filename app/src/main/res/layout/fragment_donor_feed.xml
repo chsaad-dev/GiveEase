@@ -27,15 +27,6 @@
             android:textColor="@android:color/white"
             android:layout_weight="1"/>
 
-        <ImageView
-            android:id="@+id/imgUserAvatar"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/sample_profile"
-            android:background="@drawable/circle_background"
-            android:scaleType="centerCrop"
-            android:layout_marginStart="8dp"
-            android:contentDescription="User profile" />
     </LinearLayout>
 
     <HorizontalScrollView
