@@ -11,17 +11,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giveease.R
 import com.example.giveease.databinding.FragmentImpactDashboardBinding
 import com.example.giveease.databinding.ItemBadgeBinding
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import androidx.lifecycle.ViewModelProvider
+import com.example.giveease.utils.NetworkUtils
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 
 class ImpactDashboardFragment : Fragment() {
     private var _binding: FragmentImpactDashboardBinding? = null
     private val binding get() = _binding!!
-    private lateinit var auth: FirebaseAuth
-    private lateinit var firestore: FirebaseFirestore
+    private lateinit var viewModel: ImpactDashboardViewModel
     private lateinit var categoryAdapter: CategoryImpactAdapter
+    private val firestore = FirebaseFirestore.getInstance()
 
     // Accumulated data
     private var totalDonations = 0
@@ -37,15 +39,63 @@ class ImpactDashboardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentImpactDashboardBinding.inflate(inflater, container, false)
-        auth = FirebaseAuth.getInstance()
-        firestore = FirebaseFirestore.getInstance()
+        viewModel = ViewModelProvider(this)[ImpactDashboardViewModel::class.java]
 
         setupRecyclerView()
         setupClickListeners()
-        loadDonorProfile()
-        loadImpactData()
+        observeViewModel()
+        
+        viewModel.loadData(NetworkUtils.isNetworkAvailable(requireContext()))
 
         return binding.root
+    }
+
+    private fun observeViewModel() {
+        viewModel.donorProfile.observe(viewLifecycleOwner) { profile ->
+            binding.tvGreeting.text = "Assalam-o-Alaikum, ${profile.name}"
+            
+            // Only show verified badge if actually verified or if they are NGO. For normal donors, hide pending.
+            if (profile.isVerified) {
+                binding.tvVerifiedBadge.visibility = View.VISIBLE
+                binding.tvVerifiedBadge.text = "✅ Verified"
+            } else {
+                binding.tvVerifiedBadge.visibility = View.GONE
+            }
+        }
+
+        viewModel.impactData.observe(viewLifecycleOwner) { data ->
+            // Update all accumulated data points
+            totalDonations = data.totalDonations
+            totalItems = data.totalItems
+            uniqueNGOs = data.uniqueNGOs
+            impactScore = data.impactScore
+            peopleImpacted = data.peopleImpacted
+            monthlyCount = data.monthlyCount
+            yearlyCount = data.yearlyCount
+
+            data.firstDonationTimestamp?.let { ts ->
+                binding.tvFirstDonation.text = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(Date(ts))
+            }
+
+            // Build badges
+            val badges = buildBadges(data.totalDonations, data.impactScore)
+            badgesEarned = badges.count { it.isEarned }
+
+            // Update all UI
+            updateKPIs(data.monthlyCount, data.monthlyItems)
+            updateImpactScore(badges)
+            updateBadges(badges)
+            updateTimeline()
+            loadCategoryBreakdown(data.donations)
+            updateNextGoal(badges)
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+                viewModel.clearError()
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -66,82 +116,6 @@ class ImpactDashboardFragment : Fragment() {
         }
     }
 
-    private fun loadDonorProfile() {
-        val userId = auth.currentUser?.uid ?: return
-        firestore.collection("users").document(userId).get()
-            .addOnSuccessListener { doc ->
-                if (!isAdded || _binding == null) return@addOnSuccessListener
-                val name = doc.getString("name") ?: "Donor"
-                val verified = doc.getString("verificationStatus") == "verified"
-                binding.tvGreeting.text = "Assalam-o-Alaikum, $name"
-                binding.tvVerifiedBadge.text = if (verified) "✅ Verified Donor" else "⏳ Pending Verification"
-            }
-    }
-
-    private fun loadImpactData() {
-        val userId = auth.currentUser?.uid ?: return
-
-        firestore.collection("donations")
-            .whereEqualTo("donorId", userId)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (!isAdded || _binding == null) return@addOnSuccessListener
-
-                val donations = documents.documents
-                totalDonations = donations.size
-                totalItems = donations.sumOf { it.getLong("quantity") ?: 0L }.toInt()
-                uniqueNGOs = donations.mapNotNull { it.getString("ngoId") }.distinct().size
-
-                // Impact score: 20 points per item
-                impactScore = totalItems * 20
-
-                // People impacted estimate: ~3 people per item donated
-                peopleImpacted = totalItems * 3
-
-                // Timeline calculations
-                val now = System.currentTimeMillis()
-                val cal = Calendar.getInstance()
-
-                val startOfMonth = cal.apply {
-                    timeInMillis = now
-                    set(Calendar.DAY_OF_MONTH, 1)
-                    set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
-                }.timeInMillis
-
-                val startOfYear = cal.apply {
-                    timeInMillis = now
-                    set(Calendar.MONTH, 0); set(Calendar.DAY_OF_MONTH, 1)
-                    set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
-                }.timeInMillis
-
-                monthlyCount = donations.count { (it.getLong("timestamp") ?: 0L) >= startOfMonth }
-                yearlyCount = donations.count { (it.getLong("timestamp") ?: 0L) >= startOfYear }
-
-                val monthlyItems = donations.filter { (it.getLong("timestamp") ?: 0L) >= startOfMonth }
-                    .sumOf { it.getLong("quantity") ?: 0L }.toInt()
-
-                // First donation date
-                val firstDonation = donations.minByOrNull { it.getLong("timestamp") ?: Long.MAX_VALUE }
-                firstDonation?.let { doc ->
-                    val ts = doc.getLong("timestamp") ?: 0L
-                    binding.tvFirstDonation.text = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(Date(ts))
-                }
-
-                // Build badges
-                val badges = buildBadges(totalDonations, impactScore)
-                badgesEarned = badges.count { it.isEarned }
-
-                // Update all UI
-                updateKPIs(monthlyCount, monthlyItems)
-                updateImpactScore(badges)
-                updateBadges(badges)
-                updateTimeline()
-                loadCategoryBreakdown(donations)
-                updateNextGoal(badges)
-            }
-    }
 
     private fun updateKPIs(monthlyDonations: Int, monthlyItems: Int) {
         animateCounter(binding.tvTotalDonations, totalDonations)

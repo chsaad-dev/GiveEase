@@ -38,6 +38,7 @@
                     app:cardBackgroundColor="#FFFFFF"
                     android:clickable="true"
                     android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     app:strokeColor="#E3F2FD"
                     app:strokeWidth="1dp">
 
@@ -68,7 +69,8 @@
                     app:cardElevation="2dp"
                     app:cardBackgroundColor="#E3F2FD"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
 
                     <ImageView
                         android:id="@+id/ivHelp"
@@ -165,6 +167,7 @@
                             android:gravity="center"
                             android:clickable="true"
                             android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             app:strokeColor="#1565C0"
                             app:strokeWidth="2dp"
                             android:layout_marginEnd="16dp">
@@ -336,6 +339,8 @@
                                 android:textSize="16sp"
                                 android:background="@android:color/transparent"
                                 android:padding="16dp"
+                                android:inputType="text"
+                                android:imeOptions="actionNext"
                                 android:maxLines="1" />
                         </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
@@ -535,7 +540,8 @@
                                     android:textSize="16sp"
                                     android:background="@android:color/transparent"
                                     android:padding="16dp"
-                                    android:inputType="number" />
+                                    android:imeOptions="actionNext"
+                                    android:inputType="numberDecimal" />
                             </com.google.android.material.card.MaterialCardView>
 
                             <com.google.android.material.card.MaterialCardView

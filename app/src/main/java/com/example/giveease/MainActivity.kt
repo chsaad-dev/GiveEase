@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import android.content.Context
+import com.google.android.material.transition.MaterialSharedAxis
 import com.example.giveease.auth.LoginFragment
 import com.example.giveease.donor.DonorMainFragment
 import com.example.giveease.ngo.NgoMainFragment
@@ -34,6 +37,17 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
+
+        // Apply smooth Material Shared Axis transitions globally
+        supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentPreAttached(fm: FragmentManager, f: Fragment, context: Context) {
+                super.onFragmentPreAttached(fm, f, context)
+                f.enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+                f.returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+                f.exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+                f.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+            }
+        }, true)
 
         currentRole = intent.getStringExtra("role")
 

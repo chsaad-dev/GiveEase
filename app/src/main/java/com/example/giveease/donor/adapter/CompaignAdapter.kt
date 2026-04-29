@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.Glide
 import com.example.giveease.R
 import com.example.giveease.databinding.ItemCampaignBinding
@@ -46,7 +47,10 @@ class CampaignAdapter(
                 if (campaign.imageUrls.isNotEmpty()) {
                     Glide.with(root.context)
                         .load(campaign.imageUrls.first())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop()
                         .placeholder(R.drawable.sample_compaign1)
+                        .error(R.drawable.sample_compaign1)
                         .into(imgCampaign)
                 } else {
                     imgCampaign.setImageResource(R.drawable.sample_compaign1)
