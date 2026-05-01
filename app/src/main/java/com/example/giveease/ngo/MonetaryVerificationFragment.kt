@@ -109,7 +109,7 @@ class MonetaryVerificationFragment : Fragment() {
             .setPositiveButton("Accept") { _, _ ->
                 firestore.runBatch { batch ->
                     val donationRef = firestore.collection("donations").document(docId)
-                    batch.update(donationRef, "status", "Completed")
+                    batch.update(donationRef, "status", "Pending Proof")
 
                     val campaignRef = firestore.collection("campaigns").document(campaignId)
                     batch.update(campaignRef, "currentQuantity", FieldValue.increment(quantity))

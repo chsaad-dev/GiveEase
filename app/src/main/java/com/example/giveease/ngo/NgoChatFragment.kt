@@ -140,7 +140,8 @@ class NgoChatFragment : Fragment() {
         }
 
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
+            .hide(this)
+            .add((requireView().parent as ViewGroup).id, fragment)
             .addToBackStack(null)
             .commit()
     }

@@ -137,6 +137,18 @@ class DonationHistoryFragment : Fragment() {
                     try {
                         android.util.Log.d("DonationHistory", "Processing: ${doc.id}")
 
+                        val proofMap = doc.get("proof") as? Map<String, Any>
+                        val proofData = proofMap?.let {
+                            com.example.giveease.models.DonationProof(
+                                beneficiaryName = it["beneficiaryName"] as? String ?: "",
+                                contactNumber = it["contactNumber"] as? String ?: "",
+                                cnicOrAdditionalInfo = it["cnicOrAdditionalInfo"] as? String ?: "",
+                                addressProofImageUrl = it["addressProofImageUrl"] as? String ?: "",
+                                handoverImageUrl = it["handoverImageUrl"] as? String ?: "",
+                                uploadedAt = it["uploadedAt"] as? Long ?: 0L
+                            )
+                        }
+
                         Donation(
                             id = doc.id,
                             ngoId = doc.getString("ngoId") ?: "",
@@ -146,7 +158,8 @@ class DonationHistoryFragment : Fragment() {
                             status = doc.getString("status") ?: "Completed",
                             category = "General",
                             createdAt = doc.getLong("timestamp") ?: System.currentTimeMillis(),
-                            receiptUrl = null
+                            receiptUrl = null,
+                            proof = proofData
                         )
                     } catch (e: Exception) {
                         android.util.Log.e("DonationHistory", "Error parsing: ${e.message}")
@@ -196,13 +209,32 @@ class DonationHistoryFragment : Fragment() {
     }
 
     private fun showDonationDetails(donation: Donation) {
-        Toast.makeText(requireContext(), "Donated ${donation.amount.toInt()} items to ${donation.campaignTitle}", Toast.LENGTH_SHORT).show()
+        if (donation.proof != null || donation.status.lowercase() == "delivered") {
+            val proof = donation.proof
+            if (proof != null) {
+                val fragment = DonorViewProofFragment.newInstance(
+                    name = proof.beneficiaryName,
+                    contact = proof.contactNumber,
+                    info = proof.cnicOrAdditionalInfo,
+                    handoverUrl = proof.handoverImageUrl,
+                    addressUrl = proof.addressProofImageUrl,
+                    uploadedAt = proof.uploadedAt
+                )
+                parentFragmentManager.beginTransaction()
+                    .hide(this@DonationHistoryFragment)
+                    .add(R.id.fragment_container_donor, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            } else {
+                Toast.makeText(requireContext(), "Proof data is still syncing. Please wait.", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(requireContext(), "Donated ${donation.amount.toInt()} items to ${donation.campaignTitle}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun navigateToHome() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, DonorHomeFragment())
-            .commit()
+        parentFragmentManager.popBackStack()
     }
 
     data class Donation(
@@ -214,6 +246,7 @@ class DonationHistoryFragment : Fragment() {
         val status: String,
         val category: String,
         val createdAt: Long,
-        val receiptUrl: String? = null
+        val receiptUrl: String? = null,
+        val proof: com.example.giveease.models.DonationProof? = null
     )
 }

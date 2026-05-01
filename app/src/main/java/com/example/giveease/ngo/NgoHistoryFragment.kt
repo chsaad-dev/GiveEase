@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
+import com.example.giveease.R
 
 class NgoHistoryFragment : Fragment() {
 
@@ -106,6 +107,18 @@ class NgoHistoryFragment : Fragment() {
                 allDonations.clear()
 
                 snapshots?.documents?.forEach { doc ->
+                    val proofMap = doc.get("proof") as? Map<String, Any>
+                    val proofData = proofMap?.let {
+                        com.example.giveease.models.DonationProof(
+                            beneficiaryName = it["beneficiaryName"] as? String ?: "",
+                            contactNumber = it["contactNumber"] as? String ?: "",
+                            cnicOrAdditionalInfo = it["cnicOrAdditionalInfo"] as? String ?: "",
+                            addressProofImageUrl = it["addressProofImageUrl"] as? String ?: "",
+                            handoverImageUrl = it["handoverImageUrl"] as? String ?: "",
+                            uploadedAt = it["uploadedAt"] as? Long ?: 0L
+                        )
+                    }
+
                     val donation = NgoDonation(
                         id = doc.id,
                         donorId = doc.getString("donorId") ?: "",
@@ -116,7 +129,8 @@ class NgoHistoryFragment : Fragment() {
                         unit = doc.getString("unit") ?: "items",
                         message = doc.getString("message") ?: "",
                         timestamp = doc.getLong("timestamp") ?: System.currentTimeMillis(),
-                        status = doc.getString("status") ?: "Completed"
+                        status = doc.getString("status") ?: "Completed",
+                        proof = proofData
                     )
                     allDonations.add(donation)
                 }
@@ -167,6 +181,16 @@ class NgoHistoryFragment : Fragment() {
 
     private fun showDonationDetails(donation: NgoDonation) {
         if (!isAdded) return
+
+        if (donation.status.equals("Pending Proof", ignoreCase = true)) {
+            val fragment = NgoUploadProofFragment.newInstance(donation.id, donation.campaignTitle)
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as ViewGroup).id, fragment)
+                .addToBackStack(null)
+                .commit()
+            return
+        }
 
         val message = buildString {
             append("Donor: ${donation.donorName}\n")

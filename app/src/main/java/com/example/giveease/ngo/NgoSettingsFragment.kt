@@ -38,8 +38,9 @@ class NgoSettingsFragment : Fragment() {
         }
 
         binding.btnBankAccounts.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, NgoBankAccountsFragment())
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as ViewGroup).id, NgoBankAccountsFragment())
                 .addToBackStack(null)
                 .commit()
         }

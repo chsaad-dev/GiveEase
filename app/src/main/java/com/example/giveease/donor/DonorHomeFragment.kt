@@ -18,12 +18,16 @@ import android.widget.TextView
 import java.text.SimpleDateFormat
 import java.util.*
 
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.firestore.ListenerRegistration
+
 class DonorHomeFragment : Fragment() {
     private var _binding: FragmentDonorHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private var featuredCampaignId: String? = null
+    private var notificationListener: ListenerRegistration? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDonorHomeBinding.inflate(inflater, container, false)
@@ -63,7 +67,7 @@ class DonorHomeFragment : Fragment() {
 
     private fun listenForUnreadNotifications() {
         val userId = auth.currentUser?.uid ?: return
-        firestore.collection("users").document(userId).collection("notifications")
+        notificationListener = firestore.collection("users").document(userId).collection("notifications")
             .whereEqualTo("isRead", false)
             .addSnapshotListener { snapshots, error ->
                 if (!isAdded || _binding == null) return@addSnapshotListener
@@ -301,18 +305,21 @@ class DonorHomeFragment : Fragment() {
         }
     }
 
+    private fun selectBottomNavTab(itemId: Int) {
+        val bottomNav = parentFragment?.view?.findViewById<BottomNavigationView>(R.id.bottom_nav_donor)
+        bottomNav?.selectedItemId = itemId
+    }
+
     private fun navigateToMyCampaigns() {
         if (!isAdded) return
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, DonorFeedFragment())
-            .addToBackStack(null)
-            .commit()
+        selectBottomNavTab(R.id.nav_feed)
     }
 
     private fun navigateToImpactDashboard() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, ImpactDashboardFragment())
+            .hide(this)
+            .add(R.id.fragment_container_donor, ImpactDashboardFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -320,19 +327,13 @@ class DonorHomeFragment : Fragment() {
     private fun navigateToQuickDonate() {
         if (!isAdded) return
         checkVerificationBeforeAction {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_donor, DonorFeedFragment())
-                .addToBackStack(null)
-                .commit()
+            selectBottomNavTab(R.id.nav_feed)
         }
     }
 
     private fun navigateToExploreCauses() {
         if (!isAdded) return
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, DonorFeedFragment())
-            .addToBackStack(null)
-            .commit()
+        selectBottomNavTab(R.id.nav_feed)
     }
 
     private fun navigateToLeaderboard() {
@@ -344,7 +345,8 @@ class DonorHomeFragment : Fragment() {
     private fun navigateToNotifications() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, NotificationsFragment())
+            .hide(this)
+            .add(R.id.fragment_container_donor, NotificationsFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -361,7 +363,8 @@ class DonorHomeFragment : Fragment() {
         }
 
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, fragment)
+            .hide(this)
+            .add(R.id.fragment_container_donor, fragment)
             .addToBackStack(null)
             .commit()
     }
@@ -369,9 +372,16 @@ class DonorHomeFragment : Fragment() {
     private fun navigateToDonationHistory() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, DonationHistoryFragment())
+            .hide(this)
+            .add(R.id.fragment_container_donor, DonationHistoryFragment())
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        notificationListener?.remove()
+        _binding = null
     }
 
     private fun checkVerificationBeforeAction(onVerified: () -> Unit) {
@@ -410,11 +420,6 @@ class DonorHomeFragment : Fragment() {
             .replace(R.id.fragment_container, IdentityVerificationFragment())
             .addToBackStack(null)
             .commit()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {

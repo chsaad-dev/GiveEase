@@ -196,5 +196,16 @@
                     android:fontStyle="italic" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- Upload Proof Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnUploadProof"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Upload Proof &amp; Complete"
+            android:visibility="gone"
+            app:icon="@drawable/ic_upload"
+            style="@style/Widget.MaterialComponents.Button" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

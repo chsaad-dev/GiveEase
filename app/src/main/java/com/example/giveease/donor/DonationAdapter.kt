@@ -41,6 +41,11 @@ class DonationAdapter(
 
                 val currentStatus = donation.status.lowercase()
                 when {
+                    currentStatus == "delivered" -> {
+                        tvStatus.text = "Delivered"
+                        tvStatus.setBackgroundResource(R.drawable.status_completed_bg)
+                        statusIndicator.setBackgroundColor(ContextCompat.getColor(root.context, android.R.color.holo_green_dark))
+                    }
                     currentStatus == "completed" -> {
                         tvStatus.text = "Completed"
                         tvStatus.setBackgroundResource(R.drawable.status_completed_bg)
@@ -62,6 +67,15 @@ class DonationAdapter(
                         tvStatus.setBackgroundResource(R.drawable.status_pending_bg)
                         statusIndicator.setBackgroundColor(ContextCompat.getColor(root.context, R.color.gray))
                     }
+                }
+
+                if (donation.proof != null || currentStatus == "delivered") {
+                    btnViewProof.visibility = View.VISIBLE
+                    btnViewProof.setOnClickListener {
+                        onItemClick(donation) // Let the fragment handle navigation to ViewProof
+                    }
+                } else {
+                    btnViewProof.visibility = View.GONE
                 }
 
                 if (donation.receiptUrl != null && donation.status.lowercase() == "completed") {

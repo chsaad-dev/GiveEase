@@ -134,7 +134,8 @@ class DonorProfileFragment : Fragment() {
             imgProfile.setOnClickListener {
                 if (!isAdded) return@setOnClickListener
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container_donor, EditProfileFragment())
+                    .hide(this@DonorProfileFragment)
+                    .add(R.id.fragment_container_donor, EditProfileFragment())
                     .addToBackStack(null)
                     .commit()
             }
@@ -156,7 +157,8 @@ class DonorProfileFragment : Fragment() {
     private fun navigateToImpactDashboard() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, ImpactDashboardFragment())
+            .hide(this)
+            .add(R.id.fragment_container_donor, ImpactDashboardFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -174,7 +176,8 @@ class DonorProfileFragment : Fragment() {
     private fun navigateToDonationHistory() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, DonationHistoryFragment())
+            .hide(this)
+            .add(R.id.fragment_container_donor, DonationHistoryFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -182,7 +185,8 @@ class DonorProfileFragment : Fragment() {
     private fun navigateToSettings() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, DonorSettingsFragment())
+            .hide(this)
+            .add(R.id.fragment_container_donor, DonorSettingsFragment())
             .addToBackStack(null)
             .commit()
     }

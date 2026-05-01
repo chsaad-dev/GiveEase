@@ -168,8 +168,9 @@ class ChatDetailFragment : Fragment() {
             putString("campaignId", campaignId)
         }
 
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
+        parentFragmentManager.beginTransaction()
+            .hide(this)
+            .add((requireView().parent as ViewGroup).id, fragment)
             .addToBackStack(null)
             .commit()
     }

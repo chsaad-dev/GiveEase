@@ -37,15 +37,17 @@ class NgoProfileFragment : Fragment() {
         }
 
         binding.btnEditProfile.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, NgoEditProfileFragment())
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as ViewGroup).id, NgoEditProfileFragment())
                 .addToBackStack(null)
                 .commit()
         }
 
         binding.btnSettings.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, NgoSettingsFragment())
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as ViewGroup).id, NgoSettingsFragment())
                 .addToBackStack(null)
                 .commit()
         }
