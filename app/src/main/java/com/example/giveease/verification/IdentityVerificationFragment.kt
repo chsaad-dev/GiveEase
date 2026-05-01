@@ -15,6 +15,7 @@ import com.example.giveease.databinding.FragmentIdentityVerificationBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.example.giveease.utils.NotificationHelper
 import java.util.UUID
 
 class IdentityVerificationFragment : Fragment() {
@@ -157,11 +158,31 @@ class IdentityVerificationFragment : Fragment() {
             .update(updateMap)
             .addOnSuccessListener {
                 loadingDialog.dismiss()
+                notifyAdmins(uid)
                 showSuccessDialog()
             }
             .addOnFailureListener { e ->
                 loadingDialog.dismiss()
                 Toast.makeText(requireContext(), "Failed to save: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun notifyAdmins(userId: String) {
+        firestore.collection("users")
+            .whereEqualTo("role", "admin")
+            .get()
+            .addOnSuccessListener { documents ->
+                val userName = auth.currentUser?.displayName ?: "A user"
+                val roleLabel = if (userRole == "ngo") "NGO" else "Donor"
+                for (doc in documents) {
+                    NotificationHelper.sendNotification(
+                        userId = doc.id,
+                        title = "New Verification Request 📋",
+                        message = "$userName ($roleLabel) has submitted verification documents for review.",
+                        type = "verification",
+                        referenceId = userId
+                    )
+                }
             }
     }
 

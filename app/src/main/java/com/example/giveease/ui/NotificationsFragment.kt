@@ -103,14 +103,12 @@ class NotificationsFragment : Fragment() {
     }
 
     private fun handleNotificationClick(notification: Notification, position: Int) {
-        if (!notification.isRead) {
-            val uid = auth.currentUser?.uid ?: return
-            
-            // Mark as read in Firestore
-            firestore.collection("users").document(uid)
-                .collection("notifications").document(notification.id)
-                .update("isRead", true)
-        }
+        val uid = auth.currentUser?.uid ?: return
+        
+        // Always mark as read in Firestore (the adapter may have already set local isRead = true)
+        firestore.collection("users").document(uid)
+            .collection("notifications").document(notification.id)
+            .update("isRead", true)
         
         // Show details in dialog
         AlertDialog.Builder(requireContext())
