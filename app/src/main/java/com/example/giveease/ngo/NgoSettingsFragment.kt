@@ -13,6 +13,7 @@ import com.example.giveease.R
 import com.example.giveease.databinding.FragmentNgoSettingsBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.giveease.ui.OurTeamFragment
 
 class NgoSettingsFragment : Fragment() {
 
@@ -41,6 +42,14 @@ class NgoSettingsFragment : Fragment() {
             parentFragmentManager.beginTransaction()
                 .hide(this)
                 .add((requireView().parent as ViewGroup).id, NgoBankAccountsFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        binding.btnOurTeam.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as ViewGroup).id, OurTeamFragment.newInstance())
                 .addToBackStack(null)
                 .commit()
         }

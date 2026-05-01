@@ -14,6 +14,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.giveease.ui.OurTeamFragment
 
 class DonorSettingsFragment : Fragment() {
     private var _binding: FragmentDonorSettingsBinding? = null
@@ -141,6 +142,15 @@ class DonorSettingsFragment : Fragment() {
             parentFragmentManager.beginTransaction()
                 .hide(this@DonorSettingsFragment)
                 .add(R.id.fragment_container_donor, TermsConditionsFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        binding.cardOurTeam.setOnClickListener {
+            if (!isAdded) return@setOnClickListener
+            parentFragmentManager.beginTransaction()
+                .hide(this@DonorSettingsFragment)
+                .add(R.id.fragment_container_donor, OurTeamFragment.newInstance())
                 .addToBackStack(null)
                 .commit()
         }
