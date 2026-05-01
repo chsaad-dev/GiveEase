@@ -74,7 +74,8 @@ class ContactSupportFragment : Fragment() {
 
         binding.btnViewFAQ.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_donor, FAQFragment())
+                .hide(this)
+                .add(R.id.fragment_container_donor, FAQFragment())
                 .addToBackStack(null)
                 .commit()
         }

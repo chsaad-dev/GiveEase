@@ -149,7 +149,8 @@ class DonorChatFragment : Fragment() {
         }
 
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, fragment)
+            .hide(this)
+            .add(R.id.fragment_container_donor, fragment)
             .addToBackStack(null)
             .commit()
     }

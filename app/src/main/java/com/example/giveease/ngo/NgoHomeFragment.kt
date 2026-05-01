@@ -227,15 +227,17 @@ class NgoHomeFragment : Fragment() {
 
         // View All text link
         binding.btnVerifyReceipts.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, MonetaryVerificationFragment())
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as ViewGroup).id, MonetaryVerificationFragment())
                 .addToBackStack(null)
                 .commit()
         }
 
         binding.btnManageItems.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, NgoPhysicalDonationsFragment())
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as ViewGroup).id, NgoPhysicalDonationsFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -245,8 +247,9 @@ class NgoHomeFragment : Fragment() {
         }
 
         binding.ivNotifications.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, NotificationsFragment())
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as ViewGroup).id, NotificationsFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -259,7 +262,8 @@ class NgoHomeFragment : Fragment() {
         val containerId = (view?.parent as? View)?.id ?: return
 
         parentFragmentManager.beginTransaction()
-            .replace(containerId, fragment)
+            .hide(this)
+            .add(containerId, fragment)
             .addToBackStack(null)
             .commit()
     }

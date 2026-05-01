@@ -73,7 +73,8 @@ class FAQFragment : Fragment() {
 
     private fun navigateToContactSupport() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, ContactSupportFragment())
+            .hide(this)
+            .add(R.id.fragment_container_donor, ContactSupportFragment())
             .addToBackStack(null)
             .commit()
     }

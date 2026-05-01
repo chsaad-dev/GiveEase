@@ -226,8 +226,9 @@ class CreateCampaignFragment : Fragment() {
                         .setTitle("Verification Required")
                         .setMessage("Please verify your NGO documents to create campaigns.")
                         .setPositiveButton("Verify Now") { _, _ ->
-                            requireActivity().supportFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_container, IdentityVerificationFragment())
+                            parentFragmentManager.beginTransaction()
+                                .hide(this@CreateCampaignFragment)
+                                .add((requireView().parent as ViewGroup).id, IdentityVerificationFragment())
                                 .addToBackStack(null)
                                 .commit()
                         }

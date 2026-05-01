@@ -107,7 +107,8 @@ class DonorFeedFragment : Fragment() {
         val detailsFragment = CampaignDetailsFragment.newInstance(campaign)
 
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_donor, detailsFragment)
+            .hide(this)
+            .add(R.id.fragment_container_donor, detailsFragment)
             .addToBackStack(null)
             .commit()
     }

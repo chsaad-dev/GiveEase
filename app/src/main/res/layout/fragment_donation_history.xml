@@ -186,7 +186,6 @@
             android:layout_weight="1"
             android:paddingTop="8dp"
             android:paddingBottom="16dp"
-            android:paddingHorizontal="16dp"
             app:shimmer_auto_start="true">
 
             <LinearLayout
@@ -208,8 +207,7 @@
             android:clipToPadding="false"
             android:visibility="gone"
             android:paddingTop="8dp"
-            android:paddingBottom="16dp"
-            android:paddingHorizontal="16dp" />
+            android:paddingBottom="16dp" />
 
         <LinearLayout
             android:id="@+id/layoutEmptyState"

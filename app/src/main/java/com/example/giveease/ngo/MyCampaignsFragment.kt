@@ -299,7 +299,8 @@ class MyCampaignsFragment : Fragment() {
         val containerId = (view?.parent as? View)?.id ?: return
 
         parentFragmentManager.beginTransaction()
-            .replace(containerId, fragment)
+            .hide(this)
+            .add(containerId, fragment)
             .addToBackStack(null)
             .commit()
     }
@@ -310,7 +311,8 @@ class MyCampaignsFragment : Fragment() {
         val containerId = (view?.parent as? View)?.id ?: return
 
         parentFragmentManager.beginTransaction()
-            .replace(containerId, CreateCampaignFragment())
+            .hide(this)
+            .add(containerId, CreateCampaignFragment())
             .addToBackStack(null)
             .commit()
     }

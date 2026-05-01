@@ -100,6 +100,15 @@ class NgoDonationAdapter(
                         onDonationClick(donation)
                     }
                 }
+
+                if (donation.status.equals("Pending Proof", ignoreCase = true)) {
+                    btnUploadProof.visibility = View.VISIBLE
+                    btnUploadProof.setOnClickListener {
+                        onDonationClick(donation) // We will handle this in Fragment
+                    }
+                } else {
+                    btnUploadProof.visibility = View.GONE
+                }
             }
         }
 
@@ -132,5 +141,6 @@ data class NgoDonation(
     val unit: String = "",
     val message: String = "",
     val timestamp: Long = 0,
-    val status: String = "Completed"
+    val status: String = "Completed",
+    val proof: com.example.giveease.models.DonationProof? = null
 )

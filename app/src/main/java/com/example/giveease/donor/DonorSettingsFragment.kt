@@ -85,7 +85,8 @@ class DonorSettingsFragment : Fragment() {
         binding.btnEditProfile.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_donor, EditProfileFragment())
+                .hide(this@DonorSettingsFragment)
+                .add(R.id.fragment_container_donor, EditProfileFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -93,7 +94,8 @@ class DonorSettingsFragment : Fragment() {
         binding.cardEditProfile.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_donor, ChangeEmailFragment())
+                .hide(this@DonorSettingsFragment)
+                .add(R.id.fragment_container_donor, ChangeEmailFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -101,7 +103,8 @@ class DonorSettingsFragment : Fragment() {
         binding.cardChangePassword.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_donor, ChangePasswordFragment())
+                .hide(this@DonorSettingsFragment)
+                .add(R.id.fragment_container_donor, ChangePasswordFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -109,7 +112,8 @@ class DonorSettingsFragment : Fragment() {
         binding.cardFaq.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_donor, FAQFragment())
+                .hide(this@DonorSettingsFragment)
+                .add(R.id.fragment_container_donor, FAQFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -117,7 +121,8 @@ class DonorSettingsFragment : Fragment() {
         binding.cardSupport.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_donor, ContactSupportFragment())
+                .hide(this@DonorSettingsFragment)
+                .add(R.id.fragment_container_donor, ContactSupportFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -125,7 +130,8 @@ class DonorSettingsFragment : Fragment() {
         binding.cardPrivacy.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_donor, PrivacyPolicyFragment())
+                .hide(this@DonorSettingsFragment)
+                .add(R.id.fragment_container_donor, PrivacyPolicyFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -133,7 +139,8 @@ class DonorSettingsFragment : Fragment() {
         binding.cardTerms.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_donor, TermsConditionsFragment())
+                .hide(this@DonorSettingsFragment)
+                .add(R.id.fragment_container_donor, TermsConditionsFragment())
                 .addToBackStack(null)
                 .commit()
         }

@@ -234,7 +234,8 @@ class CampaignDetailsFragment : Fragment() {
             
             layoutNgoProfile.setOnClickListener {
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container_donor, NgoPublicProfileFragment.newInstance(campaign.ngoId))
+                    .hide(this@CampaignDetailsFragment)
+                    .add(R.id.fragment_container_donor, NgoPublicProfileFragment.newInstance(campaign.ngoId))
                     .addToBackStack(null)
                     .commit()
             }
@@ -362,8 +363,9 @@ class CampaignDetailsFragment : Fragment() {
             }
         }
 
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
+        parentFragmentManager.beginTransaction()
+            .hide(this)
+            .add((requireView().parent as ViewGroup).id, fragment)
             .addToBackStack(null)
             .commit()
     }
