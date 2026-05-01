@@ -276,11 +276,13 @@ class ChatDetailFragment : Fragment() {
 
     private fun showImagePreview(uri: Uri) {
         binding.imagePreviewLayout.visibility = View.VISIBLE
+        binding.messageInputLayout.visibility = View.GONE
         Glide.with(this).load(uri).into(binding.imgPreview)
     }
 
     private fun hideImagePreview() {
         binding.imagePreviewLayout.visibility = View.GONE
+        binding.messageInputLayout.visibility = View.VISIBLE
         binding.etImageCaption.text?.clear()
         selectedImageUri = null
     }
@@ -302,6 +304,7 @@ class ChatDetailFragment : Fragment() {
                 storageRef.downloadUrl
             }
             .addOnSuccessListener { downloadUri ->
+                if (!isAdded) return@addOnSuccessListener
                 val message = Message(
                     id = UUID.randomUUID().toString(),
                     chatRoomId = chatRoomId,
@@ -319,9 +322,11 @@ class ChatDetailFragment : Fragment() {
                 binding.progressBar.visibility = View.GONE
                 hideImagePreview()
             }
-            .addOnFailureListener {
+            .addOnFailureListener { e ->
+                if (!isAdded) return@addOnFailureListener
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(requireContext(), "Failed to upload image", Toast.LENGTH_SHORT).show()
+                hideImagePreview()
+                Toast.makeText(requireContext(), "Failed to upload image: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 
