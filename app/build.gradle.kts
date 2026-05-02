@@ -82,4 +82,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Image Zooming
+    implementation("com.github.chrisbanes:PhotoView:2.3.0")
 }
