@@ -63,6 +63,7 @@ class EditProfileFragment : Fragment() {
             .setView(R.layout.dialog_loading)
             .setCancelable(false)
             .create()
+        loadingDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     private fun setupListeners() {

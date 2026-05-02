@@ -471,6 +471,7 @@ class SignupFragment : Fragment() {
             .setView(R.layout.dialog_loading)
             .setCancelable(false)
             .create()
+        loadingDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     override fun onDestroyView() {

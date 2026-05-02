@@ -206,6 +206,7 @@ class IdentityVerificationFragment : Fragment() {
             .setView(com.example.giveease.R.layout.dialog_loading)
             .setCancelable(false)
             .create()
+        loadingDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     override fun onDestroyView() {
