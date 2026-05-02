@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingBottom="12dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvBankName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🏦 Easypaisa"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#33691E" />
+
+        <TextView
+            android:id="@+id/tvAccountTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title: Trigger Foundation"
+            android:textSize="13sp"
+            android:textColor="#33691E" />
+
+        <TextView
+            android:id="@+id/tvAccountNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Acc/IBAN: 1234567890"
+            android:textSize="13sp"
+            android:textColor="#33691E" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btnCopy"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_copy"
+        app:tint="#33691E"
+        android:padding="6dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true" />
+</LinearLayout>

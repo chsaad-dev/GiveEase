@@ -119,36 +119,64 @@ class DonationDialogFragment : BottomSheetDialogFragment() {
             .addOnSuccessListener { document ->
                 if (!isAdded || _binding == null) return@addOnSuccessListener
                 
+                binding.llNgoBankDetailsContainer.removeAllViews()
+                
                 // Try new array format
                 val accounts = document.get("bankAccounts") as? List<Map<String, String>>
                 if (accounts != null && accounts.isNotEmpty()) {
-                    val sb = StringBuilder()
-                    accounts.forEachIndexed { index, map ->
-                        val bankName = map["bankName"] ?: "N/A"
-                        val title = map["accountTitle"] ?: "N/A"
-                        val number = map["accountNumber"] ?: "N/A"
-                        sb.append("🏦 $bankName\nTitle: $title\nAcc/IBAN: $number")
-                        if (index < accounts.size - 1) sb.append("\n\n")
+                    accounts.forEach { map ->
+                        addBankAccountView(
+                            map["bankName"] ?: "N/A",
+                            map["accountTitle"] ?: "N/A",
+                            map["accountNumber"] ?: "N/A"
+                        )
                     }
-                    binding.tvNgoBankDetails.text = sb.toString()
                 } else {
                     // Fallback to legacy
                     val legacy = document.get("bankDetails") as? Map<String, String>
                     if (legacy != null) {
-                        val name = legacy["bankName"] ?: "N/A"
-                        val title = legacy["accountTitle"] ?: "N/A"
-                        val number = legacy["accountNumber"] ?: "N/A"
-                        binding.tvNgoBankDetails.text = "🏦 $name\nTitle: $title\nAcc/IBAN: $number"
+                        addBankAccountView(
+                            legacy["bankName"] ?: "N/A",
+                            legacy["accountTitle"] ?: "N/A",
+                            legacy["accountNumber"] ?: "N/A"
+                        )
                     } else {
-                        binding.tvNgoBankDetails.text = "No bank details provided by NGO."
+                        val fallbackTv = android.widget.TextView(requireContext()).apply {
+                            text = "No bank details provided by NGO."
+                            textSize = 14f
+                            setTextColor(android.graphics.Color.parseColor("#33691E"))
+                        }
+                        binding.llNgoBankDetailsContainer.addView(fallbackTv)
                     }
                 }
             }
             .addOnFailureListener {
                 if (isAdded && _binding != null) {
-                    binding.tvNgoBankDetails.text = "Failed to load bank details."
+                    binding.llNgoBankDetailsContainer.removeAllViews()
+                    val fallbackTv = android.widget.TextView(requireContext()).apply {
+                        text = "Failed to load bank details."
+                        textSize = 14f
+                        setTextColor(android.graphics.Color.parseColor("#33691E"))
+                    }
+                    binding.llNgoBankDetailsContainer.addView(fallbackTv)
                 }
             }
+    }
+
+    private fun addBankAccountView(bankName: String, title: String, number: String) {
+        val view = layoutInflater.inflate(com.example.giveease.R.layout.item_bank_account_copy, binding.llNgoBankDetailsContainer, false)
+        view.findViewById<android.widget.TextView>(com.example.giveease.R.id.tvBankName).text = "🏦 $bankName"
+        view.findViewById<android.widget.TextView>(com.example.giveease.R.id.tvAccountTitle).text = "Title: $title"
+        view.findViewById<android.widget.TextView>(com.example.giveease.R.id.tvAccountNumber).text = "Acc/IBAN: $number"
+        
+        view.findViewById<android.view.View>(com.example.giveease.R.id.btnCopy).setOnClickListener {
+            val clipboard = requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+            val clip = android.content.ClipData.newPlainText("Account Number", number)
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(requireContext(), "Account number copied to clipboard", Toast.LENGTH_SHORT).show()
+        }
+        
+        binding.llNgoBankDetailsContainer.addView(view)
     }
 
     private fun loadDonorName() {
