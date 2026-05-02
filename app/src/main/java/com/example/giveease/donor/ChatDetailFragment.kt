@@ -471,8 +471,11 @@ class ChatDetailFragment : Fragment() {
     }
 
     private fun showFullImage(imageUrl: String) {
-        // TODO: Implement full screen image viewer
-        Toast.makeText(requireContext(), "Image viewer coming soon", Toast.LENGTH_SHORT).show()
+        val imageViewerFragment = ImageViewerFragment.newInstance(imageUrl)
+        parentFragmentManager.beginTransaction()
+            .add((requireView().parent as android.view.ViewGroup).id, imageViewerFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onPause() {
