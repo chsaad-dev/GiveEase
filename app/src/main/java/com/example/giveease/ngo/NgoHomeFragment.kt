@@ -20,6 +20,7 @@ class NgoHomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+    private var notificationListener: com.google.firebase.firestore.ListenerRegistration? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,11 +72,14 @@ class NgoHomeFragment : Fragment() {
 
     private fun listenForUnreadNotifications() {
         val userId = auth.currentUser?.uid ?: return
-        firestore.collection("users").document(userId).collection("notifications")
+        notificationListener = firestore.collection("users").document(userId).collection("notifications")
             .whereEqualTo("isRead", false)
             .addSnapshotListener { snapshots, error ->
                 if (!isAdded || _binding == null) return@addSnapshotListener
-                if (error != null) return@addSnapshotListener
+                if (error != null) {
+                    if (auth.currentUser == null) return@addSnapshotListener
+                    return@addSnapshotListener
+                }
 
                 val count = snapshots?.size() ?: 0
                 val badge = binding.root.findViewById<TextView>(R.id.tvNotificationBadge)
@@ -295,6 +299,8 @@ class NgoHomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        notificationListener?.remove()
+        notificationListener = null
         _binding = null
     }
 }
