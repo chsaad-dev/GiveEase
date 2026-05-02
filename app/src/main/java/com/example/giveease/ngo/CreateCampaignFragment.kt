@@ -302,7 +302,7 @@ class CreateCampaignFragment : Fragment() {
             urgencyLevel = urgency,
             itemCondition = condition ?: "",
             specificRequirements = binding.etSpecificNeeds.text.toString().trim(),
-            autoClose = binding.switchAutoClose.isChecked,
+            autoClose = false,
             createdAt = System.currentTimeMillis(),
             status = "Active"
         )

@@ -113,13 +113,18 @@ class NgoHomeFragment : Fragment() {
 
         firestore.collection("donations")
             .whereEqualTo("ngoId", ngoId)
-            .whereEqualTo("status", "Completed")
             .get()
             .addOnSuccessListener { documents ->
                 if (!isAdded || _binding == null) return@addOnSuccessListener
 
                 val totalItems = documents.sumOf { doc ->
-                    (doc.getLong("quantity") ?: 0).toInt()
+                    val status = doc.getString("status") ?: ""
+                    val paymentMethod = doc.getString("paymentMethod") ?: ""
+                    if (status != "Rejected" && paymentMethod != "Bank Transfer") {
+                        (doc.getLong("quantity") ?: 0).toInt()
+                    } else {
+                        0
+                    }
                 }
                 binding.tvTotalDonations.text = "$totalItems Items"
             }
@@ -139,8 +144,7 @@ class NgoHomeFragment : Fragment() {
 
         firestore.collection("campaigns")
             .whereEqualTo("ngoId", userId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(1)
+            .whereEqualTo("status", "Active")
             .get()
             .addOnSuccessListener { documents ->
                 if (!isAdded || _binding == null) return@addOnSuccessListener
@@ -148,8 +152,12 @@ class NgoHomeFragment : Fragment() {
                 binding.shimmerRecentCampaign.stopShimmer()
                 binding.shimmerRecentCampaign.visibility = View.GONE
 
-                if (!documents.isEmpty) {
-                    val campaign = documents.documents[0]
+                val recentCampaign = documents.documents.maxByOrNull { doc ->
+                    doc.getLong("createdAt") ?: 0L
+                }
+
+                if (recentCampaign != null) {
+                    val campaign = recentCampaign
 
                     binding.tvCampaignTitle.text = campaign.getString("title") ?: "Campaign"
                     binding.tvCampaignDescription.text = campaign.getString("description") ?: ""
