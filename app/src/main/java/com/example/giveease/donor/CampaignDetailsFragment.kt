@@ -134,6 +134,13 @@ class CampaignDetailsFragment : Fragment() {
 
     private fun setupUI() {
         binding.apply {
+            val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+            if (currentUserId == campaign.ngoId) {
+                bottomActionCard.visibility = View.GONE
+            } else {
+                bottomActionCard.visibility = View.VISIBLE
+            }
+
             // Image Gallery
             if (campaign.imageUrls.isNotEmpty()) {
                 val adapter = ImageSliderAdapter(campaign.imageUrls)
@@ -235,7 +242,7 @@ class CampaignDetailsFragment : Fragment() {
             layoutNgoProfile.setOnClickListener {
                 parentFragmentManager.beginTransaction()
                     .hide(this@CampaignDetailsFragment)
-                    .add(R.id.fragment_container_donor, NgoPublicProfileFragment.newInstance(campaign.ngoId))
+                    .add((requireView().parent as ViewGroup).id, NgoPublicProfileFragment.newInstance(campaign.ngoId))
                     .addToBackStack(null)
                     .commit()
             }

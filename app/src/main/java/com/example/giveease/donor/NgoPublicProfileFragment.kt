@@ -210,70 +210,8 @@ class NgoPublicProfileFragment : Fragment() {
     }
 
     private fun downloadAndOpenDocument(documentUrl: String) {
-        val loadingDialog = AlertDialog.Builder(requireContext())
-            .setView(com.example.giveease.R.layout.dialog_loading)
-            .setCancelable(false)
-            .create()
-        loadingDialog.show()
-
-        val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(documentUrl)
-        
-        // Determine file extension
-        storageRef.metadata.addOnSuccessListener { metadata ->
-            val ext = if (metadata.contentType?.contains("pdf") == true) ".pdf" else ".jpg"
-            val localFile = File(requireContext().cacheDir, "ngo_document$ext")
-
-            storageRef.getFile(localFile)
-                .addOnSuccessListener {
-                    loadingDialog.dismiss()
-                    if (isAdded) {
-                        openLocalFile(localFile, metadata.contentType ?: "image/jpeg")
-                    }
-                }
-                .addOnFailureListener { e ->
-                    loadingDialog.dismiss()
-                    if (isAdded) {
-                        if (e.message?.contains("does not exist") == true) {
-                            Toast.makeText(requireContext(), "This document is no longer available.", Toast.LENGTH_LONG).show()
-                        } else {
-                            Toast.makeText(requireContext(), "Download failed: ${e.message}", Toast.LENGTH_LONG).show()
-                        }
-                    }
-                }
-        }.addOnFailureListener { e ->
-            // Fallback if metadata fails
-            val localFile = File(requireContext().cacheDir, "ngo_document.jpg")
-            storageRef.getFile(localFile)
-                .addOnSuccessListener {
-                    loadingDialog.dismiss()
-                    if (isAdded) {
-                        openLocalFile(localFile, "image/jpeg")
-                    }
-                }
-                .addOnFailureListener { e2 ->
-                    loadingDialog.dismiss()
-                    if (isAdded) {
-                        if (e2.message?.contains("does not exist") == true) {
-                            Toast.makeText(requireContext(), "This document is no longer available.", Toast.LENGTH_LONG).show()
-                        } else {
-                            Toast.makeText(requireContext(), "Download failed: ${e2.message}", Toast.LENGTH_LONG).show()
-                        }
-                    }
-                }
-        }
-    }
-
-    private fun openLocalFile(file: File, mimeType: String) {
         try {
-            val uri = FileProvider.getUriForFile(
-                requireContext(),
-                "${requireContext().packageName}.fileprovider",
-                file
-            )
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(uri, mimeType)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(documentUrl))
             startActivity(intent)
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "No app found to open this document", Toast.LENGTH_SHORT).show()
