@@ -196,14 +196,21 @@
             app:cardBackgroundColor="#F1F8E9"
             android:layout_marginBottom="16dp">
 
-            <TextView
-                android:id="@+id/tvNgoBankDetails"
+            <LinearLayout
+                android:id="@+id/llNgoBankDetailsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Loading bank details..."
-                android:textSize="14sp"
-                android:textColor="#33691E"
-                android:padding="16dp" />
+                android:orientation="vertical"
+                android:padding="16dp">
+                
+                <TextView
+                    android:id="@+id/tvNgoBankDetailsFallback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Loading bank details..."
+                    android:textSize="14sp"
+                    android:textColor="#33691E" />
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <TextView

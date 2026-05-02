@@ -98,7 +98,7 @@
                             android:layout_width="80dp"
                             android:layout_height="80dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/sample_profile"
+                            android:src="@drawable/our_team_saad"
                             android:background="@color/secondary"
                             app:shapeAppearanceOverlay="@style/CircleImageView" />
 
@@ -234,7 +234,7 @@
                             android:layout_width="80dp"
                             android:layout_height="80dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/sample_profile"
+                            android:src="@drawable/our_team_ali"
                             android:background="@color/secondary"
                             app:shapeAppearanceOverlay="@style/CircleImageView" />
 

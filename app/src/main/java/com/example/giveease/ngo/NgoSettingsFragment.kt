@@ -61,6 +61,38 @@ class NgoSettingsFragment : Fragment() {
         binding.btnLogout.setOnClickListener {
             showLogoutConfirmation()
         }
+
+        binding.cardFaq.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as android.view.ViewGroup).id, com.example.giveease.donor.FAQFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        binding.cardSupport.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as android.view.ViewGroup).id, com.example.giveease.donor.ContactSupportFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        binding.cardPrivacy.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as android.view.ViewGroup).id, com.example.giveease.donor.PrivacyPolicyFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        binding.cardTerms.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .hide(this)
+                .add((requireView().parent as android.view.ViewGroup).id, com.example.giveease.donor.TermsConditionsFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     private fun showChangePasswordDialog() {
