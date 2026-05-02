@@ -99,6 +99,7 @@ class NgoHistoryFragment : Fragment() {
                 binding.progressBar.visibility = View.GONE
 
                 if (error != null) {
+                    if (auth.currentUser == null) return@addSnapshotListener
                     Toast.makeText(requireContext(), "Error loading donations", Toast.LENGTH_SHORT).show()
                     binding.emptyState.visibility = View.VISIBLE
                     return@addSnapshotListener
