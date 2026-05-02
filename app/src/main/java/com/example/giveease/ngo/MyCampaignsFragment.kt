@@ -185,7 +185,9 @@ class MyCampaignsFragment : Fragment() {
 
         val totalCampaigns = campaignsList.size
         val activeCampaigns = campaignsList.count { it.status == "Active" }
-        val totalItems = campaignsList.sumOf { it.currentQuantity }
+        val totalItems = campaignsList.sumOf { campaign ->
+            if (campaign.category != "Monetary Funds") campaign.currentQuantity else 0
+        }
 
         binding.tvTotalCampaigns.text = totalCampaigns.toString()
         binding.tvActiveCampaigns.text = activeCampaigns.toString()

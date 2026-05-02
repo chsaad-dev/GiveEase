@@ -95,7 +95,13 @@ class DonorHomeFragment : Fragment() {
 
                 val totalDonations = documents.size()
                 val totalItems = documents.sumOf { doc ->
-                    doc.getLong("quantity") ?: 0L
+                    val status = doc.getString("status") ?: ""
+                    val paymentMethod = doc.getString("paymentMethod") ?: ""
+                    if (status != "Rejected" && paymentMethod != "Bank Transfer") {
+                        doc.getLong("quantity") ?: 0L
+                    } else {
+                        0L
+                    }
                 }.toInt()
 
                 binding.tvDonationsCount.text = totalDonations.toString()
