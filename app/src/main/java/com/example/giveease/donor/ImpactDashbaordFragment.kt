@@ -24,8 +24,6 @@ class ImpactDashboardFragment : Fragment() {
     private lateinit var viewModel: ImpactDashboardViewModel
     private lateinit var categoryAdapter: CategoryImpactAdapter
     private val firestore = FirebaseFirestore.getInstance()
-
-    // Accumulated data
     private var totalDonations = 0
     private var totalItems = 0
     private var uniqueNGOs = 0
@@ -54,7 +52,6 @@ class ImpactDashboardFragment : Fragment() {
         viewModel.donorProfile.observe(viewLifecycleOwner) { profile ->
             binding.tvGreeting.text = "Assalam-o-Alaikum, ${profile.name}"
             
-            // Only show verified badge if actually verified or if they are NGO. For normal donors, hide pending.
             if (profile.isVerified) {
                 binding.tvVerifiedBadge.visibility = View.VISIBLE
                 binding.tvVerifiedBadge.text = "✅ Verified"
@@ -64,7 +61,6 @@ class ImpactDashboardFragment : Fragment() {
         }
 
         viewModel.impactData.observe(viewLifecycleOwner) { data ->
-            // Update all accumulated data points
             totalDonations = data.totalDonations
             totalItems = data.totalItems
             uniqueNGOs = data.uniqueNGOs
@@ -77,12 +73,10 @@ class ImpactDashboardFragment : Fragment() {
                 binding.tvFirstDonation.text = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(Date(ts))
             }
 
-            // Build badges
             val badges = buildBadges(data.totalDonations, data.impactScore)
             badgesEarned = badges.count { it.isEarned }
 
-            // Update all UI
-            updateKPIs(data.monthlyCount, data.monthlyItems)
+            updateKPIs(data)
             updateImpactScore(badges)
             updateBadges(badges)
             updateTimeline()
@@ -117,15 +111,16 @@ class ImpactDashboardFragment : Fragment() {
     }
 
 
-    private fun updateKPIs(monthlyDonations: Int, monthlyItems: Int) {
-        animateCounter(binding.tvTotalDonations, totalDonations)
-        animateCounter(binding.tvTotalItems, totalItems)
+    private fun updateKPIs(data: ImpactDashboardViewModel.ImpactData) {
+        animateCounter(binding.tvMonetaryAmount, data.monetaryAmount)
+        animateCounter(binding.tvBloodQuantity, data.bloodQuantity)
+        animateCounter(binding.tvItemsQuantity, data.physicalItemsQuantity)
+        animateCounter(binding.tvMedicineQuantity, data.medicineQuantity)
+
         animateCounter(binding.tvBadgesEarned, badgesEarned)
         animateCounter(binding.tvNGOsHelped, uniqueNGOs)
 
-        binding.tvDonationsTrend.text = "+$monthlyDonations this month"
-        binding.tvItemsTrend.text = "+$monthlyItems this month"
-        binding.tvTotalDonationsPill.text = "Total: $totalDonations donations"
+        binding.tvTotalDonationsPill.text = "Total: ${data.totalDonations} donations"
     }
 
     private fun updateImpactScore(badges: List<BadgeItem>) {
@@ -183,12 +178,12 @@ class ImpactDashboardFragment : Fragment() {
 
     private fun buildBadges(donationCount: Int, score: Int): List<BadgeItem> {
         return listOf(
-            BadgeItem("🎁", "First Giver", if (donationCount >= 1) "✅ Earned" else "Need 1 donation", donationCount >= 1),
-            BadgeItem("💯", "100 Points", if (score >= 100) "✅ Earned" else "Need ${100 - score} pts", score >= 100),
-            BadgeItem("❤️", "Generous Heart", if (score >= 500) "✅ Earned" else "Need ${500 - score} pts", score >= 500),
-            BadgeItem("⭐", "Rising Star", if (donationCount >= 10) "✅ Earned" else "Need ${10 - donationCount} donations", donationCount >= 10),
-            BadgeItem("🏆", "Hero Badge", if (score >= 10000) "✅ Earned" else "Need ${10000 - score} pts", score >= 10000),
-            BadgeItem("💎", "Platinum", if (donationCount >= 20) "✅ Earned" else "Need ${20 - donationCount} donations", donationCount >= 20)
+            BadgeItem("🎁", "First Giver", if (donationCount >= 1) " Earned" else "Need 1 donation", donationCount >= 1),
+            BadgeItem("💯", "100 Points", if (score >= 100) " Earned" else "Need ${100 - score} pts", score >= 100),
+            BadgeItem("❤️", "Generous Heart", if (score >= 500) " Earned" else "Need ${500 - score} pts", score >= 500),
+            BadgeItem("⭐", "Rising Star", if (donationCount >= 10) " Earned" else "Need ${10 - donationCount} donations", donationCount >= 10),
+            BadgeItem("🏆", "Hero Badge", if (score >= 10000) " Earned" else "Need ${10000 - score} pts", score >= 10000),
+            BadgeItem("💎", "Platinum", if (donationCount >= 20) " Earned" else "Need ${20 - donationCount} donations", donationCount >= 20)
         )
     }
 
@@ -242,10 +237,18 @@ class ImpactDashboardFragment : Fragment() {
         animator.interpolator = DecelerateInterpolator()
         animator.addUpdateListener { animation ->
             if (_binding != null) {
-                textView.text = (animation.animatedValue as Int).toString()
+                textView.text = formatLargeNumber(animation.animatedValue as Int)
             }
         }
         animator.start()
+    }
+
+    private fun formatLargeNumber(number: Int): String {
+        return when {
+            number >= 1000000 -> String.format(Locale.US, "%.1fM+", number / 1000000.0).replace(".0M+", "M+")
+            number >= 1000 -> String.format(Locale.US, "%.1fK+", number / 1000.0).replace(".0K+", "K+")
+            else -> number.toString()
+        }
     }
 
     override fun onDestroyView() {
