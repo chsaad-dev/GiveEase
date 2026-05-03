@@ -75,7 +75,7 @@ class ContactSupportFragment : Fragment() {
         binding.btnViewFAQ.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .hide(this)
-                .add(R.id.fragment_container_donor, FAQFragment())
+                .add((requireView().parent as android.view.ViewGroup).id, FAQFragment())
                 .addToBackStack(null)
                 .commit()
         }

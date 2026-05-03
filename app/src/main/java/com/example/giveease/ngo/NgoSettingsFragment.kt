@@ -30,6 +30,12 @@ class NgoSettingsFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        com.example.giveease.utils.AnimUtils.applyButtonPressEffect(
+            binding.btnChangePassword, binding.btnBankAccounts, binding.btnOurTeam,
+            binding.btnDeleteAccount, binding.btnLogout, binding.cardFaq,
+            binding.cardSupport, binding.cardPrivacy, binding.cardTerms
+        )
+
         binding.btnBack.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
@@ -40,6 +46,7 @@ class NgoSettingsFragment : Fragment() {
 
         binding.btnBankAccounts.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as ViewGroup).id, NgoBankAccountsFragment())
                 .addToBackStack(null)
@@ -48,6 +55,7 @@ class NgoSettingsFragment : Fragment() {
 
         binding.btnOurTeam.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as ViewGroup).id, OurTeamFragment.newInstance())
                 .addToBackStack(null)
@@ -64,6 +72,7 @@ class NgoSettingsFragment : Fragment() {
 
         binding.cardFaq.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as android.view.ViewGroup).id, com.example.giveease.donor.FAQFragment())
                 .addToBackStack(null)
@@ -72,6 +81,7 @@ class NgoSettingsFragment : Fragment() {
 
         binding.cardSupport.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as android.view.ViewGroup).id, com.example.giveease.donor.ContactSupportFragment())
                 .addToBackStack(null)
@@ -80,6 +90,7 @@ class NgoSettingsFragment : Fragment() {
 
         binding.cardPrivacy.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as android.view.ViewGroup).id, com.example.giveease.donor.PrivacyPolicyFragment())
                 .addToBackStack(null)
@@ -88,6 +99,7 @@ class NgoSettingsFragment : Fragment() {
 
         binding.cardTerms.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as android.view.ViewGroup).id, com.example.giveease.donor.TermsConditionsFragment())
                 .addToBackStack(null)

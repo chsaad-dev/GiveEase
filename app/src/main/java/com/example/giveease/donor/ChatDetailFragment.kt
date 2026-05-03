@@ -169,6 +169,7 @@ class ChatDetailFragment : Fragment() {
         }
 
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .hide(this)
             .add((requireView().parent as ViewGroup).id, fragment)
             .addToBackStack(null)
@@ -473,6 +474,7 @@ class ChatDetailFragment : Fragment() {
     private fun showFullImage(imageUrl: String) {
         val imageViewerFragment = ImageViewerFragment.newInstance(imageUrl)
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.fade_in_scale, R.anim.fade_out_scale, R.anim.fade_in_scale, R.anim.fade_out_scale)
             .add((requireView().parent as android.view.ViewGroup).id, imageViewerFragment)
             .addToBackStack(null)
             .commit()

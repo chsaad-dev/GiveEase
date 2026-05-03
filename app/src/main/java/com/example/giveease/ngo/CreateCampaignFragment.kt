@@ -126,6 +126,8 @@ class CreateCampaignFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        com.example.giveease.utils.AnimUtils.applyButtonPressEffect(binding.btnCreateCampaign)
+
         binding.btnBack.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
@@ -227,6 +229,7 @@ class CreateCampaignFragment : Fragment() {
                         .setMessage("Please verify your NGO documents to create campaigns.")
                         .setPositiveButton("Verify Now") { _, _ ->
                             parentFragmentManager.beginTransaction()
+                                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                                 .hide(this@CreateCampaignFragment)
                                 .add((requireView().parent as ViewGroup).id, IdentityVerificationFragment())
                                 .addToBackStack(null)

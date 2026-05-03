@@ -53,6 +53,7 @@ class DonorChatFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = chatAdapter
         }
+        com.example.giveease.utils.AnimUtils.applyStaggeredEntrance(binding.recyclerViewChats)
     }
 
     private fun setupSearch() {
@@ -149,8 +150,9 @@ class DonorChatFragment : Fragment() {
         }
 
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .hide(this)
-            .add(R.id.fragment_container_donor, fragment)
+            .add((requireView().parent as android.view.ViewGroup).id, fragment)
             .addToBackStack(null)
             .commit()
     }

@@ -87,8 +87,9 @@ class DonorSettingsFragment : Fragment() {
         binding.btnEditProfile.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this@DonorSettingsFragment)
-                .add(R.id.fragment_container_donor, EditProfileFragment())
+                .add((requireView().parent as android.view.ViewGroup).id, EditProfileFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -96,8 +97,9 @@ class DonorSettingsFragment : Fragment() {
         binding.cardEditProfile.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this@DonorSettingsFragment)
-                .add(R.id.fragment_container_donor, ChangeEmailFragment())
+                .add((requireView().parent as android.view.ViewGroup).id, ChangeEmailFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -105,8 +107,9 @@ class DonorSettingsFragment : Fragment() {
         binding.cardChangePassword.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this@DonorSettingsFragment)
-                .add(R.id.fragment_container_donor, ChangePasswordFragment())
+                .add((requireView().parent as android.view.ViewGroup).id, ChangePasswordFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -114,8 +117,9 @@ class DonorSettingsFragment : Fragment() {
         binding.cardFaq.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this@DonorSettingsFragment)
-                .add(R.id.fragment_container_donor, FAQFragment())
+                .add((requireView().parent as android.view.ViewGroup).id, FAQFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -123,8 +127,9 @@ class DonorSettingsFragment : Fragment() {
         binding.cardSupport.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this@DonorSettingsFragment)
-                .add(R.id.fragment_container_donor, ContactSupportFragment())
+                .add((requireView().parent as android.view.ViewGroup).id, ContactSupportFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -132,8 +137,9 @@ class DonorSettingsFragment : Fragment() {
         binding.cardPrivacy.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this@DonorSettingsFragment)
-                .add(R.id.fragment_container_donor, PrivacyPolicyFragment())
+                .add((requireView().parent as android.view.ViewGroup).id, PrivacyPolicyFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -141,8 +147,9 @@ class DonorSettingsFragment : Fragment() {
         binding.cardTerms.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this@DonorSettingsFragment)
-                .add(R.id.fragment_container_donor, TermsConditionsFragment())
+                .add((requireView().parent as android.view.ViewGroup).id, TermsConditionsFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -150,8 +157,9 @@ class DonorSettingsFragment : Fragment() {
         binding.cardOurTeam.setOnClickListener {
             if (!isAdded) return@setOnClickListener
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this@DonorSettingsFragment)
-                .add(R.id.fragment_container_donor, OurTeamFragment.newInstance())
+                .add((requireView().parent as android.view.ViewGroup).id, OurTeamFragment.newInstance())
                 .addToBackStack(null)
                 .commit()
         }

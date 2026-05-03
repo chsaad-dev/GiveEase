@@ -235,12 +235,15 @@ class CampaignDetailsFragment : Fragment() {
                 shareCampaign()
             }
 
+            com.example.giveease.utils.AnimUtils.applyButtonPressEffect(btnDonate)
+
             btnDonate.setOnClickListener {
                 handleDonate()
             }
             
             layoutNgoProfile.setOnClickListener {
                 parentFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                     .hide(this@CampaignDetailsFragment)
                     .add((requireView().parent as ViewGroup).id, NgoPublicProfileFragment.newInstance(campaign.ngoId))
                     .addToBackStack(null)
@@ -371,6 +374,7 @@ class CampaignDetailsFragment : Fragment() {
         }
 
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .hide(this)
             .add((requireView().parent as ViewGroup).id, fragment)
             .addToBackStack(null)

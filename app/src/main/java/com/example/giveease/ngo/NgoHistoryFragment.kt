@@ -57,6 +57,7 @@ class NgoHistoryFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@NgoHistoryFragment.adapter
         }
+        com.example.giveease.utils.AnimUtils.applyStaggeredEntrance(binding.recyclerViewDonations)
     }
 
     private fun setupClickListeners() {
@@ -186,6 +187,7 @@ class NgoHistoryFragment : Fragment() {
         if (donation.status.equals("Pending Proof", ignoreCase = true)) {
             val fragment = NgoUploadProofFragment.newInstance(donation.id, donation.campaignTitle)
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as ViewGroup).id, fragment)
                 .addToBackStack(null)

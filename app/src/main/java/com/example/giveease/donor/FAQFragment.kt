@@ -74,7 +74,7 @@ class FAQFragment : Fragment() {
     private fun navigateToContactSupport() {
         parentFragmentManager.beginTransaction()
             .hide(this)
-            .add(R.id.fragment_container_donor, ContactSupportFragment())
+            .add((requireView().parent as android.view.ViewGroup).id, ContactSupportFragment())
             .addToBackStack(null)
             .commit()
     }
