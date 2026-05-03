@@ -179,12 +179,15 @@ class SignupFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        com.example.giveease.utils.AnimUtils.applyButtonPressEffect(binding.btnSignup, binding.btnGoogleSignup)
+
         binding.btnSignup.setOnClickListener {
             handleSignup()
         }
 
         binding.tvLoginLink.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .replace(R.id.fragment_container, LoginFragment())
                 .addToBackStack(null)
                 .commit()
@@ -192,6 +195,7 @@ class SignupFragment : Fragment() {
 
         binding.tvTermsLink.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .replace(R.id.fragment_container, com.example.giveease.donor.TermsConditionsFragment())
                 .addToBackStack(null)
                 .commit()
@@ -199,6 +203,7 @@ class SignupFragment : Fragment() {
 
         binding.tvPrivacyLink.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .replace(R.id.fragment_container, com.example.giveease.donor.PrivacyPolicyFragment())
                 .addToBackStack(null)
                 .commit()
@@ -352,6 +357,7 @@ class SignupFragment : Fragment() {
 
     private fun navigateToLogin() {
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .replace(R.id.fragment_container, LoginFragment())
             .commit()
     }

@@ -115,12 +115,15 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        com.example.giveease.utils.AnimUtils.applyButtonPressEffect(binding.btnLogin, binding.btnGoogleLogin)
+
         binding.btnLogin.setOnClickListener {
             handleLogin()
         }
 
         binding.tvSignupLink.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .replace(R.id.fragment_container, SignupFragment())
                 .addToBackStack(null)
                 .commit()
@@ -132,6 +135,7 @@ class LoginFragment : Fragment() {
 
         binding.tvTermsLink.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .replace(R.id.fragment_container, com.example.giveease.donor.TermsConditionsFragment())
                 .addToBackStack(null)
                 .commit()
@@ -139,6 +143,7 @@ class LoginFragment : Fragment() {
 
         binding.tvPrivacyLink.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .replace(R.id.fragment_container, com.example.giveease.donor.PrivacyPolicyFragment())
                 .addToBackStack(null)
                 .commit()
@@ -520,6 +525,7 @@ class LoginFragment : Fragment() {
                     val existingFragment = parentFragmentManager.findFragmentByTag(tag)
                     if (existingFragment == null) {
                         parentFragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.fade_in_scale, R.anim.fade_out_scale)
                             .replace(R.id.fragment_container, fragment, tag)
                             .commit()
                     }
@@ -529,6 +535,7 @@ class LoginFragment : Fragment() {
             val existingFragment = parentFragmentManager.findFragmentByTag("ADMIN_MAIN")
             if (existingFragment == null) {
                 parentFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in_scale, R.anim.fade_out_scale)
                     .replace(R.id.fragment_container, AdminMainFragment(), "ADMIN_MAIN")
                     .commit()
             }

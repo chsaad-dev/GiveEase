@@ -49,19 +49,23 @@ class MainActivity : AppCompatActivity() {
             }
         }, true)
 
-        currentRole = intent.getStringExtra("role")
+        if (savedInstanceState != null) {
+            currentRole = savedInstanceState.getString("currentRole")
+        } else {
+            currentRole = intent.getStringExtra("role")
 
-        val fragment: Fragment = when (currentRole) {
-            "donor" -> DonorMainFragment()
-            "ngo" -> NgoMainFragment()
-            "admin" -> AdminMainFragment()
-            "login" -> LoginFragment()
-            else -> LoginFragment()
+            val fragment: Fragment = when (currentRole) {
+                "donor" -> DonorMainFragment()
+                "ngo" -> NgoMainFragment()
+                "admin" -> AdminMainFragment()
+                "login" -> LoginFragment()
+                else -> LoginFragment()
+            }
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
         }
-
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
 
         if (currentRole != "admin" && currentRole != "login") {
             MaintenanceManager.startListening()
@@ -145,6 +149,11 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("currentRole", currentRole)
     }
 
     override fun onDestroy() {
