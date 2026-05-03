@@ -98,6 +98,7 @@ class NgoMainFragment : Fragment() {
 
             if (activeFragment != targetFragment) {
                 childFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in_scale, R.anim.fade_out_scale)
                     .hide(activeFragment)
                     .show(targetFragment)
                     .commit()
@@ -150,6 +151,7 @@ class NgoMainFragment : Fragment() {
 
     private fun navigateToVerification() {
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .replace(R.id.fragment_container, IdentityVerificationFragment())
             .addToBackStack(null)
             .commit()
