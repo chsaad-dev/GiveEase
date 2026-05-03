@@ -154,7 +154,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
-                            android:text="FA22-BCS-000"
+                            android:text="FA22-BSE-075"
                             android:textSize="14sp"
                             android:textColor="#444444" />
                     </LinearLayout>
@@ -178,7 +178,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
-                            android:text="member1@example.com"
+                            android:text="saadw7751@gmail.com"
                             android:textSize="14sp"
                             android:textColor="#444444" />
                     </LinearLayout>
@@ -201,7 +201,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
-                            android:text="+92 300 0000000"
+                            android:text="+92 311 1223381"
                             android:textSize="14sp"
                             android:textColor="#444444" />
                     </LinearLayout>
@@ -249,7 +249,7 @@
                                 android:id="@+id/tvName2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Team Member 2"
+                                android:text="Muhammad Ali"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:textColor="@android:color/black" />
@@ -289,7 +289,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
-                            android:text="FA22-BCS-000"
+                            android:text="FA22-BSE-114"
                             android:textSize="14sp"
                             android:textColor="#444444" />
                     </LinearLayout>
@@ -312,7 +312,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
-                            android:text="member2@example.com"
+                            android:text="chali@gmail.com"
                             android:textSize="14sp"
                             android:textColor="#444444" />
                     </LinearLayout>
@@ -367,7 +367,7 @@
                             android:layout_width="80dp"
                             android:layout_height="80dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/sample_profile"
+                            android:src="@drawable/our_team_usman"
                             android:background="@color/secondary"
                             app:shapeAppearanceOverlay="@style/CircleImageView" />
 
@@ -382,7 +382,7 @@
                                 android:id="@+id/tvName3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Team Member 3"
+                                android:text="Usman Javed"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:textColor="@android:color/black" />
@@ -422,7 +422,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
-                            android:text="FA22-BCS-000"
+                            android:text="FA22-BSE-130"
                             android:textSize="14sp"
                             android:textColor="#444444" />
                     </LinearLayout>
@@ -445,7 +445,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
-                            android:text="member3@example.com"
+                            android:text="mianusman@gmail.com"
                             android:textSize="14sp"
                             android:textColor="#444444" />
                     </LinearLayout>

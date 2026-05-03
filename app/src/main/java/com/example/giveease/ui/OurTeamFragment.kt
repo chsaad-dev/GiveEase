@@ -34,7 +34,7 @@ class OurTeamFragment : Fragment() {
 
         binding.tvName2.text = "Muhammad Ali"
         binding.tvReg2.text = "FA22-BSE-114"
-        binding.tvEmail2.text = "chali@gmail.com"
+        binding.tvEmail2.text = "muhammadali225001@gmail.com"
         binding.tvPhone2.text = "+92 310 6063135"
 
         binding.tvName3.text = "Usman Javed"
