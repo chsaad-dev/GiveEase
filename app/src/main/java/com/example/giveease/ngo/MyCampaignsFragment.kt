@@ -68,6 +68,7 @@ class MyCampaignsFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@MyCampaignsFragment.adapter
         }
+        com.example.giveease.utils.AnimUtils.applyStaggeredEntrance(binding.recyclerViewCampaigns)
     }
 
     private fun setupFilterChips() {
@@ -104,6 +105,8 @@ class MyCampaignsFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        com.example.giveease.utils.AnimUtils.applyButtonPressEffect(binding.btnCreateNewCampaign)
+
         binding.btnBack.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
@@ -301,6 +304,7 @@ class MyCampaignsFragment : Fragment() {
         val containerId = (view?.parent as? View)?.id ?: return
 
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .hide(this)
             .add(containerId, fragment)
             .addToBackStack(null)
@@ -313,6 +317,7 @@ class MyCampaignsFragment : Fragment() {
         val containerId = (view?.parent as? View)?.id ?: return
 
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .hide(this)
             .add(containerId, CreateCampaignFragment())
             .addToBackStack(null)

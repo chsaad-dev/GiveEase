@@ -256,6 +256,11 @@ class DonorHomeFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        com.example.giveease.utils.AnimUtils.applyButtonPressEffect(
+            binding.layoutImpactDashboard, binding.layoutQuickDonate,
+            binding.layoutExploreCauses, binding.btnDonateFeatured
+        )
+
         binding.apply {
             layoutImpactDashboard.setOnClickListener {
                 navigateToImpactDashboard()
@@ -324,8 +329,9 @@ class DonorHomeFragment : Fragment() {
     private fun navigateToImpactDashboard() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .hide(this)
-            .add(R.id.fragment_container_donor, ImpactDashboardFragment())
+            .add((requireView().parent as android.view.ViewGroup).id, ImpactDashboardFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -351,8 +357,9 @@ class DonorHomeFragment : Fragment() {
     private fun navigateToNotifications() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .hide(this)
-            .add(R.id.fragment_container_donor, NotificationsFragment())
+            .add((requireView().parent as android.view.ViewGroup).id, NotificationsFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -369,8 +376,9 @@ class DonorHomeFragment : Fragment() {
         }
 
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .hide(this)
-            .add(R.id.fragment_container_donor, fragment)
+            .add((requireView().parent as android.view.ViewGroup).id, fragment)
             .addToBackStack(null)
             .commit()
     }
@@ -378,8 +386,9 @@ class DonorHomeFragment : Fragment() {
     private fun navigateToDonationHistory() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .hide(this)
-            .add(R.id.fragment_container_donor, DonationHistoryFragment())
+            .add((requireView().parent as android.view.ViewGroup).id, DonationHistoryFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -423,6 +432,7 @@ class DonorHomeFragment : Fragment() {
     private fun navigateToVerification() {
         if (!isAdded) return
         requireActivity().supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .replace(R.id.fragment_container, IdentityVerificationFragment())
             .addToBackStack(null)
             .commit()

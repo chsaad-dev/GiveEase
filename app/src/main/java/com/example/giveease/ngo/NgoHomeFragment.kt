@@ -217,6 +217,11 @@ class NgoHomeFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        com.example.giveease.utils.AnimUtils.applyButtonPressEffect(
+            binding.btnCreateNewCampaign, binding.btnViewAllCampaigns,
+            binding.btnVerifyReceipts, binding.btnManageItems
+        )
+
         // Create New Campaign button
         binding.btnCreateNewCampaign.setOnClickListener {
             firestore.collection("users").document(auth.currentUser?.uid ?: "")
@@ -240,6 +245,7 @@ class NgoHomeFragment : Fragment() {
         // View All text link
         binding.btnVerifyReceipts.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as ViewGroup).id, MonetaryVerificationFragment())
                 .addToBackStack(null)
@@ -248,6 +254,7 @@ class NgoHomeFragment : Fragment() {
 
         binding.btnManageItems.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as ViewGroup).id, NgoPhysicalDonationsFragment())
                 .addToBackStack(null)
@@ -260,6 +267,7 @@ class NgoHomeFragment : Fragment() {
 
         binding.ivNotifications.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as ViewGroup).id, NotificationsFragment())
                 .addToBackStack(null)
@@ -274,6 +282,7 @@ class NgoHomeFragment : Fragment() {
         val containerId = (view?.parent as? View)?.id ?: return
 
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .hide(this)
             .add(containerId, fragment)
             .addToBackStack(null)

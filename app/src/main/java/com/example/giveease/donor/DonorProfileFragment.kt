@@ -135,7 +135,7 @@ class DonorProfileFragment : Fragment() {
                 if (!isAdded) return@setOnClickListener
                 parentFragmentManager.beginTransaction()
                     .hide(this@DonorProfileFragment)
-                    .add(R.id.fragment_container_donor, EditProfileFragment())
+                    .add((requireView().parent as android.view.ViewGroup).id, EditProfileFragment())
                     .addToBackStack(null)
                     .commit()
             }
@@ -158,7 +158,7 @@ class DonorProfileFragment : Fragment() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
             .hide(this)
-            .add(R.id.fragment_container_donor, ImpactDashboardFragment())
+            .add((requireView().parent as android.view.ViewGroup).id, ImpactDashboardFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -177,7 +177,7 @@ class DonorProfileFragment : Fragment() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
             .hide(this)
-            .add(R.id.fragment_container_donor, DonationHistoryFragment())
+            .add((requireView().parent as android.view.ViewGroup).id, DonationHistoryFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -186,7 +186,7 @@ class DonorProfileFragment : Fragment() {
         if (!isAdded) return
         parentFragmentManager.beginTransaction()
             .hide(this)
-            .add(R.id.fragment_container_donor, DonorSettingsFragment())
+            .add((requireView().parent as android.view.ViewGroup).id, DonorSettingsFragment())
             .addToBackStack(null)
             .commit()
     }

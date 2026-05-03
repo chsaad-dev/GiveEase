@@ -108,7 +108,7 @@ class DonorFeedFragment : Fragment() {
 
         parentFragmentManager.beginTransaction()
             .hide(this)
-            .add(R.id.fragment_container_donor, detailsFragment)
+            .add((requireView().parent as android.view.ViewGroup).id, detailsFragment)
             .addToBackStack(null)
             .commit()
     }

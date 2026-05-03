@@ -43,6 +43,7 @@ class DonationHistoryFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = donationAdapter
         }
+        com.example.giveease.utils.AnimUtils.applyStaggeredEntrance(binding.recyclerViewDonations)
     }
 
     private fun setupClickListeners() {
@@ -221,8 +222,9 @@ class DonationHistoryFragment : Fragment() {
                     uploadedAt = proof.uploadedAt
                 )
                 parentFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                     .hide(this@DonationHistoryFragment)
-                    .add(R.id.fragment_container_donor, fragment)
+                    .add((requireView().parent as android.view.ViewGroup).id, fragment)
                     .addToBackStack(null)
                     .commit()
             } else {

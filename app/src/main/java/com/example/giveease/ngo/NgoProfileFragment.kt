@@ -32,12 +32,17 @@ class NgoProfileFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        com.example.giveease.utils.AnimUtils.applyButtonPressEffect(
+            binding.btnEditProfile, binding.btnSettings
+        )
+
         binding.btnBack.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.btnEditProfile.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as ViewGroup).id, NgoEditProfileFragment())
                 .addToBackStack(null)
@@ -46,6 +51,7 @@ class NgoProfileFragment : Fragment() {
 
         binding.btnSettings.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .hide(this)
                 .add((requireView().parent as ViewGroup).id, NgoSettingsFragment())
                 .addToBackStack(null)
