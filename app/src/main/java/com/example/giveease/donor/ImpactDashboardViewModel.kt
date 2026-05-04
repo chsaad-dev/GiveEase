@@ -119,7 +119,9 @@ class ImpactDashboardViewModel : ViewModel() {
             }
             
             val uniqueNGOs = uniqueNGOsSet.size
-            val peopleImpacted = totalItems * 3
+            
+            // Calculate a realistic 'People Impacted' metric based on categories
+            val peopleImpacted = (monetaryAmount / 500) + (bloodQuantity * 3) + physicalItemsQuantity + medicineQuantity
 
             val now = System.currentTimeMillis()
             val cal = Calendar.getInstance()
