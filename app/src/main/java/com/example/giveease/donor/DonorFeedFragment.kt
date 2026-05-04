@@ -99,6 +99,26 @@ class DonorFeedFragment : Fragment() {
         binding.chipEducation.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) viewModel.filterCampaigns("Education")
         }
+        
+        binding.chipMonetary.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) viewModel.filterCampaigns("Monetary Funds")
+        }
+        
+        binding.chipBlood.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) viewModel.filterCampaigns("Blood Donation")
+        }
+        
+        binding.chipDisaster.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) viewModel.filterCampaigns("Disaster Relief")
+        }
+        
+        binding.chipClothing.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) viewModel.filterCampaigns("Clothing & Essentials")
+        }
+        
+        binding.chipAnimal.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) viewModel.filterCampaigns("Animal Welfare")
+        }
     }
 
 

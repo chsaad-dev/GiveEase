@@ -257,7 +257,7 @@ class DonorHomeFragment : Fragment() {
 
     private fun setupClickListeners() {
         com.example.giveease.utils.AnimUtils.applyButtonPressEffect(
-            binding.layoutImpactDashboard, binding.layoutQuickDonate,
+            binding.layoutImpactDashboard, binding.layoutSavedCampaigns,
             binding.layoutExploreCauses, binding.btnDonateFeatured
         )
 
@@ -266,8 +266,8 @@ class DonorHomeFragment : Fragment() {
                 navigateToImpactDashboard()
             }
 
-            layoutQuickDonate.setOnClickListener {
-                navigateToQuickDonate()
+            layoutSavedCampaigns.setOnClickListener {
+                navigateToSavedCampaigns()
             }
 
             layoutExploreCauses.setOnClickListener {
@@ -336,11 +336,14 @@ class DonorHomeFragment : Fragment() {
             .commit()
     }
 
-    private fun navigateToQuickDonate() {
+    private fun navigateToSavedCampaigns() {
         if (!isAdded) return
-        checkVerificationBeforeAction {
-            selectBottomNavTab(R.id.nav_feed)
-        }
+        parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+            .hide(this)
+            .add((requireView().parent as android.view.ViewGroup).id, SavedCampaignsFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun navigateToExploreCauses() {

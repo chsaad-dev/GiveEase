@@ -99,6 +99,10 @@ class AdminDashboardFragment : Fragment() {
             navigateToFragment(AdminLogsFragment())
         }
         
+        binding.btnFlaggedContent.setOnClickListener {
+            navigateToFragment(AdminReportsFragment())
+        }
+        
         binding.btnSupportTickets.setOnClickListener {
             navigateToFragment(AdminSupportTicketsFragment())
         }
