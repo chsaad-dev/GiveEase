@@ -70,7 +70,42 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/chipEducation"
                 style="@style/Widget.Material3.Chip.Filter"
-                android:text="Education"/>
+                android:text="Education"
+                android:layout_marginEnd="8dp"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chipMonetary"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:text="Monetary Funds"
+                android:layout_marginEnd="8dp"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chipBlood"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:text="Blood Donation"
+                android:layout_marginEnd="8dp"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chipDisaster"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:text="Disaster Relief"
+                android:layout_marginEnd="8dp"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chipClothing"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:text="Clothing &amp; Essentials"
+                android:layout_marginEnd="8dp"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chipAnimal"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:text="Animal Welfare"/>
         </LinearLayout>
     </HorizontalScrollView>
 

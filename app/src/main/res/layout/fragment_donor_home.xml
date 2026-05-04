@@ -188,7 +188,7 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/layoutQuickDonate"
+                            android:id="@+id/layoutSavedCampaigns"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -204,18 +204,20 @@
                             <ImageView
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
-                                android:src="@drawable/ic_donation"
+                                android:src="@drawable/ic_favorite"
                                 app:tint="@color/secondary"
                                 android:layout_marginBottom="8dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Quick Donate"
+                                android:text="Saved Campaigns"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/secondary"
-                                android:gravity="center" />
+                                android:gravity="center"
+                                android:maxLines="2"
+                                android:ellipsize="end"/>
                         </LinearLayout>
 
                         <LinearLayout

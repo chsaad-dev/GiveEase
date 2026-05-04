@@ -137,9 +137,13 @@ class CampaignDetailsFragment : Fragment() {
             val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
             if (currentUserId == campaign.ngoId) {
                 bottomActionCard.visibility = View.GONE
+                btnReport.visibility = View.GONE
             } else {
                 bottomActionCard.visibility = View.VISIBLE
+                btnReport.visibility = View.VISIBLE
             }
+
+            checkFavoriteStatus()
 
             // Image Gallery
             if (campaign.imageUrls.isNotEmpty()) {
@@ -234,6 +238,14 @@ class CampaignDetailsFragment : Fragment() {
             btnShare.setOnClickListener {
                 shareCampaign()
             }
+            
+            btnFavorite.setOnClickListener {
+                toggleFavorite()
+            }
+            
+            btnReport.setOnClickListener {
+                showReportDialog()
+            }
 
             com.example.giveease.utils.AnimUtils.applyButtonPressEffect(btnDonate)
 
@@ -265,22 +277,124 @@ class CampaignDetailsFragment : Fragment() {
 
     private fun shareCampaign() {
         val shareText = """
-            Help support: ${campaign.title}
+            🌟 *Support a Noble Cause!* 🌟
             
-            NGO: ${campaign.ngoName}
-            Category: ${campaign.category}
-            Target: ${campaign.targetQuantity} ${campaign.unit}
+            *${campaign.title}*
             
-            Donate now through GiveEase app!
+            🏛️ *NGO:* ${campaign.ngoName}
+            🏷️ *Category:* ${campaign.category}
+            🎯 *Target:* ${campaign.targetQuantity} ${campaign.unit}
+            
+            ${if (campaign.description.length > 100) campaign.description.take(100) + "..." else campaign.description}
+            
+            🤝 *Every contribution counts. Donate now through the GiveEase App!*
         """.trimIndent()
 
         val shareIntent = android.content.Intent().apply {
             action = android.content.Intent.ACTION_SEND
             type = "text/plain"
+            putExtra(android.content.Intent.EXTRA_SUBJECT, "Support: ${campaign.title}")
             putExtra(android.content.Intent.EXTRA_TEXT, shareText)
         }
 
-        startActivity(android.content.Intent.createChooser(shareIntent, "Share Campaign"))
+        startActivity(android.content.Intent.createChooser(shareIntent, "Share Campaign via"))
+    }
+
+    private var isFavorite = false
+
+    private fun checkFavoriteStatus() {
+        val userId = UserManager.getUserId(requireContext())
+        if (userId.isEmpty()) return
+
+        firestore.collection("users").document(userId)
+            .collection("favorites").document(campaign.id).get()
+            .addOnSuccessListener { document ->
+                isFavorite = document.exists()
+                updateFavoriteIcon()
+            }
+    }
+
+    private fun updateFavoriteIcon() {
+        if (_binding == null) return
+        if (isFavorite) {
+            binding.ivFavoriteIcon.setImageResource(R.drawable.ic_favorite)
+        } else {
+            binding.ivFavoriteIcon.setImageResource(R.drawable.ic_favorite_border)
+        }
+    }
+
+    private fun toggleFavorite() {
+        val userId = UserManager.getUserId(requireContext())
+        if (userId.isEmpty()) {
+            Toast.makeText(requireContext(), "Please login to save campaigns", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val favRef = firestore.collection("users").document(userId)
+            .collection("favorites").document(campaign.id)
+
+        if (isFavorite) {
+            favRef.delete().addOnSuccessListener {
+                isFavorite = false
+                updateFavoriteIcon()
+                Toast.makeText(requireContext(), "Removed from Saved Campaigns", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            val favData = hashMapOf(
+                "campaignId" to campaign.id,
+                "savedAt" to System.currentTimeMillis()
+            )
+            favRef.set(favData).addOnSuccessListener {
+                isFavorite = true
+                updateFavoriteIcon()
+                Toast.makeText(requireContext(), "Added to Saved Campaigns", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun showReportDialog() {
+        val reasons = arrayOf("Scam / Fraud", "Inappropriate Content", "Misleading Information", "Other")
+        var selectedReason = reasons[0]
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Report Campaign")
+            .setSingleChoiceItems(reasons, 0) { _, which ->
+                selectedReason = reasons[which]
+            }
+            .setPositiveButton("Submit") { _, _ ->
+                submitReport(selectedReason)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun submitReport(reason: String) {
+        val userId = UserManager.getUserId(requireContext())
+        
+        val reportData = hashMapOf(
+            "campaignId" to campaign.id,
+            "campaignTitle" to campaign.title,
+            "ngoId" to campaign.ngoId,
+            "reporterId" to userId,
+            "reason" to reason,
+            "status" to "Pending",
+            "timestamp" to System.currentTimeMillis()
+        )
+
+        binding.progressBar.visibility = View.VISIBLE
+        firestore.collection("reports").add(reportData)
+            .addOnSuccessListener {
+                if (_binding != null) {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Campaign reported successfully. Our team will review it.", Toast.LENGTH_LONG).show()
+                }
+            }
+            .addOnFailureListener {
+                if (_binding != null) {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Failed to submit report", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     private fun setupChatButton(campaign: CampaignData) {
