@@ -89,7 +89,17 @@ In Pakistan, charitable giving is deeply cultural — but trust is the biggest b
 
 ## Screenshots
 
-> Screenshots coming soon.
+| Donor Home | Campaign Feed | Donation Flow |
+|:---:|:---:|:---:|
+| ![Donor Home](screenshots/donor_home.png) | ![Campaign Feed](screenshots/campaign_feed.png) | ![Donation Flow](screenshots/donation_flow.png) |
+
+| Impact Dashboard | Chat | Verification |
+|:---:|:---:|:---:|
+| ![Impact Dashboard](screenshots/impact_dashboard.png) | ![Chat](screenshots/chat.png) | ![Verification](screenshots/verification.png) |
+
+| NGO Home | Admin Panel | Maintenance |
+|:---:|:---:|:---:|
+| ![NGO Home](screenshots/ngo_home.png) | ![Admin Panel](screenshots/admin_panel.png) | ![Maintenance](screenshots/maintenance.png) |
 
 ---
 
