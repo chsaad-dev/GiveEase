@@ -39,7 +39,7 @@ class DonorFeedViewModel : ViewModel() {
                         val currentQuantity = doc.getLong("currentQuantity")?.toInt() ?: 0
                         val targetQuantity = doc.getLong("targetQuantity")?.toInt() ?: 0
                         val autoClose = doc.getBoolean("autoClose") ?: false
-                        
+
                         // Filter out expired campaigns
                         if (endDate > 0 && endDate < currentTime) {
                             return@mapNotNull null
