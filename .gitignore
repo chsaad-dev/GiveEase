@@ -9,3 +9,4 @@ captures/
 *.log
 *.apk
 *.aab
+google-services.json
