@@ -336,5 +336,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 ## Author
 
 **Muhammad Saad** — [@chsaad-dev](https://github.com/chsaad-dev)
+[Portfolio](https://saadev.site/)
+[LinkedIn](https://www.linkedin.com/in/muhammad-saad075/)
 
 Built with ❤️ for Pakistan's charity ecosystem.
